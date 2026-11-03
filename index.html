@@ -1,5 +1,9 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Repaso SRI T0–T2</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -25,6 +29,7 @@
   --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
   --extra:#b49af0; --extra-soft:#221b33; color-scheme:dark}
 
+[hidden]{display:none!important}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
@@ -190,6 +195,9 @@ svg text{font-family:var(--f-mono)}
 footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;color:var(--muted)}
 @media (prefers-reduced-motion:no-preference){.progress i{transition:width .25s}}
 </style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
 
 <header class="top"><div class="wrap">
   <div class="brand"><span class="pairs" aria-hidden="true"><i style="background:var(--t0)"></i><i style="background:var(--dhcp)"></i><i style="background:var(--dns)"></i></span>SRI · T0–T2</div>
@@ -1349,3 +1357,6 @@ function end(){
 updAvail();
 route();
 </script>
+
+</body>
+</html>
