@@ -1,0 +1,1351 @@
+<title>Repaso SRI T0–T2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: banda fija con pestañas por tema; cada tema lleva el color de un par del cable UTP (T568B): marrón T0, naranja DHCP, azul DNS. */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#15202b; --muted:#5b6a78; --line:#d5dce3; --code:#e7ecf1; --code-ink:#1a2733;
+  --t0:#8a5a2b; --t0-soft:#f3e9de; --dhcp:#c85a14; --dhcp-soft:#fbe9dc; --dns:#1d5fc2; --dns-soft:#e1ebfa;
+  --ok:#1f7a4a; --ok-soft:#dff2e7; --bad:#b3261e; --bad-soft:#f9e1df; --warn:#8a6100; --warn-soft:#fbf0d2;
+  --extra:#6b4bb0; --extra-soft:#ece6f7;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1419; --surface:#151d24; --ink:#e2e8ee; --muted:#95a3b0; --line:#28333d; --code:#0b1116; --code-ink:#d5dee6;
+  --t0:#d39a62; --t0-soft:#2a2016; --dhcp:#f08a45; --dhcp-soft:#2d1d12; --dns:#6ea6f7; --dns-soft:#132238;
+  --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
+  --extra:#b49af0; --extra-soft:#221b33; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1419; --surface:#151d24; --ink:#e2e8ee; --muted:#95a3b0; --line:#28333d; --code:#0b1116; --code-ink:#d5dee6;
+  --t0:#d39a62; --t0-soft:#2a2016; --dhcp:#f08a45; --dhcp-soft:#2d1d12; --dns:#6ea6f7; --dns-soft:#132238;
+  --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
+  --extra:#b49af0; --extra-soft:#221b33; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:800;font-stretch:88%;letter-spacing:-.01em}
+h2{font-size:clamp(1.5rem,3.2vw,2rem);font-weight:750;font-stretch:90%}
+h3{font-size:1.2rem;font-weight:700;font-stretch:95%}
+h4{font-size:1rem;font-weight:700}
+p{margin:0}
+a{color:var(--dns)}
+code,kbd,pre{font-family:var(--f-mono);font-size:.88em}
+:not(pre)>code{background:var(--code);color:var(--code-ink);padding:.08em .35em;border-radius:4px;word-break:break-word}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+:focus-visible{outline:2px solid var(--dns);outline-offset:2px}
+
+/* cabecera */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:14px;padding-block:8px}
+.brand{font-family:var(--f-display);font-weight:800;font-stretch:80%;font-size:1.05rem;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.pairs{display:inline-flex;gap:2px}
+.pairs i{display:block;width:5px;height:16px;border-radius:1px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-weight:600;font-size:.9rem;padding:7px 11px;border-radius:6px;border:1px solid transparent}
+nav.tabs a:hover{color:var(--ink);background:var(--bg)}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-color:var(--line);background:var(--bg)}
+nav.tabs a .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+main{padding-block:28px 80px}
+section.view{display:grid;gap:28px}
+.head{display:grid;gap:10px;padding-bottom:6px}
+.lead{font-size:1.08rem;max-width:68ch;color:var(--ink)}
+.prose{display:grid;gap:12px;max-width:72ch}
+.prose ul,.prose ol{margin:0;padding-left:1.2em;display:grid;gap:6px}
+
+/* bloques */
+.block{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px;min-width:0}
+.block>h3{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sid{font-family:var(--f-mono);font-size:.75rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px}
+.t0 .block>h3 .sid{background:var(--t0-soft);color:var(--t0)}
+.dhcp .block>h3 .sid{background:var(--dhcp-soft);color:var(--dhcp)}
+.dns .block>h3 .sid{background:var(--dns-soft);color:var(--dns)}
+.topic-head{border-left:4px solid var(--c);padding-left:14px}
+.t0{--c:var(--t0);--cs:var(--t0-soft)} .dhcp{--c:var(--dhcp);--cs:var(--dhcp-soft)} .dns{--c:var(--dns);--cs:var(--dns-soft)}
+.pts{display:inline-block;font-family:var(--f-mono);font-size:.8rem;font-weight:600;color:var(--c,var(--ink));background:var(--cs,var(--bg));padding:3px 9px;border-radius:999px}
+
+/* avisos */
+.note{border-radius:8px;padding:12px 14px;display:grid;gap:6px;font-size:.95rem}
+.note b.k{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.trap{background:var(--bad-soft)} .trap b.k{color:var(--bad)}
+.key{background:var(--cs,var(--bg))} .key b.k{color:var(--c,var(--ink))}
+.pro{background:var(--extra-soft)} .pro b.k{color:var(--extra)}
+.tag-extra{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--extra);background:var(--extra-soft);padding:2px 6px;border-radius:4px;white-space:nowrap}
+
+/* tablas */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-display);font-weight:700;font-stretch:92%;background:var(--bg);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+
+/* código */
+.codebox{border-radius:8px;background:var(--code);color:var(--code-ink);min-width:0;overflow:hidden;border:1px solid var(--line)}
+.codebar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.codebar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy{font:600 .72rem var(--f-mono);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:5px;padding:3px 8px;cursor:pointer}
+pre.code{margin:0;padding:12px 14px;overflow-x:auto;line-height:1.5;font-size:.84rem}
+.ann-rows{display:grid}
+.ann-row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border-bottom:1px solid var(--line)}
+.ann-row:last-child{border-bottom:0}
+.ann-row pre{margin:0;padding:5px 12px;overflow-x:auto;font-size:.82rem;line-height:1.45}
+.ann-row div{padding:5px 12px;font-size:.84rem;color:var(--muted);border-left:1px solid var(--line);background:var(--surface);font-family:var(--f-body)}
+.ann-row div:empty{background:transparent}
+@media (max-width:640px){.ann-row{grid-template-columns:1fr}.ann-row div{border-left:0;border-top:1px dashed var(--line)}.ann-row div:empty{display:none}}
+
+/* pasos */
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px}
+ol.steps>li::before{content:counter(s);font:700 .95rem var(--f-mono);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--cs);color:var(--c)}
+ol.steps>li>div{display:grid;gap:8px;min-width:0}
+
+/* inicio */
+.exam-bar{display:flex;height:54px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.exam-bar a{display:flex;flex-direction:column;justify-content:center;padding:0 10px;text-decoration:none;color:var(--surface);font-size:.78rem;line-height:1.2;min-width:0}
+.exam-bar a b{font:700 1rem var(--f-mono)}
+.exam-bar a span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px}
+.legend a{display:grid;gap:2px;text-decoration:none;color:var(--ink);padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);border-top:4px solid var(--c)}
+.legend a b{font-family:var(--f-mono);color:var(--c)}
+.plan li{line-height:1.5}
+.toc{display:flex;flex-wrap:wrap;gap:6px}
+.toc a{font-size:.85rem;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
+.toc a:hover{border-color:var(--c)}
+
+/* botones / inputs */
+button.btn{font:600 .9rem var(--f-body);border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;cursor:pointer}
+button.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+button.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input[type=text],select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:7px 10px;min-width:0}
+textarea{font-family:var(--f-mono);font-size:.85rem;width:100%;min-height:200px;line-height:1.45;resize:vertical}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:600 .85rem var(--f-body);background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line);padding:7px 12px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+
+/* encuentra el error */
+.bug-lines{border-radius:8px;background:var(--code);border:1px solid var(--line);overflow-x:auto;padding:6px 0}
+.bug-lines button{display:grid;grid-template-columns:30px 1fr;width:100%;text-align:left;border:0;background:transparent;color:var(--code-ink);font:400 .84rem/1.6 var(--f-mono);padding:1px 12px 1px 4px;cursor:pointer;white-space:pre;min-width:max-content}
+.bug-lines button span:first-child{color:var(--muted);text-align:right;padding-right:10px;user-select:none}
+.bug-lines button:hover{background:var(--surface)}
+.bug-lines button.sel{background:var(--warn-soft);box-shadow:inset 3px 0 0 var(--warn)}
+.bug-lines button.hit{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+.bug-lines button.miss{background:var(--bad-soft);box-shadow:inset 3px 0 0 var(--bad)}
+.bug-lines button.fp{background:var(--bg);box-shadow:inset 3px 0 0 var(--muted);text-decoration:line-through}
+.verdict{display:grid;gap:8px;font-size:.93rem}
+.verdict ul{margin:0;padding-left:1.1em;display:grid;gap:4px}
+.chk{list-style:none;padding:0;margin:0;display:grid;gap:4px;font-size:.92rem}
+.chk li::before{display:inline-block;width:1.4em;font-weight:700}
+.chk li.y::before{content:"✓";color:var(--ok)} .chk li.n::before{content:"✗";color:var(--bad)}
+.score{font:700 1.1rem var(--f-mono)}
+
+/* test */
+.q{display:grid;gap:12px}
+.q .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.q .opts{display:grid;gap:8px}
+.q .opts button{text-align:left;font:inherit;font-size:.97rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;display:grid;grid-template-columns:24px 1fr;gap:6px}
+.q .opts button b{font-family:var(--f-mono);color:var(--muted)}
+.q .opts button:hover:not(:disabled){border-color:var(--ink)}
+.q .opts button.right{background:var(--ok-soft);border-color:var(--ok)}
+.q .opts button.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.q .opts button:disabled{cursor:default}
+.expl{font-size:.93rem;background:var(--bg);border-radius:8px;padding:10px 12px}
+.progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--ink);width:0}
+
+/* chuleta */
+.cmd-list{display:grid;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.cmd{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:4px 14px;padding:10px 12px;border-bottom:1px solid var(--line);align-items:start}
+.cmd:last-child{border-bottom:0}
+.cmd .c{display:flex;gap:8px;align-items:flex-start;min-width:0}
+.cmd .c code{background:var(--code);color:var(--code-ink);padding:5px 8px;border-radius:5px;overflow-x:auto;white-space:pre;display:block;flex:1;min-width:0;font-size:.82rem}
+.cmd .d{font-size:.9rem}
+.cmd .d small{display:block;color:var(--muted)}
+.cmd .g{font:600 .68rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--c,var(--muted))}
+@media (max-width:640px){.cmd{grid-template-columns:1fr}}
+
+/* subredes */
+.sub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.sub-grid label{display:grid;gap:4px;font-size:.85rem;color:var(--muted)}
+.sub-grid input.ok{border-color:var(--ok);background:var(--ok-soft)}
+.sub-grid input.ko{border-color:var(--bad);background:var(--bad-soft)}
+.big-ip{font:600 clamp(1.3rem,4vw,1.8rem) var(--f-mono);letter-spacing:.02em}
+
+svg text{font-family:var(--f-mono)}
+.diagram{overflow-x:auto}
+.diagram svg{display:block;max-width:100%;height:auto;min-width:480px}
+footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.progress i{transition:width .25s}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand"><span class="pairs" aria-hidden="true"><i style="background:var(--t0)"></i><i style="background:var(--dhcp)"></i><i style="background:var(--dns)"></i></span>SRI · T0–T2</div>
+  <nav class="tabs" aria-label="Secciones">
+    <a href="#inicio">Inicio</a>
+    <a href="#t0"><span class="dot" style="background:var(--t0)"></span>T0 Repaso</a>
+    <a href="#dhcp"><span class="dot" style="background:var(--dhcp)"></span>T1 DHCP</a>
+    <a href="#dns"><span class="dot" style="background:var(--dns)"></span>T2 DNS</a>
+    <a href="#errores">Encuentra el error</a>
+    <a href="#escribir">Escribe el archivo</a>
+    <a href="#comandos">Comandos</a>
+    <a href="#test">Test</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+
+<!-- ============ INICIO ============ -->
+<section class="view" id="v-inicio" data-view="inicio">
+  <div class="head">
+    <span class="eyebrow">Servicios en Red · 2.º SMR · Debian 13</span>
+    <h1>Repaso para el examen de T0, DHCP y DNS</h1>
+    <p class="lead">Todo lo que entra, ordenado por lo que puntúa: conceptos que te van a preguntar, archivos que tienes que saber escribir de memoria, los errores que te van a poner para que los encuentres y los comandos que usa un técnico de verdad.</p>
+  </div>
+
+  <div class="block">
+    <h3>Cómo se reparten los 10 puntos</h3>
+    <div class="exam-bar" role="img" aria-label="Reparto: T0 2 puntos, DHCP teoría 2, DHCP práctica 1, DNS teoría 3, DNS práctica 2">
+      <a href="#t0" style="flex:2;background:var(--t0)"><b>2</b><span>T0 teoría</span></a>
+      <a href="#dhcp" style="flex:2;background:var(--dhcp)"><b>2</b><span>DHCP teoría</span></a>
+      <a href="#escribir" style="flex:1;background:var(--dhcp);opacity:.82"><b>1</b><span>práct.</span></a>
+      <a href="#dns" style="flex:3;background:var(--dns)"><b>3</b><span>DNS teoría</span></a>
+      <a href="#errores" style="flex:2;background:var(--dns);opacity:.82"><b>2</b><span>DNS práctica</span></a>
+    </div>
+    <div class="legend">
+      <a href="#t0" class="t0"><b>T0 · 2 pt</b>Preguntas cortas de concepto. Parecen fáciles; fallan si memorizas sin entender.</a>
+      <a href="#dhcp" class="dhcp"><b>DHCP · 2 + 1 pt</b>Teoría (DORA, concesión, ámbito, reservas) y práctica: escribir <code>dhcpd.conf</code>, encontrar errores, comandos.</a>
+      <a href="#dns" class="dns"><b>DNS · 3 + 2 pt</b>Lo que más pesa. Árbol, zonas, servidores, resolución, registros, y montar bind9 de cero.</a>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="block">
+      <h3>Plan de estudio en 5 pasos</h3>
+      <ol class="steps dns" style="--c:var(--ink);--cs:var(--bg)">
+        <li><div><b>DNS teoría primero</b><span class="muted">Son 3 puntos. Lee la sección T2 entera y haz el test de DNS hasta acertar más del 80 %.</span></div></li>
+        <li><div><b>Escribe los 4 archivos de memoria</b><span class="muted"><code>dhcpd.conf</code>, <code>named.conf.local</code>, el archivo de zona y <code>named.conf.options</code>. Usa «Escribe el archivo» sin mirar.</span></div></li>
+        <li><div><b>Haz los «Encuentra el error»</b><span class="muted">Es justo el formato del examen práctico. Cada error tiene su porqué.</span></div></li>
+        <li><div><b>Repasa los comandos</b><span class="muted">Instalar, validar, reiniciar, ver logs y probar desde Windows y Linux.</span></div></li>
+        <li><div><b>T0 al final</b><span class="muted">Lee las trampas de T0 y practica dos o tres subredes con el entrenador.</span></div></li>
+      </ol>
+    </div>
+    <div class="block">
+      <h3>Las 10 cosas que más se fallan</h3>
+      <ol class="plan prose" style="padding-left:1.2em">
+        <li>En la zona, los nombres completos llevan <b>punto final</b>: <code>ns.practicas.local.</code></li>
+        <li>En el SOA el correo va con punto: <code>admin.practicas.local.</code>, nunca con <code>@</code>.</li>
+        <li><b>Subir el serial</b> cada vez que cambias la zona.</li>
+        <li>Validar antes de recargar: <code>named-checkconf</code> y <code>named-checkzone</code>.</li>
+        <li>En <code>dhcpd.conf</code> y en bind9, <b>cada línea acaba en <code>;</code></b> y cada <code>}</code> de bloque de bind9 también.</li>
+        <li>La interfaz de escucha de DHCP va en <code>/etc/default/isc-dhcp-server</code>.</li>
+        <li>Tras cambiar el servidor DHCP, el cliente no se entera hasta que renueva: <code>ipconfig /release</code> y <code>/renew</code>.</li>
+        <li><b>NXDOMAIN</b> = el servidor responde y el nombre no existe. <b>Timeout</b> = no llega al servidor.</li>
+        <li>Un <b>CNAME</b> apunta a un nombre, nunca a una IP, y no puede ir en <code>@</code>.</li>
+        <li>El <b>MX</b> necesita prioridad: <code>@ IN MX 10 servidor.practicas.local.</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="note pro">
+    <b class="k">Leyenda</b>
+    <p>Todo sale de los apuntes del curso. Lo marcado con <span class="tag-extra">extra pro</span> no está en tus apuntes: son cosas que usa un técnico en el trabajo real. Úsalas para entender mejor, pero en el examen responde con lo de clase. La zona inversa no aparece, como pediste.</p>
+  </div>
+</section>
+
+<!-- ============ T0 ============ -->
+<section class="view t0" id="v-t0" data-view="t0" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Tema 0 · Repaso de primero</span>
+    <h2>Lo básico de redes que tienes que dominar</h2>
+    <p class="lead">Preguntas cortas, pero con trampa. Para cada concepto: la idea en una frase y el error típico que el profe quiere que no cometas.</p>
+    <span class="pts">2 puntos · teoría</span>
+  </div>
+  <div class="toc"><a href="#t0-capas">Capas</a><a href="#t0-disp">Dispositivos</a><a href="#t0-cable">Cableado</a><a href="#t0-ip">IP y máscaras</a><a href="#t0-sub">Entrenador de subredes</a><a href="#t0-nat">NAT</a><a href="#t0-arp">ARP y MAC</a><a href="#t0-diag">Diagnóstico</a><a href="#t0-tcp">TCP/UDP</a><a href="#t0-wifi">Wifi y seguridad</a><a href="#t0-linux">Linux</a><a href="#t0-vm">Virtualización</a></div>
+
+  <div class="block" id="t0-capas">
+    <h3><span class="sid">0.1</span>Capas y encapsulado</h3>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>OSI (7)</th><th>TCP/IP (4)</th><th>Unidad</th><th>Etiqueta que añade</th></tr>
+        <tr><td>7 Aplicación · 6 Presentación · 5 Sesión</td><td>Aplicación</td><td>Datos</td><td>El contenido</td></tr>
+        <tr><td>4 Transporte</td><td>Transporte</td><td>Segmento (TCP) / Datagrama (UDP)</td><td>Puertos</td></tr>
+        <tr><td>3 Red</td><td>Red</td><td>Paquete</td><td>IP origen y destino</td></tr>
+        <tr><td>2 Enlace · 1 Física</td><td>Enlace</td><td>Trama</td><td>MAC origen y destino</td></tr>
+      </table></div>
+      <div class="prose">
+        <p><b>Encapsular</b> es meter el mensaje de una capa dentro del «sobre» de la capa de abajo. En el destino se <b>desencapsula</b>, de fuera hacia dentro.</p>
+        <p>TCP/IP es el que usan los sistemas de verdad. OSI se usa para hablar con precisión: «es un problema de capa 2».</p>
+        <div class="note trap"><b class="k">Trampa</b><p>Encapsular <b>no es cifrar ni comprimir</b>: solo añade cabeceras. Y cada capa solo lee su etiqueta: un router mira la IP, no los puertos.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-disp">
+    <h3><span class="sid">0.2</span>Hub, switch, router y dominios</h3>
+    <div class="tw"><table>
+      <tr><th>Aparato</th><th>Capa</th><th>Qué mira</th><th>Dominio de colisión</th><th>Dominio de difusión</th></tr>
+      <tr><td>Hub</td><td>1</td><td>Nada: repite por todos los puertos</td><td>No lo corta</td><td>No lo corta</td></tr>
+      <tr><td>Switch</td><td>2</td><td>MAC de destino (tabla MAC)</td><td>Cada puerto es uno</td><td>No lo corta</td></tr>
+      <tr><td>Router</td><td>3</td><td>IP de destino</td><td>Lo corta</td><td><b>Lo corta</b> (el único)</td></tr>
+    </table></div>
+    <div class="grid2">
+      <div class="note key"><b class="k">Pregunta típica</b><p>Switch de 24 puertos con 24 PCs: <b>24 dominios de colisión y 1 de difusión</b>. Por eso DHCP (que va en broadcast) no cruza un router sin relay.</p></div>
+      <div class="note key"><b class="k">Topología y arquitectura</b><p>Bus (cae el cable, caen todos), estrella (cae un cable, cae un equipo), malla (hay otro camino). Son independientes de la arquitectura: cliente-servidor o P2P. Un mismo PC puede ser servidor DNS y cliente DHCP a la vez.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-cable">
+    <h3><span class="sid">0.3</span>Cableado UTP y RJ45</h3>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Categoría</th><th>Soporta</th></tr>
+        <tr><td>Cat5e</td><td>1 Gbps</td></tr>
+        <tr><td>Cat6</td><td>1 Gbps con margen; 10 Gbps a poca distancia</td></tr>
+        <tr><td>Cat6a</td><td>10 Gbps a distancia completa</td></tr>
+      </table></div>
+      <div class="prose">
+        <p>UTP: 4 pares trenzados sin blindaje. El trenzado cancela interferencias. RJ45: 8 posiciones, normas <b>T568A</b> y <b>T568B</b>.</p>
+        <p><b>Directo</b>: misma norma en los dos extremos. <b>Cruzado</b>: A en un lado, B en el otro.</p>
+        <p>Regla clásica: <b>mismo tipo</b> (PC-PC, switch-switch) → cruzado. <b>Distinto tipo</b> (PC-switch) → directo. Hoy casi todo tiene <b>Auto-MDI/MDI-X</b> y se adapta solo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-ip">
+    <h3><span class="sid">0.5–0.7</span>IPv4, máscaras, CIDR y subredes</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>IPv4 = <b>32 bits</b> en 4 octetos (0–255). <code>192.168.1.10</code> = <code>11000000.10101000.00000001.00001010</code>.</p>
+        <p>Clases históricas por el primer octeto: <b>A</b> 1–126 · <b>B</b> 128–191 · <b>C</b> 192–223. <code>127.x.x.x</code> es <b>loopback</b>. Hoy se usa CIDR.</p>
+        <p>Con <i>n</i> bits de host: <b>hosts = 2<sup>n</sup> − 2</b> (se restan red y broadcast). Red = bits de host a 0. Broadcast = bits de host a 1.</p>
+        <p><b>Subnetting</b>: cada bit que tomas prestado duplica las subredes y divide los hosts a la mitad. Salto entre subredes = 2<sup>bits de host</sup>. <b>VLSM</b>: asigna primero los bloques grandes.</p>
+      </div>
+      <div class="tw"><table>
+        <tr><th>CIDR</th><th>Máscara</th><th>Hosts</th><th>Salto</th></tr>
+        <tr><td>/24</td><td>255.255.255.0</td><td>254</td><td>256</td></tr>
+        <tr><td>/25</td><td>255.255.255.128</td><td>126</td><td>128</td></tr>
+        <tr><td>/26</td><td>255.255.255.192</td><td>62</td><td>64</td></tr>
+        <tr><td>/27</td><td>255.255.255.224</td><td>30</td><td>32</td></tr>
+        <tr><td>/28</td><td>255.255.255.240</td><td>14</td><td>16</td></tr>
+        <tr><td>/29</td><td>255.255.255.248</td><td>6</td><td>8</td></tr>
+        <tr><td>/30</td><td>255.255.255.252</td><td>2</td><td>4</td></tr>
+      </table></div>
+    </div>
+    <div class="note key"><b class="k">Conecta con DHCP</b><p>La red del curso es <code>192.168.77.0/27</code>: red <code>.0</code>, hosts <code>.1</code>–<code>.30</code>, broadcast <code>.31</code>. Por eso el <code>range</code> de ejemplo llega hasta <code>.30</code> y no más.</p></div>
+  </div>
+
+  <div class="block" id="t0-sub">
+    <h3><span class="sid">práctica</span>Entrenador de subredes</h3>
+    <p class="muted">Calcula a mano y comprueba. Escribe las IP completas.</p>
+    <div class="row"><span class="big-ip" id="sub-q">—</span><button class="btn" id="sub-new" type="button">Otra IP</button></div>
+    <div class="sub-grid">
+      <label>Máscara decimal<input type="text" id="sub-mask" inputmode="decimal" autocomplete="off"></label>
+      <label>Dirección de red<input type="text" id="sub-net" inputmode="decimal" autocomplete="off"></label>
+      <label>Broadcast<input type="text" id="sub-bc" inputmode="decimal" autocomplete="off"></label>
+      <label>Primer host<input type="text" id="sub-first" inputmode="decimal" autocomplete="off"></label>
+      <label>Último host<input type="text" id="sub-last" inputmode="decimal" autocomplete="off"></label>
+      <label>Hosts utilizables<input type="text" id="sub-hosts" inputmode="numeric" autocomplete="off"></label>
+    </div>
+    <div class="row"><button class="btn primary" id="sub-check" type="button">Comprobar</button><button class="btn" id="sub-show" type="button">Ver solución</button><span id="sub-msg" class="muted"></span></div>
+  </div>
+
+  <div class="block" id="t0-nat">
+    <h3><span class="sid">0.8</span>IP pública, privada, NAT y Port Forwarding</h3>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Rangos privados</th></tr>
+        <tr><td><code>10.0.0.0</code> – <code>10.255.255.255</code></td></tr>
+        <tr><td><code>172.16.0.0</code> – <code>172.31.255.255</code></td></tr>
+        <tr><td><code>192.168.0.0</code> – <code>192.168.255.255</code></td></tr>
+      </table></div>
+      <div class="prose">
+        <p><b>NAT</b>: varios equipos con IP privada salen a Internet con una sola IP pública. La conexión la <b>inicia alguien de dentro</b>.</p>
+        <p><b>Port Forwarding</b>: regla fija para que una conexión que <b>empieza desde fuera</b> llegue a un equipo interno. Ej.: puerto 8080 del router → <code>192.168.1.50:80</code>. Técnicamente es DNAT.</p>
+        <div class="note trap"><b class="k">Trampa</b><p>Ojo con <code>172.32.x.x</code>: es pública. El rango privado acaba en 172.31. Y dos redes distintas pueden repetir el mismo rango privado sin problema.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-arp">
+    <h3><span class="sid">0.9 · 0.12</span>ARP, MAC y tramas</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p><b>ARP</b>: «tengo esta IP, ¿qué MAC tiene?». Request en <b>broadcast</b>, Reply en <b>unicast</b>, se guarda en la caché ARP (<code>arp -a</code>).</p>
+        <p><b>ARP nunca cruza un router.</b> Para hablar con otra red, haces ARP de tu <b>puerta de enlace</b>, no de la IP lejana.</p>
+      </div>
+      <div class="prose">
+        <p><b>MAC</b>: 6 bytes en hexadecimal. Los 3 primeros son el fabricante. Trama: MAC destino, MAC origen, tipo, datos, control de errores.</p>
+        <p>El switch aprende MAC→puerto. Si no conoce el destino, <b>inunda</b> por todos menos el de entrada. Al cruzar un router se construye una trama nueva: <b>la MAC cambia en cada salto, la IP no</b>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-diag">
+    <h3><span class="sid">0.10 · 0.11</span>Diagnóstico</h3>
+    <div class="grid2">
+      <ol class="steps" style="--c:var(--t0);--cs:var(--t0-soft)">
+        <li><div><code>ipconfig</code> / <code>ip a</code><span class="muted">¿Tengo IP correcta?</span></div></li>
+        <li><div><code>ping</code> a la puerta de enlace<span class="muted">¿Llego a mi router?</span></div></li>
+        <li><div><code>ping 8.8.8.8</code><span class="muted">¿Salgo a Internet?</span></div></li>
+        <li><div><code>ping google.com</code><span class="muted">¿Funciona el DNS?</span></div></li>
+      </ol>
+      <div class="prose">
+        <div class="note key"><b class="k">APIPA</b><p><code>169.254.x.x</code> = Windows no ha conseguido respuesta de ningún servidor DHCP.</p></div>
+        <p><code>tracert</code>/<code>traceroute</code>: cada salto. Si un salto da <code>* * *</code> y el siguiente responde, la red funciona (ese router no contesta al diagnóstico).</p>
+        <p><code>netstat</code>: <b>LISTENING</b> = servicio esperando; <b>ESTABLISHED</b> = conexión activa. Un ping fallido no siempre es falta de conexión: hay firewalls que bloquean ICMP.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-tcp">
+    <h3><span class="sid">0.13</span>TCP, UDP y puertos</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p><b>TCP</b>: conexión previa (saludo de 3 pasos), fiable, en orden, retransmite. <b>UDP</b>: sin conexión, sin garantías, rápido.</p>
+        <p>Puertos 0–65535; <b>bien conocidos 0–1023</b>. El servidor usa un puerto fijo; el cliente, uno efímero aleatorio.</p>
+        <p>DNS y DHCP usan UDP porque los mensajes son cortos: si se pierde uno, es más barato volver a preguntar.</p>
+      </div>
+      <div class="tw"><table>
+        <tr><th>Puerto</th><th>Servicio</th><th>Transporte</th></tr>
+        <tr><td>53</td><td>DNS</td><td>UDP (TCP para transferencias de zona)</td></tr>
+        <tr><td>67 / 68</td><td>DHCP (servidor / cliente)</td><td>UDP</td></tr>
+        <tr><td>80</td><td>HTTP</td><td>TCP</td></tr>
+        <tr><td>443</td><td>HTTPS</td><td>TCP</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-wifi">
+    <h3><span class="sid">0.14 · 0.15</span>Wifi y seguridad básica</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p><b>SSID</b>: el nombre de la red. <b>Canal</b>: trozo de espectro; redes cercanas en el mismo canal se interfieren.</p>
+        <p><b>2,4 GHz</b>: más alcance, más congestión. <b>5 GHz</b>: menos alcance, más ancho de banda. Las letras de 802.11 (n, ac, ax) son generaciones.</p>
+        <div class="note trap"><b class="k">Trampa</b><p>Ocultar el SSID <b>no es seguridad</b>. La seguridad la da el cifrado (WPA2/WPA3).</p></div>
+      </div>
+      <div class="prose">
+        <p><b>Cortafuegos</b>: filtra por IP, puerto, protocolo y sentido. <b>Denegar por defecto</b> (más segura) frente a <b>permitir por defecto</b>.</p>
+        <p>Amenazas: <b>fuerza bruta</b> (probar contraseñas), <b>escaneo de puertos</b>, <b>DoS</b> (saturar el servicio).</p>
+        <p>«El servicio está en LISTENING pero el cliente no llega» suele ser el firewall.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-linux">
+    <h3><span class="sid">0.16–0.18</span>Linux</h3>
+    <div class="grid3">
+      <div class="prose"><h4>Archivos</h4><p><code>pwd</code> <code>ls -l</code> <code>cd</code> <code>mkdir</code> <code>touch</code> <code>cp</code> <code>mv</code> <code>rm -r</code>. Ruta absoluta empieza por <code>/</code>. <b><code>rm</code> no tiene papelera.</b></p><p><code>/etc</code> = configuración de servicios · <code>/var/log</code> = registros · <code>/home</code> = usuarios.</p></div>
+      <div class="prose"><h4>Permisos</h4><p>r=4, w=2, x=1 para propietario / grupo / otros. <code>755</code> = rwx r-x r-x. <code>640</code> = rw- r-- ---.</p><p><code>chmod</code> permisos, <code>chown usuario:grupo</code> propietario. <code>sudo</code> puntual mejor que ser root siempre. <code>777</code> nunca como «arreglo».</p></div>
+      <div class="prose"><h4>Red</h4><p><code>ip a</code> IPs · <code>ip link</code> estado · <code>ip route</code> puerta de enlace · <code>ip addr add 192.168.77.5/27 dev enp0s3</code> asigna IP.</p><p><code>ip addr add</code> es <b>temporal</b>: se pierde al reiniciar.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="t0-vm">
+    <h3><span class="sid">0.19 · 0.20</span>Virtualización y montaje profesional</h3>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Modo de red</th><th>Qué alcanza</th></tr>
+        <tr><td>NAT</td><td>Sale a Internet por el NAT del hipervisor. No es alcanzable desde fuera.</td></tr>
+        <tr><td>Bridge (puente)</td><td>Conectada a la red física real, como un equipo más. El único para prácticas cruzadas entre PCs.</td></tr>
+        <tr><td>Solo-anfitrión</td><td>Red aislada entre el anfitrión y sus VMs, sin Internet.</td></tr>
+      </table></div>
+      <div class="prose">
+        <div class="note trap"><b class="k">El error que más tiempo hace perder</b><p>Servidor y cliente en <b>modos de red distintos</b>: nada funciona aunque cada uno esté bien configurado. Primera pregunta siempre: ¿mismo modo de red?</p></div>
+        <p>Montaje profesional en 5 pasos: <b>diseño → montaje → configuración → verificación → documentación</b>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DHCP ============ -->
+<section class="view dhcp" id="v-dhcp" data-view="dhcp" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Tema 1 · DHCP · isc-dhcp-server en Debian 13</span>
+    <h2>DHCP: repartir la configuración de red sin tocar cada equipo</h2>
+    <p class="lead">Un servidor central entrega a cada equipo su IP, máscara, puerta de enlace y DNS. Sin él, alguien tendría que escribirlo a mano en cada PC, con el riesgo de repetir IPs.</p>
+    <span class="pts">2 puntos teoría · 1 punto práctica</span>
+  </div>
+  <div class="toc"><a href="#dhcp-dora">DORA</a><a href="#dhcp-lease">Concesión</a><a href="#dhcp-inst">Instalación</a><a href="#dhcp-conf">dhcpd.conf</a><a href="#dhcp-cli">Clientes</a><a href="#dhcp-diag">Diagnóstico</a><a href="#dhcp-bridge">Montaje cruzado</a></div>
+
+  <div class="block" id="dhcp-dora">
+    <h3><span class="sid">1.1</span>DORA: los 4 mensajes</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 640 250" role="img" aria-label="Diagrama DORA entre cliente y servidor">
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ink)"/></marker><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--dhcp)"/></marker></defs>
+        <rect x="20" y="12" width="150" height="38" rx="6" fill="var(--bg)" stroke="var(--line)"/>
+        <text x="95" y="36" text-anchor="middle" font-size="13" fill="var(--ink)">Cliente (sin IP)</text>
+        <rect x="470" y="12" width="150" height="38" rx="6" fill="var(--dhcp-soft)" stroke="var(--dhcp)"/>
+        <text x="545" y="36" text-anchor="middle" font-size="13" fill="var(--dhcp)">Servidor DHCP</text>
+        <line x1="95" y1="50" x2="95" y2="236" stroke="var(--line)" stroke-dasharray="4 4"/>
+        <line x1="545" y1="50" x2="545" y2="236" stroke="var(--line)" stroke-dasharray="4 4"/>
+        <line x1="97" y1="80" x2="541" y2="80" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+        <text x="320" y="72" text-anchor="middle" font-size="12" fill="var(--ink)">1 DISCOVER · broadcast · «¿hay algún DHCP?»</text>
+        <line x1="543" y1="122" x2="99" y2="122" stroke="var(--dhcp)" stroke-width="1.6" marker-end="url(#ar2)"/>
+        <text x="320" y="114" text-anchor="middle" font-size="12" fill="var(--dhcp)">2 OFFER · «te ofrezco 192.168.77.10»</text>
+        <line x1="97" y1="164" x2="541" y2="164" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+        <text x="320" y="156" text-anchor="middle" font-size="12" fill="var(--ink)">3 REQUEST · «quiero esa IP»</text>
+        <line x1="543" y1="206" x2="99" y2="206" stroke="var(--dhcp)" stroke-width="1.6" marker-end="url(#ar2)"/>
+        <text x="320" y="198" text-anchor="middle" font-size="12" fill="var(--dhcp)">4 ACK · confirmada + máscara, gateway, DNS</text>
+        <text x="320" y="236" text-anchor="middle" font-size="11" fill="var(--muted)">UDP · servidor puerto 67 · cliente puerto 68</text>
+      </svg>
+    </div>
+    <div class="grid2">
+      <div class="prose">
+        <p><b>Discover</b> (cliente) → <b>Offer</b> (servidor) → <b>Request</b> (cliente) → <b>Acknowledge</b> (servidor).</p>
+        <p>Va en <b>broadcast</b> porque el cliente todavía no tiene IP y no sabe a quién preguntar. Por eso <b>DHCP solo funciona dentro del mismo dominio de difusión</b>, salvo que se use un <b>relay DHCP</b> (fuera del tema).</p>
+      </div>
+      <div class="prose">
+        <div class="note trap"><b class="k">Trampa</b><p>DHCP no reparte solo la IP: en el mismo DORA entrega <b>máscara, puerta de enlace, DNS</b> y otras opciones.</p></div>
+        <div class="note trap"><b class="k">Trampa</b><p>Si el cliente manda Discover y nadie responde, el problema <b>no</b> es su puerta de enlace: aún no tiene ninguna. Acabará con APIPA <code>169.254.x.x</code>.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="dhcp-lease">
+    <h3><span class="sid">1.1.2</span>Concesión (lease): una IP prestada</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>La IP se presta durante un tiempo configurable. Antes de que caduque, el cliente la <b>renueva</b> solo, sin que el usuario se entere.</p>
+        <p>Consecuencia práctica: si cambias algo en el servidor, un cliente que ya tenía IP <b>sigue con la configuración antigua</b> hasta renovar. Para comprobar un cambio hay que <b>forzar la renovación</b> en el cliente.</p>
+      </div>
+      <div class="note pro"><b class="k">Extra pro · tiempos de renovación</b><p>El cliente intenta renovar con su servidor al <b>50 %</b> de la concesión (T1) y, si no contesta, pregunta a cualquier servidor al <b>87,5 %</b> (T2). En <code>dhcpd.conf</code> se fija con <code>default-lease-time 600;</code> y <code>max-lease-time 7200;</code> (en segundos). Las concesiones activas se guardan en <code>/var/lib/dhcp/dhcpd.leases</code>.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="dhcp-inst">
+    <h3><span class="sid">1.2</span>Instalar isc-dhcp-server</h3>
+    <ol class="steps">
+      <li><div><b>Instalar</b><pre class="code" data-file="Servidor Debian">sudo apt update
+sudo apt install isc-dhcp-server</pre><span class="muted">Es normal que el servicio salga <code>failed</code> al instalarlo: todavía no tiene ningún ámbito configurado.</span></div></li>
+      <li><div><b>Decirle en qué interfaz escuchar</b><div data-ann="default"></div><span class="muted">Mira el nombre real con <code>ip a</code>. Si no coincide, el servicio puede quedar «active» y <b>no repartir nada</b>: un fallo silencioso.</span></div></li>
+      <li><div><b>Configurar el ámbito</b> en <code>/etc/dhcp/dhcpd.conf</code> (abajo).</div></li>
+      <li><div><b>Reiniciar y comprobar</b><pre class="code" data-file="Servidor Debian">sudo systemctl restart isc-dhcp-server
+sudo systemctl status isc-dhcp-server
+sudo systemctl enable isc-dhcp-server
+sudo journalctl -u isc-dhcp-server -f</pre></div></li>
+    </ol>
+    <div class="note pro"><b class="k">Extra pro · validar antes de reiniciar</b><p><code>sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf</code> comprueba la sintaxis sin tocar el servicio y te dice la línea del error. <code>sudo ss -ulpn | grep :67</code> confirma que dhcpd está escuchando.</p></div>
+  </div>
+
+  <div class="block" id="dhcp-conf">
+    <h3><span class="sid">1.3–1.5</span>El archivo <code>/etc/dhcp/dhcpd.conf</code>, línea a línea</h3>
+    <p class="muted">Este es el archivo del examen práctico. Fíjate en cada <code>;</code> y en cada llave.</p>
+    <div data-ann="dhcpconf"></div>
+    <div class="grid2">
+      <div class="note key"><b class="k">Ámbito (scope)</b><p>Red + rango + opciones. El <code>range</code> casi nunca cubre toda la red: se deja un hueco para IPs fijas (el servidor, impresoras, reservas). Si no, DHCP podría dar una IP que ya usa un equipo fijo.</p></div>
+      <div class="note key"><b class="k">Reserva</b><p>IP fija por <b>MAC</b>, porque es lo único que el cliente lleva desde el primer Discover. La IP reservada <b>no tiene por qué estar dentro del range</b>; lo habitual es ponerla fuera. Si cambias la tarjeta de red de la VM, cambia la MAC y la reserva deja de aplicarse.</p></div>
+      <div class="note key"><b class="k">Varios ámbitos</b><p>Varios bloques <code>subnet</code> en el mismo archivo, cada uno con su rango, su gateway y sus reservas. Pero el servidor necesita <b>alcance real</b> a cada red: una interfaz en ella (o un relay). Escribir el bloque no basta.</p></div>
+      <div class="note trap"><b class="k">Tras editar</b><p>Siempre <code>sudo systemctl restart isc-dhcp-server</code>. Si no arranca: <code>journalctl -u isc-dhcp-server</code> te dice el error de sintaxis.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="dhcp-cli">
+    <h3><span class="sid">1.6 · 1.7</span>Comprobar desde el cliente</h3>
+    <div class="grid2">
+      <div class="prose"><h4>Windows 10</h4>
+        <pre class="code" data-file="cmd">ipconfig /release
+ipconfig /renew
+ipconfig /all</pre>
+        <p><code>/release</code> suelta la IP, <code>/renew</code> fuerza un DORA nuevo, <code>/all</code> enseña IP, máscara, gateway, DNS y servidor DHCP.</p>
+      </div>
+      <div class="prose"><h4>Ubuntu (NetworkManager)</h4>
+        <pre class="code" data-file="terminal">nmcli connection show
+nmcli connection down "Wired connection 1"
+nmcli connection up "Wired connection 1"
+nmcli device show</pre>
+        <p>Mira primero el nombre real con <code>connection show</code>: en español puede ser «Conexión cableada 1». Con un nombre mal escrito, el comando no hace nada.</p>
+      </div>
+    </div>
+    <div class="note pro"><b class="k">Extra pro · Debian sin entorno gráfico</b><p><code>sudo dhclient -r enp0s3</code> suelta la IP y <code>sudo dhclient -v enp0s3</code> la pide enseñando los mensajes DORA en pantalla. Muy útil para ver si llega el Offer.</p></div>
+  </div>
+
+  <div class="block" id="dhcp-diag">
+    <h3><span class="sid">1.8</span>Diagnóstico: de lo general a lo concreto</h3>
+    <div class="tw"><table>
+      <tr><th>Síntoma</th><th>Causa probable</th><th>Dónde mirar</th></tr>
+      <tr><td>El servicio no arranca</td><td>Error de sintaxis en <code>dhcpd.conf</code> o interfaz mal indicada</td><td><code>journalctl</code> y <code>/etc/default/isc-dhcp-server</code></td></tr>
+      <tr><td>El cliente recibe APIPA</td><td>Servicio caído o el ámbito no cubre esa red</td><td><code>systemctl status</code> y el bloque <code>subnet</code></td></tr>
+      <tr><td>No recibe la IP reservada</td><td>MAC mal escrita en la reserva</td><td><code>ip a</code> / <code>ipconfig /all</code> en el cliente y comparar</td></tr>
+      <tr><td>Un ámbito no reparte nada</td><td>El servidor no tiene alcance real a esa red</td><td>Interfaces del servidor</td></tr>
+      <tr><td>Cambias el servidor y el cliente no lo nota</td><td>Concesión antigua todavía válida</td><td>Forzar <code>/release</code> + <code>/renew</code></td></tr>
+    </table></div>
+    <div class="note key"><b class="k">Orden correcto</b><p>1) ¿El servicio está activo? 2) ¿El ámbito cubre esa red? 3) Solo al final, la reserva concreta. Y antes de nada: ¿afecta a un cliente o a todos?</p></div>
+  </div>
+
+  <div class="block" id="dhcp-bridge">
+    <h3><span class="sid">1.9</span>Montaje cruzado en modo bridge</h3>
+    <div class="prose">
+      <p>Para que tu servidor atienda al cliente de un compañero en otro PC físico hace falta <b>modo bridge</b>. Riesgo: si hay <b>dos servidores DHCP</b> activos en la misma red, el cliente se queda con el que responda primero y puede recibir una IP de otro ámbito. Regla: <b>un solo servidor DHCP activo</b> por prueba, y nunca conectado a la red del centro.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DNS ============ -->
+<section class="view dns" id="v-dns" data-view="dns" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Tema 2 · DNS · bind9 en Debian 13</span>
+    <h2>DNS: traducir nombres a IP, y quién decide cada nombre</h2>
+    <p class="lead">Lo que más puntúa. Primero la teoría (cómo está organizado Internet), después montar bind9 de cero y probarlo desde Windows y Ubuntu.</p>
+    <span class="pts">3 puntos teoría · 2 puntos práctica</span>
+  </div>
+  <div class="toc"><a href="#dns-arbol">Árbol</a><a href="#dns-gob">Quién manda</a><a href="#dns-raiz">Servidores raíz</a><a href="#dns-dominio">Registrar dominio</a><a href="#dns-zona">Zona y servidor</a><a href="#dns-res">Recursiva e iterativa</a><a href="#dns-inst">Instalar bind9</a><a href="#dns-files">Archivos</a><a href="#dns-rr">Registros</a><a href="#dns-guia">Montaje paso a paso</a><a href="#dns-sec">Secundario y delegación</a><a href="#dns-fwd">Forwarders</a><a href="#dns-cli">Clientes</a><a href="#dns-diag">Diagnóstico</a><a href="#dns-int">DHCP + DNS</a></div>
+
+  <div class="block" id="dns-arbol">
+    <h3><span class="sid">2.1</span>El árbol DNS</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>Todos los nombres de Internet cuelgan de <b>un único árbol</b>:</p>
+        <ul>
+          <li><b>Raíz</b> <code>.</code> — el punto final que casi nunca se escribe.</li>
+          <li><b>TLD</b>: genéricos (gTLD: <code>.com</code> <code>.org</code> <code>.app</code> <code>.madrid</code>) y de país (ccTLD, 2 letras: <code>.es</code> <code>.fr</code>).</li>
+          <li><b>Dominio</b>: lo que contrata alguien, <code>bodegasalmunia.es</code>.</li>
+          <li>Por debajo, lo que decida el dueño: <b>hosts</b> (<code>www</code>, <code>correo</code>) y <b>subdominios</b> (<code>sanlucar</code>).</li>
+        </ul>
+      </div>
+      <div class="prose">
+        <p>Se lee de <b>derecha a izquierda</b>: <code>tienda.sanlucar.bodegasalmunia.es.</code> Completo y con punto final es un <b>FQDN</b>. Cada parte entre puntos es una <b>etiqueta</b>.</p>
+        <p>Cada nudo tiene un responsable que puede <b>delegar</b> una rama en otro.</p>
+        <div class="note trap"><b class="k">Trampa</b><p>El árbol <b>no es la red física</b>: dice quién decide sobre un nombre, no dónde está la máquina. Y <code>.local</code> no cuelga de la raíz pública: por eso se usa en el aula.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="dns-gob">
+    <h3><span class="sid">2.1.2</span>Quién gobierna cada nivel</h3>
+    <div class="tw"><table>
+      <tr><th>Quién</th><th>Qué gestiona</th><th>Ejemplo</th></tr>
+      <tr><td><b>ICANN / IANA</b></td><td>La raíz: qué TLD existen y a quién se delegan. IANA es la función técnica dentro de ICANN.</td><td>Crear <code>.madrid</code></td></tr>
+      <tr><td><b>Registro</b> (registry)</td><td>Un TLD entero: su lista de dominios y su zona</td><td>Red.es → <code>.es</code> · Verisign → <code>.com</code> · PIR → <code>.org</code></td></tr>
+      <tr><td><b>Registrador</b> (agente registrador)</td><td>Vende, cobra, tramita y renueva</td><td>Empresas acreditadas por el registro</td></tr>
+      <tr><td><b>Titular</b></td><td>Un dominio concreto</td><td>La empresa dueña de <code>bodegasalmunia.es</code></td></tr>
+      <tr><td><b>Equipo técnico del titular</b></td><td>Todo lo que cuelga del dominio</td><td><code>www</code>, <code>correo</code>, <code>sanlucar</code></td></tr>
+    </table></div>
+    <div class="note trap"><b class="k">Trampa</b><p>Ni el registro ni el registrador ven ni aprueban tus nombres internos. El registro solo apunta <b>qué servidores mandan</b> sobre tu dominio.</p></div>
+  </div>
+
+  <div class="grid2">
+    <div class="block" id="dns-raiz">
+      <h3><span class="sid">2.1.3</span>Servidores raíz</h3>
+      <div class="prose">
+        <p><b>13 nombres</b> (<code>a.root-servers.net</code> … <code>m.root-servers.net</code>), de una docena de organizaciones, pero <b>unas 2.000 copias</b> por el mundo gracias a <b>anycast</b>: la misma IP anunciada desde muchos sitios; cada consulta llega a la copia más cercana.</p>
+        <p>Son servidores normales en racks, muchos en puntos neutros. Nunca dan la respuesta final: solo <b>referencias</b> a los TLD. La zona raíz es pequeña (~1.500 TLD).</p>
+        <p>¿Por qué tantas copias? <b>Rapidez, resistencia y reparto de carga</b>. Lista y mapa en <code>root-servers.org</code>.</p>
+      </div>
+    </div>
+    <div class="block" id="dns-dominio">
+      <h3><span class="sid">2.2</span>Registrar un dominio</h3>
+      <div class="prose">
+        <p>No se compra: se <b>alquila</b> por años, renovable. Si caduca, web y correo dejan de funcionar aunque las máquinas sigan encendidas.</p>
+        <p>Pasos: elegir nombre → comprobar libre → contratar con un registrador → datos del titular → <b>indicar los NS</b> → renovar.</p>
+        <p>El registro de <code>.es</code> solo escribe la <b>delegación</b> (líneas NS). Si el NS está dentro del propio dominio, también su IP: <b>registro glue</b>.</p>
+        <p><code>whois wikipedia.org</code> (o RDAP en <code>lookup.icann.org</code>; para <code>.es</code>, <code>dominios.es</code>). Datos personales ocultos por el <b>RGPD</b>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Cuatro papeles que no hay que confundir</h3>
+    <div class="tw"><table>
+      <tr><th>Papel</th><th>Qué hace</th></tr>
+      <tr><td>Registro</td><td>Gestiona el TLD entero (Red.es para <code>.es</code>)</td></tr>
+      <tr><td>Registrador</td><td>Vende, cobra y renueva el dominio</td></tr>
+      <tr><td>Proveedor de DNS</td><td>Tiene los servidores NS donde están tus zonas</td></tr>
+      <tr><td>Alojamiento (hosting)</td><td>Tiene las máquinas de tu web o tu correo</td></tr>
+    </table></div>
+    <p class="muted">Pueden ser cuatro empresas o la misma. Cambiar de una no obliga a cambiar de las demás.</p>
+  </div>
+
+  <div class="block" id="dns-zona">
+    <h3><span class="sid">2.3 · 2.4</span>Subdominios, zonas y servidores</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p><b>Zona</b>: el trozo del árbol que gestiona un mismo responsable como un único conjunto de datos (en bind9, un archivo). Empieza en un nudo y baja hasta donde empiece una delegación.</p>
+        <p><b>Dominio ≠ zona</b>: el dominio <code>bodegasalmunia.es</code> es todo lo que cuelga; la zona es solo lo que <b>no</b> se ha delegado.</p>
+        <p><b>¿Delegar un subdominio?</b> La pregunta es siempre: <b>¿quién va a administrar esos nombres?</b> Si eres tú, no delegues. Si es otro equipo que necesita autonomía, delega.</p>
+        <p>Criterios para repartir: por sede, por departamento, por equipo de trabajo, por servicio.</p>
+      </div>
+      <div class="prose">
+        <p><b>Servidor DNS</b>: una máquina con software DNS que carga una o varias zonas. No hay relación uno a uno:</p>
+        <ul>
+          <li>Un servidor sirve muchas zonas (un proveedor sirve miles).</li>
+          <li>Una zona está en varios servidores: 1 <b>primario</b> (donde se edita) y uno o más <b>secundarios</b> (copias). En Internet, <b>mínimo 2</b>, en redes distintas.</li>
+          <li>El nombre del servidor no tiene que estar en la zona que sirve: <code>ns2.dnsproveedor.net</code> sirve <code>bodegasalmunia.es</code>.</li>
+        </ul>
+        <p>Primario/secundario es un papel <b>respecto a una zona</b>, no de la máquina.</p>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="note key"><b class="k">Autoritativo</b><p>Tiene los datos de la zona (como primario o secundario) y responde de primera mano. Su respuesta lleva la marca <code>aa</code>.</p></div>
+      <div class="note key"><b class="k">Caché / recursivo</b><p>Para lo que no es suyo, pregunta a otros, guarda la respuesta en caché según el <b>TTL</b>. Tu bind9 hará los dos papeles: autoritativo de <code>practicas.local</code> y caché para el resto.</p></div>
+    </div>
+    <div class="note key"><b class="k">Caso Bodegas La Almunia</b><p><code>oficina</code> lo administra el informático de Jerez → no se delega. <code>sanlucar</code> tiene su técnico → se delega. <code>lab</code> cambia cada mes y lo lleva I+D → se delega. Resultado: <b>un dominio, tres zonas</b>, cada una con al menos dos servidores.</p></div>
+  </div>
+
+  <div class="block" id="dns-res">
+    <h3><span class="sid">2.5</span>Consulta recursiva y resolución iterativa</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 680 270" role="img" aria-label="El cliente hace una consulta recursiva a su servidor DNS, que resuelve de forma iterativa preguntando a raíz, TLD y autoritativo">
+        <defs><marker id="br" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ink)"/></marker><marker id="bb" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--dns)"/></marker></defs>
+        <rect x="16" y="110" width="110" height="44" rx="6" fill="var(--bg)" stroke="var(--line)"/>
+        <text x="71" y="137" text-anchor="middle" font-size="12" fill="var(--ink)">Tu PC</text>
+        <rect x="212" y="110" width="140" height="44" rx="6" fill="var(--dns-soft)" stroke="var(--dns)"/>
+        <text x="282" y="130" text-anchor="middle" font-size="12" fill="var(--dns)">Tu servidor DNS</text>
+        <text x="282" y="146" text-anchor="middle" font-size="10" fill="var(--muted)">(caché/recursivo)</text>
+        <line x1="128" y1="124" x2="208" y2="124" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#br)"/>
+        <line x1="210" y1="142" x2="130" y2="142" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#br)"/>
+        <text x="168" y="104" text-anchor="middle" font-size="10.5" fill="var(--ink)">recursiva</text>
+        <text x="168" y="170" text-anchor="middle" font-size="10" fill="var(--muted)">1 pregunta, 1 respuesta</text>
+        <rect x="470" y="14" width="190" height="40" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="565" y="38" text-anchor="middle" font-size="12" fill="var(--ink)">Raíz  .</text>
+        <rect x="470" y="112" width="190" height="40" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="565" y="136" text-anchor="middle" font-size="12" fill="var(--ink)">TLD  .org</text>
+        <rect x="470" y="210" width="190" height="40" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="565" y="234" text-anchor="middle" font-size="12" fill="var(--ink)">Autoritativo wikipedia.org</text>
+        <line x1="354" y1="114" x2="466" y2="40" stroke="var(--dns)" stroke-width="1.4" marker-end="url(#bb)"/>
+        <text x="398" y="64" font-size="10.5" fill="var(--dns)">«pregunta a .org»</text>
+        <line x1="354" y1="132" x2="466" y2="132" stroke="var(--dns)" stroke-width="1.4" marker-end="url(#bb)"/>
+        <text x="372" y="124" font-size="10.5" fill="var(--dns)">«pregunta a wikipedia»</text>
+        <line x1="354" y1="150" x2="466" y2="224" stroke="var(--dns)" stroke-width="1.4" marker-end="url(#bb)"/>
+        <text x="392" y="214" font-size="10.5" fill="var(--dns)">IP final</text>
+        <text x="410" y="262" text-anchor="middle" font-size="10.5" fill="var(--muted)">iterativa: referencias paso a paso</text>
+      </svg>
+    </div>
+    <div class="tw"><table>
+      <tr><th></th><th>Quién pregunta</th><th>Qué espera</th></tr>
+      <tr><td><b>Recursiva</b></td><td>Tu PC → su servidor DNS</td><td>La respuesta final, sin pasos intermedios. Es lo que hacen el navegador y el sistema.</td></tr>
+      <tr><td><b>Iterativa</b></td><td>El servidor DNS → raíz → TLD → autoritativo</td><td>En cada paso, la respuesta final o una <b>referencia</b> (referral): «no lo sé, pregunta a este».</td></tr>
+    </table></div>
+    <div class="note trap"><b class="k">Trampa</b><p>El cliente <b>no participa</b> en la búsqueda: para él es una caja negra. Y los servidores raíz y TLD casi nunca aceptan consultas recursivas: solo dan referencias. bind9 trae precargada la lista de raíces (<b>root hints</b>).</p></div>
+  </div>
+
+  <div class="block" id="dns-inst">
+    <h3><span class="sid">2.6</span>Instalar bind9</h3>
+    <pre class="code" data-file="Servidor Debian">sudo apt install bind9 bind9utils bind9-doc
+sudo systemctl status bind9
+sudo systemctl restart bind9</pre>
+    <div class="grid2">
+      <div class="note key"><b class="k">Nombres</b><p>El paquete es <b>bind9</b>, pero el proceso se llama <b>named</b>. <code>bind9utils</code> trae <code>named-checkconf</code> y <code>named-checkzone</code>.</p></div>
+      <div class="note trap"><b class="k">Por qué validar siempre</b><p>Un error de sintaxis puede impedir que <code>named</code> arranque y deja caída <b>toda</b> la resolución, no solo la zona con el error.</p></div>
+    </div>
+    <div class="note pro"><b class="k">Extra pro</b><p>En Debian 13 la unidad real de systemd es <code>named</code> y <code>bind9</code> es un alias. Si <code>journalctl -u bind9</code> no enseña nada, usa <code>journalctl -u named</code> (es el que usa la práctica guiada). <code>sudo rndc reload</code> recarga zonas sin reiniciar el servicio.</p></div>
+  </div>
+
+  <div class="block" id="dns-files">
+    <h3><span class="sid">2.6.2</span>Los archivos de <code>/etc/bind/</code></h3>
+    <div class="tw"><table>
+      <tr><th>Archivo</th><th>Para qué sirve</th></tr>
+      <tr><td><code>named.conf</code></td><td>Principal. Solo incluye a los otros tres.</td></tr>
+      <tr><td><code>named.conf.options</code></td><td>Opciones globales: <b>forwarders</b>, <code>listen-on</code>, DNSSEC…</td></tr>
+      <tr><td><code>named.conf.local</code></td><td><b>Tus zonas</b> (<code>practicas.local</code>). Aquí y no en otro sitio.</td></tr>
+      <tr><td><code>named.conf.default-zones</code></td><td>Zonas que trae Debian (localhost…). No se toca.</td></tr>
+      <tr><td><code>db.practicas.local</code></td><td>El archivo de zona con los registros (lo creas tú).</td></tr>
+    </table></div>
+    <p class="muted">Se separan para que una actualización del paquete no pise tus zonas.</p>
+  </div>
+
+  <div class="block" id="dns-rr">
+    <h3><span class="sid">2.7 · 2.8 · 2.12</span>Tipos de registro</h3>
+    <div class="tw"><table>
+      <tr><th>Registro</th><th>Para qué</th><th>Ejemplo</th><th>Regla</th></tr>
+      <tr><td><b>SOA</b></td><td>Metadatos: primario, contacto, serial, temporizadores</td><td><code>@ IN SOA ns.practicas.local. admin.practicas.local. (…)</code></td><td>Obligatorio. Uno por zona.</td></tr>
+      <tr><td><b>NS</b></td><td>Qué servidores son autoritativos</td><td><code>@ IN NS ns.practicas.local.</code></td><td>Obligatorio. El nombre del NS necesita su A.</td></tr>
+      <tr><td><b>A</b></td><td>Nombre → IPv4</td><td><code>servidor IN A 192.168.77.5</code></td><td>El más usado.</td></tr>
+      <tr><td><b>CNAME</b></td><td>Alias → otro nombre</td><td><code>www IN CNAME servidor.practicas.local.</code></td><td>Nunca a una IP. No en <code>@</code>. Ese nombre no puede tener otro registro.</td></tr>
+      <tr><td><b>MX</b></td><td>Servidor de correo del dominio</td><td><code>@ IN MX 10 servidor.practicas.local.</code></td><td><b>Prioridad obligatoria</b> (menor = preferido). Apunta a un nombre con A, no a IP ni CNAME.</td></tr>
+      <tr><td><b>TXT</b></td><td>Texto libre: verificación, SPF, documentación</td><td><code>@ IN TXT "Red de practicas SRI"</code></td><td>Entre comillas.</td></tr>
+    </table></div>
+    <div class="grid2">
+      <div class="note key"><b class="k"><code>@</code> y el punto final</b><p><code>@</code> = el nombre de la zona (<code>practicas.local.</code>). Nombre <b>sin punto</b> = relativo, bind9 le añade la zona. <b>Con punto</b> = completo. <code>ns.practicas.local</code> sin punto se convierte en <code>ns.practicas.local.practicas.local.</code></p></div>
+      <div class="note key"><b class="k">Serial</b><p>Súbelo en cada cambio. Convención <b>AAAAMMDDNN</b>: <code>2026110301</code>, <code>2026110302</code>… Es lo que usa el secundario para saber que hay cambios.</p></div>
+      <div class="note key"><b class="k">¿Por qué CNAME?</b><p>Si <code>www</code>, <code>ftp</code> e <code>intranet</code> son la misma máquina, CNAME hacia un nombre con A: si cambia la IP, solo tocas un registro.</p></div>
+      <div class="note key"><b class="k">TTL</b><p><code>$TTL 604800</code> al principio = tiempo de vida por defecto (en segundos, 1 semana) de lo que se guarda en caché.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="dns-guia">
+    <h3><span class="sid">2.9</span>Montaje del primario de cero a probado</h3>
+    <div class="tw"><table>
+      <tr><th>Equipo</th><th>Sistema</th><th>IP</th><th>Nombre</th></tr>
+      <tr><td>Servidor DNS</td><td>Debian 13 + bind9</td><td>192.168.77.5</td><td><code>ns</code> y <code>servidor</code></td></tr>
+      <tr><td>Cliente 1</td><td>Windows 10</td><td>192.168.77.10</td><td><code>cliente-win</code></td></tr>
+      <tr><td>Cliente 2</td><td>Ubuntu Desktop</td><td>192.168.77.11</td><td><code>cliente-ubuntu</code></td></tr>
+    </table></div>
+    <p class="muted">Antes de nada: las tres se hacen <b>ping por IP</b>. Si eso falla, el problema es de red, no de DNS.</p>
+    <ol class="steps">
+      <li><div><b>Comprobar bind9</b><pre class="code" data-file="Servidor">sudo systemctl status bind9    # active (running)</pre></div></li>
+      <li><div><b>Declarar la zona</b> en <code>/etc/bind/named.conf.local</code><div data-ann="namedlocal"></div><pre class="code" data-file="Comprobar">sudo named-checkconf     # sin salida = todo bien</pre></div></li>
+      <li><div><b>Escribir el archivo de zona</b> <code>/etc/bind/db.practicas.local</code><div data-ann="zona"></div><pre class="code" data-file="Comprobar">sudo named-checkzone practicas.local /etc/bind/db.practicas.local
+zone practicas.local/IN: loaded serial 2026102601
+OK</pre></div></li>
+      <li><div><b>Cargar la zona</b><pre class="code" data-file="Servidor">sudo systemctl reload bind9
+sudo journalctl -u named -n 20    # busca: zone practicas.local/IN: loaded serial ...</pre></div></li>
+      <li><div><b>Probar desde el propio servidor</b> (si falla aquí, no sigas)<div data-ann="dig"></div></div></li>
+      <li><div><b>Cliente Windows 10</b> (cmd como administrador)<pre class="code" data-file="cmd">netsh interface show interface
+netsh interface ip set dns "Ethernet" static 192.168.77.5
+ipconfig /flushdns
+ipconfig /all
+nslookup www.practicas.local
+ping www.practicas.local</pre><span class="muted">En <code>nslookup</code> sale <code>Servidor: UnKnown</code>: es normal, no es un error. Lo que importa son las líneas <code>Nombre</code>, <code>Address</code> y <code>Aliases: www.practicas.local</code>.</span></div></li>
+      <li><div><b>Cliente Ubuntu</b><pre class="code" data-file="terminal">nmcli connection show
+nmcli connection modify "Wired connection 1" ipv4.dns "192.168.77.5"
+nmcli connection modify "Wired connection 1" ipv4.ignore-auto-dns yes
+nmcli connection modify "Wired connection 1" ipv4.dns-search "practicas.local"
+nmcli connection up "Wired connection 1"
+resolvectl status
+sudo apt install bind9-dnsutils     # para tener dig
+resolvectl flush-caches
+dig www.practicas.local
+resolvectl query www.practicas.local
+ping -c 3 www.practicas.local</pre><span class="muted">En <code>dig</code> sale <code>SERVER: 127.0.0.53</code>: es systemd-resolved, el intermediario local de Ubuntu. Normal.</span></div></li>
+      <li><div><b>Hacer un cambio y seguirlo</b><span class="muted">Añade <code>ftp IN CNAME servidor.practicas.local.</code>, <b>sube el serial</b> a <code>2026102602</code>, <code>named-checkzone</code>, <code>reload</code>, y prueba <code>nslookup ftp.practicas.local</code> en Windows y <code>dig ftp.practicas.local</code> en Ubuntu.</span></div></li>
+    </ol>
+    <div class="note trap"><b class="k">Si en Ubuntu <code>dig</code> funciona pero <code>ping</code> no</b><p>Ubuntu reserva <code>.local</code> para mDNS. Comprueba <code>grep hosts /etc/nsswitch.conf</code>; si aparece <code>mdns4_minimal [NOTFOUND=return]</code>, quítalo:<br><code>sudo sed -i 's/mdns4_minimal \[NOTFOUND=return\] //' /etc/nsswitch.conf</code></p></div>
+  </div>
+
+  <div class="block" id="dns-sec">
+    <h3><span class="sid">2.10</span>Servidor secundario y delegación</h3>
+    <div class="grid2">
+      <div class="prose">
+        <h4>Secundario (slave): una copia de la misma zona</h4>
+        <p>Recibe la zona del primario por <b>transferencia de zona</b>. Si el primario cae, la zona sigue resolviendo.</p>
+        <div data-ann="slave"></div>
+        <p>Detecta cambios comparando el <b>serial</b> del SOA. Sin subir el serial, el secundario nunca copia nada nuevo.</p>
+      </div>
+      <div class="prose">
+        <h4>Delegación: otra zona, otro responsable</h4>
+        <p>Se hace con un <b>NS en la zona padre</b>. Desde ahí, lo que esté bajo <code>alumnos.practicas.local</code> lo responde el servidor delegado; el padre solo da una referencia.</p>
+        <div data-ann="deleg"></div>
+        <p><b>Glue record</b>: si el NS delegado tiene un nombre <b>dentro</b> del subdominio que delegas, hace falta su A en la zona padre. Si no, para encontrarlo habría que preguntarle a él: un círculo.</p>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="note trap"><b class="k">¿Por qué ns2 tiene que salir como NS?</b><p>Sin él, la transferencia funciona igual, pero el primario <b>no le manda NOTIFY</b> (solo lo envía a los NS) y <b>nadie le pregunta</b>, porque los demás solo conocen los NS publicados.</p></div>
+      <div class="note trap"><b class="k">Replicar ≠ delegar</b><p>Secundario = copia exacta de la misma zona. Delegado = zona distinta, con registros que el padre ni conoce. Prueba: añades <code>pc03</code> solo en el delegado y resuelve sin tocar el primario.</p></div>
+    </div>
+    <div class="note key"><b class="k">En el aula: delegación con <code>.local</code></b><p>Sin esto el primario da SERVFAIL al resolver el subdominio delegado, porque bind9 intenta validar DNSSEC y <code>.local</code> no existe en Internet. Dentro de <code>options { … }</code> del primario: <code>validate-except { "practicas.local"; };</code>, luego <code>named-checkconf</code>, <code>systemctl restart bind9</code> y <code>rndc flush</code>. Preguntando al primario verás «Non-authoritative answer»; preguntando al delegado, no.</p></div>
+  </div>
+
+  <div class="block" id="dns-fwd">
+    <h3><span class="sid">2.12</span>Forwarders</h3>
+    <div data-ann="options"></div>
+    <div class="grid2">
+      <div class="note key"><b class="k">Sin <code>forward only;</code></b><p>Si los forwarders no responden, bind9 intenta resolver él solo desde la raíz. Es lo recomendado en el aula.</p></div>
+      <div class="note key"><b class="k">Con <code>forward only;</code></b><p>Depende exclusivamente de los forwarders. Si caen, no resuelve nada externo.</p></div>
+    </div>
+    <div class="note trap"><b class="k">Diagnóstico</b><p>Si <code>practicas.local</code> resuelve pero <code>google.com</code> no, el fallo está en los forwarders (o en la salida a Internet), no en tu zona.</p></div>
+  </div>
+
+  <div class="block" id="dns-cli">
+    <h3><span class="sid">2.13</span>Clientes DNS</h3>
+    <div class="grid2">
+      <div class="prose"><h4>Windows</h4><pre class="code" data-file="cmd (administrador)">netsh interface ip set dns "Ethernet" static 192.168.77.5
+ipconfig /flushdns
+nslookup servidor.practicas.local</pre><p><code>/flushdns</code> vacía la caché local. Sin él, puedes ver respuestas antiguas.</p></div>
+      <div class="prose"><h4>Linux (NetworkManager)</h4><pre class="code" data-file="terminal">nmcli connection modify "Wired connection 1" ipv4.dns "192.168.77.5"
+nmcli connection modify "Wired connection 1" ipv4.ignore-auto-dns yes
+nmcli connection up "Wired connection 1"
+dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezclar tu DNS manual con el que llegue por DHCP.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="dns-diag">
+    <h3><span class="sid">2.14</span>Diagnóstico</h3>
+    <div class="tw"><table>
+      <tr><th>Lo que ves</th><th>Qué significa</th><th>Qué mirar</th></tr>
+      <tr><td><code>status: NOERROR</code> + <code>aa</code></td><td>Todo bien, respuesta autoritativa</td><td>—</td></tr>
+      <tr><td><code>NXDOMAIN</code></td><td>El servidor <b>responde</b>: ese nombre no existe en la zona (o falta un punto final, o forwarders mal)</td><td>Archivo de zona, <code>named-checkzone</code>, forwarders</td></tr>
+      <tr><td><code>SERVFAIL</code> en todo <code>practicas.local</code></td><td>La zona no se ha cargado</td><td><code>journalctl -u named -n 20</code></td></tr>
+      <tr><td><code>connection timed out</code></td><td>No llega al servidor: IP del DNS mal, bind9 parado o firewall en el <b>53/UDP</b></td><td><code>ipconfig /all</code> o <code>resolvectl status</code>, <code>systemctl status bind9</code></td></tr>
+      <tr><td>No arranca tras un cambio</td><td>Error de sintaxis</td><td><code>named-checkconf</code> / <code>named-checkzone</code></td></tr>
+      <tr><td>El cliente sigue viendo lo antiguo</td><td>Caché del cliente o TTL</td><td><code>ipconfig /flushdns</code> / <code>resolvectl flush-caches</code></td></tr>
+    </table></div>
+    <div class="note pro"><b class="k">Extra pro · dig como un profesional</b><p><code>dig +short www.practicas.local</code> solo la respuesta · <code>dig @192.168.77.5 practicas.local SOA</code> ver el serial · <code>dig @192.168.77.5 practicas.local NS</code> · <code>dig @192.168.77.5 practicas.local MX</code> · <code>dig +trace es.wikipedia.org</code> ver la resolución iterativa paso a paso · <code>sudo ss -ulpn | grep :53</code> comprobar que named escucha.</p></div>
+  </div>
+
+  <div class="block" id="dns-int">
+    <h3><span class="sid">2.15</span>Integrar DHCP y DNS</h3>
+    <div data-ann="integra"></div>
+    <div class="note trap"><b class="k">Fallos que solo salen al integrar</b><p>Una IP mal escrita en <code>domain-name-servers</code>, o un cliente con una concesión antigua que aún no ha renovado y sigue con el DNS viejo. Comprueba el flujo completo: pedir IP → recibir el DNS en el mismo DORA → resolver nombres sin tocar nada a mano.</p></div>
+  </div>
+</section>
+
+<!-- ============ ERRORES ============ -->
+<section class="view" id="v-errores" data-view="errores" hidden>
+  <div class="head">
+    <span class="eyebrow">Práctica · formato examen</span>
+    <h2>Encuentra el error</h2>
+    <p class="lead">Toca las líneas que están mal y pulsa <b>Comprobar</b>. Verde: acertaste. Rojo: había un error y no lo marcaste. Tachado: marcaste una línea que estaba bien.</p>
+  </div>
+  <div class="row"><div class="seg" id="err-filter" role="group" aria-label="Filtrar por tema"><button type="button" data-f="all" aria-pressed="true">Todos</button><button type="button" data-f="dhcp" aria-pressed="false">DHCP</button><button type="button" data-f="dns" aria-pressed="false">DNS</button></div><span class="muted" id="err-score"></span></div>
+  <div id="err-list" style="display:grid;gap:20px"></div>
+</section>
+
+<!-- ============ ESCRIBIR ============ -->
+<section class="view" id="v-escribir" data-view="escribir" hidden>
+  <div class="head">
+    <span class="eyebrow">Práctica · de memoria</span>
+    <h2>Escribe el archivo</h2>
+    <p class="lead">Escribe sin mirar los apuntes. <b>Corregir</b> revisa las piezas que el profe va a buscar: directivas, IPs, puntos finales y <code>;</code>. Después compara con la solución.</p>
+  </div>
+  <div id="w-list" style="display:grid;gap:20px"></div>
+</section>
+
+<!-- ============ COMANDOS ============ -->
+<section class="view" id="v-comandos" data-view="comandos" hidden>
+  <div class="head">
+    <span class="eyebrow">Chuleta</span>
+    <h2>Comandos importantes</h2>
+    <p class="lead">Los que más se usan, con para qué sirven y cuándo usarlos. Busca o filtra.</p>
+  </div>
+  <div class="row"><input type="text" id="cmd-q" placeholder="Buscar: dig, renew, serial…" aria-label="Buscar comando" style="flex:1;min-width:180px"><div class="seg" id="cmd-filter" role="group" aria-label="Filtrar"><button type="button" data-f="all" aria-pressed="true">Todos</button><button type="button" data-f="t0" aria-pressed="false">T0</button><button type="button" data-f="dhcp" aria-pressed="false">DHCP</button><button type="button" data-f="dns" aria-pressed="false">DNS</button></div></div>
+  <div id="cmd-list"></div>
+</section>
+
+<!-- ============ TEST ============ -->
+<section class="view" id="v-test" data-view="test" hidden>
+  <div class="head">
+    <span class="eyebrow">Autoevaluación</span>
+    <h2>Test</h2>
+    <p class="lead">Preguntas del propio curso más preguntas prácticas tipo examen. Cada respuesta trae su explicación. Los fallos se guardan en este navegador para repasarlos.</p>
+  </div>
+  <div class="block" id="test-setup">
+    <div class="row"><b>Tema</b><div class="seg" id="t-topic" role="group" aria-label="Tema"><button type="button" data-v="all" aria-pressed="true">Todo</button><button type="button" data-v="0" aria-pressed="false">T0</button><button type="button" data-v="1" aria-pressed="false">DHCP</button><button type="button" data-v="2" aria-pressed="false">DNS</button><button type="button" data-v="fallos" aria-pressed="false">Mis fallos</button></div></div>
+    <div class="row"><b>Preguntas</b><div class="seg" id="t-n" role="group" aria-label="Número de preguntas"><button type="button" data-v="10" aria-pressed="false">10</button><button type="button" data-v="20" aria-pressed="true">20</button><button type="button" data-v="40" aria-pressed="false">40</button><button type="button" data-v="999" aria-pressed="false">Todas</button></div><span class="muted" id="t-avail"></span></div>
+    <div class="row"><button class="btn primary" id="t-start" type="button">Empezar</button><button class="btn" id="t-sim" type="button">Simulacro con el peso del examen</button></div>
+  </div>
+  <div class="block" id="test-run" hidden>
+    <div class="row" style="justify-content:space-between"><span class="score" id="t-count"></span><span class="muted" id="t-hits"></span></div>
+    <div class="progress"><i id="t-bar"></i></div>
+    <div class="q" id="t-q"></div>
+    <div class="row"><button class="btn primary" id="t-next" type="button" disabled>Siguiente</button><button class="btn" id="t-stop" type="button">Terminar</button></div>
+  </div>
+  <div class="block" id="test-end" hidden></div>
+</section>
+
+</main>
+<footer><div class="wrap">Basado en el curso «Servicios en Red» (phergar23.github.io/Servicios-De-Red), Temas 0, 1 y 2. Sin zona inversa. Lo marcado como «extra pro» no está en los apuntes.</div></footer>
+
+<script>
+'use strict';
+const BANK = [{"t": 0, "s": "0.1 Capas: por qué un mensaje no viaja de un salto", "q": "¿Qué hace la capa de transporte que no hace la de red?", "o": ["Encuentra el camino entre redes", "Entrega el mensaje a la aplicación correcta y comprueba que llegó completo", "Convierte los bits en señales eléctricas", "Traduce nombres de dominio"], "a": 1, "e": "La capa de red lleva el paquete de una red a otra. La de transporte añade el puerto (qué aplicación) y, con TCP, comprueba que todo llegó bien."}, {"t": 0, "s": "0.1 Capas: por qué un mensaje no viaja de un salto", "q": "Un switch sin más funciones, ¿hasta qué capa entiende?", "o": ["Capa 2: lee direcciones MAC", "Capa 3: lee direcciones IP", "Capa 4: lee puertos", "Capa 7: lee el contenido"], "a": 0, "e": "Un switch mira solo la MAC de destino. No abre el paquete IP de dentro."}, {"t": 0, "s": "0.1 Capas: por qué un mensaje no viaja de un salto", "q": "Encapsular un mensaje significa...", "o": ["Cifrarlo para que nadie lo lea", "Meterlo dentro del sobre de la capa de abajo, con su propia etiqueta", "Comprimirlo", "Firmarlo digitalmente"], "a": 1, "e": "Cada capa añade su propia etiqueta y mete dentro lo que le pasó la capa de arriba."}, {"t": 0, "s": "0.2 Switch, router y hub: quién actúa en cada capa", "q": "Un switch de 8 puertos con 8 PC. ¿Cuántos dominios de difusión hay?", "o": ["1", "8", "0", "Depende del cableado"], "a": 0, "e": "El switch no separa dominios de difusión: un broadcast llega a todos."}, {"t": 0, "s": "0.2 Switch, router y hub: quién actúa en cada capa", "q": "¿Qué diferencia principal hay entre un hub y un switch?", "o": ["El hub es más rápido", "El switch mira la MAC de destino y manda solo por el puerto correcto", "El hub soporta más puertos", "El switch no necesita corriente"], "a": 1, "e": "El hub repite ciegamente. El switch elige el puerto correcto."}, {"t": 0, "s": "0.2 Switch, router y hub: quién actúa en cada capa", "q": "¿Por qué un router corta el dominio de difusión?", "o": ["Porque no reenvía broadcasts de una red a otra por defecto", "Porque tiene menos puertos que un switch", "Porque cifra el tráfico", "Porque solo entiende MACs"], "a": 0, "e": "Un broadcast solo tiene sentido dentro de su propia red. El router lo sabe y no lo pasa a otras redes."}, {"t": 0, "s": "0.3 Cableado UTP y el conector RJ45", "q": "Un cable con T568B en los dos extremos es...", "o": ["Directo", "Cruzado", "Cat5e obligatoriamente", "Inválido"], "a": 0, "e": "Misma norma en los dos extremos, sea A o B, es siempre un cable directo."}, {"t": 0, "s": "0.3 Cableado UTP y el conector RJ45", "q": "¿Qué diferencia a un cable Cat6 de uno Cat5e?", "o": ["Cat6 soporta más ancho de banda", "Cat6 tiene más hilos", "Cat5e es inalámbrico", "No hay diferencia real"], "a": 0, "e": "Ambos tienen 4 pares (8 hilos), pero Cat6 soporta más velocidad de forma fiable."}, {"t": 0, "s": "0.3 Cableado UTP y el conector RJ45", "q": "Vas a conectar dos switches entre sí, sin Auto-MDI/MDI-X. ¿Qué cable usas?", "o": ["Directo, porque son de la misma marca", "Cruzado, porque son del mismo tipo", "Cualquiera", "Directo, porque ambos son switches"], "a": 1, "e": "Mismo tipo de dispositivo → cruzado, según la regla clásica."}, {"t": 0, "s": "0.4 Topologías y arquitecturas: cómo se organiza una red", "q": "En una estrella, si se corta el cable de un PC, ¿qué pasa?", "o": ["Solo ese PC pierde conexión", "Toda la red se cae", "El switch se reinicia", "Los demás pierden la mitad de la velocidad"], "a": 0, "e": "La estrella aísla los fallos de cable a un único equipo."}, {"t": 0, "s": "0.4 Topologías y arquitecturas: cómo se organiza una red", "q": "¿Qué caracteriza a P2P frente a cliente-servidor?", "o": ["Cualquier nodo puede ser cliente y servidor del mismo recurso", "Necesita siempre un servidor central", "Solo funciona en malla", "No sirve para compartir archivos"], "a": 0, "e": "En P2P no hay un rol fijo: cada uno comparte y consume a la vez."}, {"t": 0, "s": "0.4 Topologías y arquitecturas: cómo se organiza una red", "q": "Tu PC pide IP por DHCP y también tiene un servidor web instalado. ¿Qué arquitectura es esto?", "o": ["Cliente-servidor: cliente de un servicio, servidor de otro", "P2P", "Ninguna, es imposible", "Bus"], "a": 0, "e": "Nada impide que el mismo equipo sea cliente de un servicio y servidor de otro a la vez."}, {"t": 0, "s": "0.5 IPv4: octetos, binario y clases", "q": "¿Cuántos bits tiene una IPv4 en total?", "o": ["8", "16", "32", "64"], "a": 2, "e": "4 octetos de 8 bits: 4 × 8 = 32."}, {"t": 0, "s": "0.5 IPv4: octetos, binario y clases", "q": "¿A qué clase pertenece 172.16.0.5?", "o": ["Clase A", "Clase B", "Clase C", "Clase D"], "a": 1, "e": "El primer octeto, 172, está en el rango 128-191, clase B."}, {"t": 0, "s": "0.5 IPv4: octetos, binario y clases", "q": "¿Qué representa 127.0.0.1?", "o": ["La primera IP de una red", "Loopback: la propia máquina", "La puerta de enlace por defecto", "Una dirección de broadcast"], "a": 1, "e": "127.0.0.1 es la dirección con la que un equipo se habla a sí mismo."}, {"t": 0, "s": "0.6 Máscaras y CIDR: calcular redes y hosts", "q": "¿Cuántos hosts utilizables tiene una red /24?", "o": ["256", "255", "254", "253"], "a": 2, "e": "2⁸ = 256, menos 2 reservadas = 254."}, {"t": 0, "s": "0.6 Máscaras y CIDR: calcular redes y hosts", "q": "La IP 192.168.1.0/24, ¿se puede asignar a un PC?", "o": ["Sí", "No, es la dirección de red", "Sí, solo a servidores", "No, es del router siempre"], "a": 1, "e": "Con todos los bits de host a 0, es la dirección de la red, no de un host."}, {"t": 0, "s": "0.6 Máscaras y CIDR: calcular redes y hosts", "q": "¿Qué significa /26?", "o": ["26 hosts", "Los primeros 26 bits son de red", "26 subredes", "Máscara 255.255.255.26"], "a": 1, "e": "CIDR indica cuántos bits, desde la izquierda, son de red."}, {"t": 0, "s": "0.7 Subredes: dividir una red dada", "q": "Necesitas subredes de máximo 14 hosts. ¿Cuántos bits de host hacen falta como mínimo?", "o": ["3", "4", "5", "6"], "a": 1, "e": "2⁴ − 2 = 14, justo el máximo pedido."}, {"t": 0, "s": "0.7 Subredes: dividir una red dada", "q": "Si tomas 2 bits prestados de una red /24, ¿en qué máscara se convierte?", "o": ["/22", "/23", "/26", "/28"], "a": 2, "e": "24 + 2 = 26."}, {"t": 0, "s": "0.7 Subredes: dividir una red dada", "q": "Con una red /26, ¿de cuánto en cuánto saltan las subredes en el último octeto?", "o": ["De 16 en 16", "De 64 en 64", "De 32 en 32", "De 4 en 4"], "a": 1, "e": "/26 deja 6 bits de host: 2⁶ = 64."}, {"t": 0, "s": "0.8 IP pública, privada, NAT y Port Forwarding", "q": "¿Cuál de estas es una IP privada?", "o": ["8.8.8.8", "192.168.5.10", "172.15.0.1", "200.10.5.1"], "a": 1, "e": "192.168.5.10 está en el rango privado 192.168.0.0/16."}, {"t": 0, "s": "0.8 IP pública, privada, NAT y Port Forwarding", "q": "¿Qué ocurre normalmente cuando un PC privado navega por Internet a través de un router doméstico?", "o": ["El PC recibe una IP pública permanente", "El router traduce la conexión de salida y recuerda cómo devolver la respuesta", "Hay que crear un Port Forwarding para cada web", "El servidor web de Internet aprende la IP privada del PC"], "a": 1, "e": "Es una conexión iniciada desde dentro. El router aplica NAT de salida y mantiene la información necesaria para devolver las respuestas al equipo correcto."}, {"t": 0, "s": "0.8 IP pública, privada, NAT y Port Forwarding", "q": "Quieres que desde Internet se pueda acceder a un servidor web interno 192.168.1.50:80. ¿Qué necesitas configurar?", "o": ["Solo NAT de salida", "Una regla de Port Forwarding hacia 192.168.1.50:80", "DHCP", "DNS inverso"], "a": 1, "e": "La conexión se inicia desde fuera. El router necesita una regla explícita que indique a qué equipo y puerto internos debe reenviar ese tráfico."}, {"t": 0, "s": "0.9 ARP: de la IP a la dirección física", "q": "¿En qué capa está ARP?", "o": ["Solo en la de red", "Solo en la de enlace", "Entre las dos, traduciendo IP a MAC", "En la de aplicación"], "a": 2, "e": "ARP toma una IP (capa 3) y devuelve una MAC (capa 2), haciendo de puente."}, {"t": 0, "s": "0.9 ARP: de la IP a la dirección física", "q": "Un ARP Request se envía...", "o": ["En unicast, directo al destino", "En broadcast, a todos", "Al router", "Solo si la caché está vacía en todos"], "a": 1, "e": "El equipo que pregunta no sabe todavía a quién dirigirse, así que pregunta a todos."}, {"t": 0, "s": "0.9 ARP: de la IP a la dirección física", "q": "Quieres hacer ping a una IP de otra red. ¿Para qué IP hace ARP tu equipo?", "o": ["Para la IP de destino final", "Para la IP de la puerta de enlace", "Para ninguna", "Para todas las IPs de la red de destino"], "a": 1, "e": "ARP nunca cruza redes. Tu equipo solo necesita la MAC de su puerta de enlace."}, {"t": 0, "s": "0.10 Diagnóstico I: ping e ipconfig/ip a", "q": "Tu PC tiene la IP 169.254.10.5. ¿Qué indica esto?", "o": ["Que tienes una IP pública correcta", "Que el cliente DHCP no consiguió respuesta de ningún servidor", "Que estás usando IPv6", "Que tu router hace NAT"], "a": 1, "e": "APIPA es la señal de que el proceso DHCP ha fallado."}, {"t": 0, "s": "0.10 Diagnóstico I: ping e ipconfig/ip a", "q": "¿Qué confirma exactamente un ping exitoso?", "o": ["Que hay conectividad IP de ida y vuelta en ese momento", "Que el servicio web de ese destino funciona", "Que la resolución DNS funciona", "Que no hay ningún firewall"], "a": 0, "e": "Ping solo confirma tráfico ICMP, no dice nada de servicios concretos ni de DNS si se hace ping a una IP directa."}, {"t": 0, "s": "0.10 Diagnóstico I: ping e ipconfig/ip a", "q": "Si ping a una IP falla pero el servicio web en esa misma IP funciona desde el navegador, ¿qué es lo más probable?", "o": ["Que el firewall bloquea ICMP mientras deja pasar HTTP", "Que la IP está mal escrita", "Que ping siempre falla en servidores web", "Que el DNS está mal"], "a": 0, "e": "Es una configuración de seguridad habitual: bloquear ICMP sin afectar al servicio real."}, {"t": 0, "s": "0.11 Diagnóstico II: tracert, netstat y arp -a", "q": "En tracert, un salto no responde pero el siguiente sí. ¿Qué es lo más probable?", "o": ["Ese router no responde por seguridad, pero sigue pasando el tráfico", "La red está rota ahí", "El destino no es alcanzable", "Hay que reiniciar el router de casa"], "a": 0, "e": "Si el salto siguiente responde, la ruta funciona: solo ese router concreto oculta información de diagnóstico."}, {"t": 0, "s": "0.11 Diagnóstico II: tracert, netstat y arp -a", "q": "¿Qué indica un puerto en LISTENING?", "o": ["Que un servicio espera conexiones en ese puerto", "Que hay una conexión ya activa", "Que el puerto está bloqueado", "Que el puerto ha caducado"], "a": 0, "e": "LISTENING significa que un proceso está a la escucha, esperando el primer cliente."}, {"t": 0, "s": "0.11 Diagnóstico II: tracert, netstat y arp -a", "q": "¿Cómo llegó una entrada a tu caché ARP?", "o": ["La puso el administrador a mano", "Tu equipo hizo un proceso ARP para esa IP y guardó el resultado", "Viene precargada de fábrica", "La puso el servidor DHCP"], "a": 1, "e": "La caché ARP se rellena sola conforme el equipo se comunica con otras IPs de su red."}, {"t": 0, "s": "0.12 Ethernet: tramas y direcciones MAC", "q": "¿Qué hace un switch con una trama cuya MAC de destino no conoce?", "o": ["La descarta", "La reenvía por todos los puertos menos el de entrada", "La envía al router", "Espera a que el destino se anuncie"], "a": 1, "e": "Sin saber el puerto, el switch inunda la trama para que el equipo correcto responda."}, {"t": 0, "s": "0.12 Ethernet: tramas y direcciones MAC", "q": "¿Qué identifican los primeros 3 bytes de una MAC?", "o": ["Al fabricante", "A la red local", "Al protocolo de capa superior", "Al sistema operativo"], "a": 0, "e": "Ese bloque (OUI) lo asigna la IEEE a cada fabricante."}, {"t": 0, "s": "0.12 Ethernet: tramas y direcciones MAC", "q": "Un paquete cruza de una red A a una red B. ¿Qué pasa con las MACs?", "o": ["El router construye una trama nueva, con MACs distintas, para la red B", "Las MACs se mantienen iguales en toda la ruta", "El router las elimina", "Solo cambia la MAC de destino"], "a": 0, "e": "El router opera en capa 3: desencapsula y crea una trama nueva para el siguiente tramo."}, {"t": 0, "s": "0.13 TCP frente a UDP", "q": "¿Qué garantiza TCP que UDP no garantiza?", "o": ["Entrega en orden, sin pérdidas ni duplicados", "Que los datos lleguen más rápido", "Que el puerto de destino sea siempre 80", "Que no haga falta una IP de destino"], "a": 0, "e": "TCP controla activamente la entrega; UDP simplemente envía y confía."}, {"t": 0, "s": "0.13 TCP frente a UDP", "q": "¿Por qué DHCP usa típicamente UDP?", "o": ["Porque el intercambio es corto, y ocurre antes de tener IP configurada", "Porque TCP no puede usarse sin IP", "Porque UDP es obligatorio en configuración", "Porque DHCP nunca pierde paquetes"], "a": 0, "e": "El intercambio DHCP es breve y encaja mejor con la naturaleza ligera de UDP."}, {"t": 0, "s": "0.13 TCP frente a UDP", "q": "¿A qué servicio está asociado el puerto 443?", "o": ["DNS", "FTP", "HTTPS", "DHCP"], "a": 2, "e": "443 es el puerto estándar de HTTPS."}, {"t": 0, "s": "0.14 Wifi básico: SSID, canales y estándares", "q": "Dos redes vecinas usan el mismo canal en 2,4 GHz. ¿Qué pasa?", "o": ["Interferencia entre ambas, con peor rendimiento", "Nada, los canales son independientes", "Una deja de emitir automáticamente", "Se fusionan en una sola red"], "a": 0, "e": "Comparten la misma porción de espectro y compiten por el medio."}, {"t": 0, "s": "0.14 Wifi básico: SSID, canales y estándares", "q": "¿Qué banda da más alcance a costa de menos ancho de banda?", "o": ["2,4 GHz", "5 GHz", "Las dos igual", "Depende solo del estándar"], "a": 0, "e": "2,4 GHz penetra mejor, pero tiene menos canales disponibles."}, {"t": 0, "s": "0.14 Wifi básico: SSID, canales y estándares", "q": "Ocultar el SSID...", "o": ["Es la medida de seguridad más efectiva", "No aporta seguridad real", "Impide físicamente conectarse", "Cifra el tráfico"], "a": 1, "e": "Solo oculta el nombre de la lista por defecto; sigue siendo detectable."}, {"t": 0, "s": "0.15 Seguridad básica: cortafuegos y amenazas", "q": "Un servicio en LISTENING pero un cliente externo no se conecta. ¿Qué sospechas primero?", "o": ["Que el firewall bloquea ese puerto", "Que el servicio está mal programado", "Que el cliente no tiene tarjeta de red", "Que el puerto no existe"], "a": 0, "e": "LISTENING confirma que el proceso está activo; el firewall puede seguir bloqueando el tráfico hasta él."}, {"t": 0, "s": "0.15 Seguridad básica: cortafuegos y amenazas", "q": "\"Denegar por defecto\" significa...", "o": ["Solo se permite lo autorizado explícitamente", "Se permite todo salvo lo bloqueado", "No filtra nada", "Solo se aplica al tráfico saliente"], "a": 0, "e": "Es la política más segura: cualquier cosa sin regla explícita de permiso queda bloqueada."}, {"t": 0, "s": "0.15 Seguridad básica: cortafuegos y amenazas", "q": "¿Qué es un escaneo de puertos?", "o": ["Probar sistemáticamente qué puertos están abiertos", "Un tipo de cifrado", "Un método de asignar IPs", "Un mecanismo de resolución de nombres"], "a": 0, "e": "Suele ser un paso de reconocimiento antes de un ataque dirigido."}, {"t": 0, "s": "0.16 Linux: navegación y gestión de archivos", "q": "¿Qué muestra pwd?", "o": ["El directorio en el que estás", "El contenido del directorio actual", "La contraseña del usuario", "Los procesos en ejecución"], "a": 0, "e": "pwd (print working directory) devuelve la ruta donde está tu terminal ahora mismo."}, {"t": 0, "s": "0.16 Linux: navegación y gestión de archivos", "q": "¿Diferencia entre ruta absoluta y relativa?", "o": ["La absoluta empieza en /, la relativa parte de donde estás", "La absoluta solo funciona con archivos", "No hay diferencia", "La relativa siempre es más larga"], "a": 0, "e": "Una ruta absoluta vale desde cualquier sitio. Una relativa depende de dónde esté la terminal."}, {"t": 0, "s": "0.16 Linux: navegación y gestión de archivos", "q": "¿Qué pasa si ejecutas rm archivo.txt por error?", "o": ["Se elimina de inmediato, sin papelera", "Se mueve a una papelera recuperable", "Pide confirmación siempre", "Solo se oculta"], "a": 0, "e": "A diferencia del escritorio gráfico, rm en terminal borra sin papelera por defecto."}, {"t": 0, "s": "0.17 Linux: usuarios, grupos y permisos", "q": "¿Qué significan los permisos rwxr-xr--?", "o": ["Propietario todo, grupo lectura+ejecución, otros solo lectura", "Propietario solo lectura, grupo y otros todo", "Es un error, no es válido", "Solo indica el tamaño"], "a": 0, "e": "Se lee en 3 bloques de 3: rwx (propietario), r-x (grupo), r-- (otros)."}, {"t": 0, "s": "0.17 Linux: usuarios, grupos y permisos", "q": "¿Valor numérico de rwx (los tres activados)?", "o": ["5", "6", "7", "3"], "a": 2, "e": "4+2+1 = 7."}, {"t": 0, "s": "0.17 Linux: usuarios, grupos y permisos", "q": "¿Por qué es mala idea usar chmod 777 como solución rápida?", "o": ["Da acceso total a cualquier usuario del sistema, sin necesidad", "Porque 777 no es válido", "Porque solo funciona en carpetas", "Porque requiere siempre root"], "a": 0, "e": "777 abre el archivo por completo, en vez de dar el mínimo permiso realmente necesario."}, {"t": 0, "s": "0.18 Linux: configurar interfaces de red", "q": "¿Qué comando muestra todas las interfaces y sus IPs?", "o": ["ifconfig -all", "ip a", "netstat -i", "route print"], "a": 1, "e": "ip a es el comando moderno recomendado en Linux."}, {"t": 0, "s": "0.18 Linux: configurar interfaces de red", "q": "Asignas una IP con ip addr add, funciona, pero desaparece tras reiniciar la VM. ¿Por qué?", "o": ["Porque ip addr add es temporal, no persistente por sí sola", "Porque la IP estaba mal escrita", "Porque el nombre de interfaz no era válido", "Porque hace falta reiniciar dos veces"], "a": 0, "e": "ip addr add aplica un cambio en caliente que no se guarda salvo que también se configure la persistencia."}, {"t": 0, "s": "0.18 Linux: configurar interfaces de red", "q": "¿Qué comando muestra la puerta de enlace configurada?", "o": ["ip link", "ip route", "ip a solamente", "chmod -R"], "a": 1, "e": "ip route muestra la tabla de rutas, incluida la ruta por defecto."}, {"t": 0, "s": "0.19 Virtualización: máquinas virtuales y redes virtuales", "q": "Servidor en bridge, cliente en NAT, ambos bien configurados. ¿Se comunican?", "o": ["Sí, siempre que tengan IP", "No, viven en redes virtuales distintas", "Sí, si están en el mismo equipo físico", "Depende del sistema operativo"], "a": 1, "e": "NAT y bridge son mundos de red distintos gestionados por separado por el hipervisor."}, {"t": 0, "s": "0.19 Virtualización: máquinas virtuales y redes virtuales", "q": "¿Qué modo conecta una VM directamente a la red física real?", "o": ["NAT", "Bridge", "Solo-anfitrión", "Ninguno"], "a": 1, "e": "Bridge hace que la VM se comporte como un equipo más de la red física."}, {"t": 0, "s": "0.19 Virtualización: máquinas virtuales y redes virtuales", "q": "¿Qué modo usarías para un laboratorio cerrado que nunca debe salir a la red física?", "o": ["NAT", "Bridge", "Solo-anfitrión", "Cualquiera"], "a": 2, "e": "Solo-anfitrión aísla completamente el tráfico, sin conexión a la red física."}, {"t": 0, "s": "0.20 Programa completo: montar y diagnosticar una red virtualizada", "q": "¿En qué paso se decide el direccionamiento?", "o": ["En el diseño, antes de tocar ninguna máquina", "En la verificación, al final", "Durante la configuración, sobre la marcha", "No hace falta decidirlo"], "a": 0, "e": "Decidirlo antes evita los errores de coherencia ya vistos en sesiones anteriores."}, {"t": 0, "s": "0.20 Programa completo: montar y diagnosticar una red virtualizada", "q": "¿Por qué la documentación no es un paso opcional?", "o": ["Porque deja constancia de lo hecho y de las incidencias resueltas", "Porque solo sirve para rellenar tiempo", "Porque el profesor no revisa el resto", "Porque sustituye a la verificación"], "a": 0, "e": "Documentar complementa a la verificación, no la sustituye."}, {"t": 0, "s": "0.20 Programa completo: montar y diagnosticar una red virtualizada", "q": "Si te saltas el diseño, ¿qué riesgo es más probable?", "o": ["Máscaras distintas o puertas de enlace mal calculadas", "Que las VMs no arranquen", "Que el hipervisor deje de funcionar", "Ninguno"], "a": 0, "e": "Sin un esquema decidido de antemano, es fácil que cada máquina acabe con una configuración incoherente."}, {"t": 1, "s": "1.1 Qué resuelve DHCP: el proceso DORA", "q": "¿Qué significan las siglas DORA?", "o": ["Discover, Offer, Request, Acknowledge", "Domain, Offer, Register, Assign", "Discover, Order, Reply, Accept", "Data, Offer, Request, Answer"], "a": 0, "e": "Son los 4 mensajes del proceso de asignación: pregunta, oferta, petición y confirmación."}, {"t": 1, "s": "1.1 Qué resuelve DHCP: el proceso DORA", "q": "¿Por qué el mensaje Discover va en broadcast?", "o": ["Porque el cliente no tiene IP todavía y no sabe a quién dirigirse", "Porque es obligatorio por seguridad", "Porque así llega más rápido", "Porque el servidor lo pide así"], "a": 0, "e": "Sin IP propia, el cliente no puede mandar nada de forma directa. El broadcast llega a todos, y solo responde quien tiene un servidor DHCP."}, {"t": 1, "s": "1.1 Qué resuelve DHCP: el proceso DORA", "q": "Además de la IP, ¿qué más entrega típicamente DHCP en el mismo proceso?", "o": ["Solo la IP, nada más", "Máscara y puerta de enlace, entre otros datos", "La contraseña del wifi", "El nombre del equipo"], "a": 1, "e": "DHCP entrega toda la configuración de red necesaria en un mismo paquete: IP, máscara, puerta de enlace, y más opciones que verás en próximas sesiones."}, {"t": 1, "s": "1.2 Instalar isc-dhcp-server en Debian 13", "q": "¿Qué comando comprueba si isc-dhcp-server está activo?", "o": ["systemctl check dhcp", "sudo systemctl status isc-dhcp-server", "dhcp-server --status", "apt status isc-dhcp-server"], "a": 1, "e": "Es el mismo patrón systemctl que ya usarás con todos los servicios del módulo."}, {"t": 1, "s": "1.2 Instalar isc-dhcp-server en Debian 13", "q": "¿Por qué puede fallar el servicio nada más instalarlo?", "o": ["Porque todavía no tiene ningún ámbito configurado", "Porque Debian 13 no soporta DHCP", "Porque falta reiniciar el equipo", "Porque isc-dhcp-server necesita una licencia"], "a": 0, "e": "Sin un ámbito con un rango de IPs, el servicio no tiene nada que ofrecer, y puede no arrancar hasta que se configure."}, {"t": 1, "s": "1.2 Instalar isc-dhcp-server en Debian 13", "q": "¿Dónde se indica en qué interfaz debe escuchar isc-dhcp-server?", "o": ["En named.conf", "En /etc/default/isc-dhcp-server", "En /etc/network/interfaces solamente", "No hace falta indicarlo"], "a": 1, "e": "La línea INTERFACESv4 de ese archivo indica la interfaz de red donde el servicio debe escuchar peticiones DHCP."}, {"t": 1, "s": "1.3 Tu primer ámbito DHCP", "q": "¿Qué indica la directiva range dentro de un ámbito?", "o": ["La red completa que gestiona el servidor", "El tramo de IPs que se reparte a los clientes", "La puerta de enlace", "La máscara de la red"], "a": 1, "e": "range define el tramo concreto dentro de la red que el servidor puede ofrecer, no necesariamente toda la red."}, {"t": 1, "s": "1.3 Tu primer ámbito DHCP", "q": "¿Por qué conviene dejar IPs fuera del range dinámico?", "o": ["Para reservarlas a equipos con IP fija, como el propio servidor", "Porque el range no puede superar 20 direcciones", "Porque isc-dhcp-server lo exige por diseño", "No hay ninguna razón, es solo costumbre"], "a": 0, "e": "Dejar un tramo fuera del range evita que DHCP asigne por error una IP que ya usa un equipo con configuración fija."}, {"t": 1, "s": "1.3 Tu primer ámbito DHCP", "q": "¿Qué comando aplica un cambio en dhcpd.conf?", "o": ["sudo systemctl reload apache2", "sudo systemctl restart isc-dhcp-server", "sudo dhcpd --apply", "sudo apt install isc-dhcp-server otra vez"], "a": 1, "e": "Igual que con otros servicios del módulo, hay que reiniciar (o recargar) el servicio para que lea la configuración nueva."}, {"t": 1, "s": "1.4 Reservas por MAC: IP fija para un equipo", "q": "¿Con qué dato identifica isc-dhcp-server a un equipo para aplicarle una reserva?", "o": ["Su nombre de host", "Su dirección MAC", "Su IP anterior", "Su número de serie"], "a": 1, "e": "hardware ethernet indica la MAC del equipo al que se aplica la reserva."}, {"t": 1, "s": "1.4 Reservas por MAC: IP fija para un equipo", "q": "Si cambias la tarjeta de red virtual de una VM, ¿sigue aplicándose la reserva?", "o": ["Sí, siempre", "No, hasta que actualices la MAC en la configuración", "Solo si la IP sigue libre", "Solo si reinicias el servidor"], "a": 1, "e": "La reserva depende de la MAC exacta. Una MAC nueva no coincide con la reserva antigua."}, {"t": 1, "s": "1.4 Reservas por MAC: IP fija para un equipo", "q": "¿Tiene que estar la IP de una reserva dentro del range dinámico?", "o": ["Sí, siempre", "No, es habitual reservarla fuera del range", "Solo en Debian 13", "Solo si el equipo es un servidor"], "a": 1, "e": "Es habitual usar, para reservas, el tramo que se dejó fuera del range dinámico."}, {"t": 1, "s": "1.5 Varios ámbitos: más de una red en el mismo servidor", "q": "¿Se pueden declarar varios bloques subnet en el mismo dhcpd.conf?", "o": ["Sí, uno por cada red distinta que gestione el servidor", "No, solo se permite uno", "Sí, pero máximo dos", "Solo si tienen la misma máscara"], "a": 0, "e": "Cada bloque subnet describe una red distinta, y pueden convivir varios en el mismo archivo."}, {"t": 1, "s": "1.5 Varios ámbitos: más de una red en el mismo servidor", "q": "¿Qué necesita el servidor para poder repartir IPs en una red distinta a la suya propia?", "o": ["Alcance real a esa red, por interfaz directa o por un relay", "Nada especial, basta con escribir el bloque subnet", "Que esa red use la misma máscara", "Que el cliente tenga IP fija"], "a": 0, "e": "Sin un camino real hasta esa red, el bloque subnet escrito no tiene ningún efecto práctico."}, {"t": 1, "s": "1.5 Varios ámbitos: más de una red en el mismo servidor", "q": "¿Puede cada ámbito tener sus propias reservas?", "o": ["Sí, las reservas van dentro de su ámbito correspondiente", "No, las reservas son globales para todo el servidor", "Solo el primer ámbito puede tener reservas", "Las reservas no existen en varios ámbitos"], "a": 0, "e": "Cada bloque subnet puede incluir sus propias reservas (host), independientes de las de otros ámbitos."}, {"t": 1, "s": "1.6 Cliente DHCP en Windows 10", "q": "¿Qué hace ipconfig /release?", "o": ["Suelta la IP actual del cliente", "Pide una IP nueva", "Muestra toda la configuración", "Reinicia la tarjeta de red físicamente"], "a": 0, "e": "/release libera la concesión actual, dejando al cliente sin IP hasta la siguiente petición."}, {"t": 1, "s": "1.6 Cliente DHCP en Windows 10", "q": "¿Por qué hace falta forzar /release y /renew tras cambiar la configuración del servidor?", "o": ["Porque el cliente puede seguir usando su configuración antigua un rato", "Porque Windows lo exige por seguridad", "Porque si no, el cliente pierde la conexión de red física", "No hace falta nunca"], "a": 0, "e": "Sin forzar la renovación, el cliente sigue con su concesión previa hasta que le toque renovar de forma natural."}, {"t": 1, "s": "1.6 Cliente DHCP en Windows 10", "q": "¿Qué comando muestra toda la configuración de red recibida por DHCP?", "o": ["ipconfig /release", "ipconfig /all", "ipconfig /renew", "netstat -a"], "a": 1, "e": "/all muestra IP, máscara, puerta de enlace, DNS y más, todo lo recibido en el proceso DORA."}, {"t": 1, "s": "1.7 Cliente DHCP en Linux", "q": "¿Qué comando muestra el nombre real de las conexiones de red en Linux con NetworkManager?", "o": ["nmcli device show", "nmcli connection show", "ip a", "ipconfig /all"], "a": 1, "e": "nmcli connection show lista las conexiones configuradas, con su nombre exacto."}, {"t": 1, "s": "1.7 Cliente DHCP en Linux", "q": "¿Qué hace nmcli connection down seguido de up?", "o": ["Fuerza una desconexión y reconexión, provocando un DORA nuevo", "Solo consulta la configuración, sin cambiar nada", "Desinstala la conexión", "Cambia el servidor DNS manualmente"], "a": 0, "e": "Es el equivalente en Linux a release/renew en Windows: fuerza que el cliente pida configuración de red desde cero."}, {"t": 1, "s": "1.7 Cliente DHCP en Linux", "q": "¿Por qué conviene comprobar el nombre exacto de la conexión antes de usarlo en un comando?", "o": ["Porque puede variar entre equipos y el comando fallaría con un nombre incorrecto", "Porque NetworkManager lo exige como paso obligatorio siempre", "Porque cambia cada vez que se reinicia el equipo", "No importa, cualquier nombre funciona"], "a": 0, "e": "Si el nombre no coincide exactamente, el comando no encontrará la conexión y no hará nada."}, {"t": 1, "s": "1.8 Diagnóstico DHCP: journalctl y errores frecuentes", "q": "¿Qué comando ves los mensajes de isc-dhcp-server en tiempo real?", "o": ["tail -f /var/log/dhcp.log", "sudo journalctl -u isc-dhcp-server -f", "systemctl watch isc-dhcp-server", "dhcpd --log"], "a": 1, "e": "journalctl -u isc-dhcp-server -f muestra en directo los mensajes del sistema sobre este servicio."}, {"t": 1, "s": "1.8 Diagnóstico DHCP: journalctl y errores frecuentes", "q": "Un cliente recibe APIPA. Según la tabla, ¿qué compruebas primero?", "o": ["Si el servicio está activo", "Directamente la MAC de una reserva concreta", "El certificado HTTPS del servidor", "Los permisos de un archivo web"], "a": 0, "e": "APIPA apunta a un problema general del proceso DHCP, no a algo específico de una reserva."}, {"t": 1, "s": "1.8 Diagnóstico DHCP: journalctl y errores frecuentes", "q": "¿Por qué seguir un orden de diagnóstico (general antes que específico) ahorra tiempo?", "o": ["Porque descarta primero lo más probable de afectar a todos los clientes", "Porque Linux lo exige técnicamente", "Porque así se generan menos logs", "No ahorra tiempo, da igual el orden"], "a": 0, "e": "Revisar primero lo general evita investigar un detalle concreto (como una reserva) cuando el problema podría ser algo que afecta a todos los clientes por igual."}, {"t": 1, "s": "1.9 Programa completo: montaje cruzado con un compañero", "q": "¿Qué modo de red de VirtualBox permite que tu servidor atienda al cliente de otro equipo físico?", "o": ["NAT", "Bridge", "Solo-anfitrión", "Cualquiera de los tres"], "a": 1, "e": "Bridge conecta la VM a la red física real, la única forma de que dos equipos físicos distintos se vean entre sí."}, {"t": 1, "s": "1.9 Programa completo: montaje cruzado con un compañero", "q": "¿Qué riesgo hay si dos compañeros activan su servidor DHCP a la vez en modo bridge?", "o": ["Que los ámbitos compitan y los clientes reciban configuraciones distintas sin control", "Ninguno, DHCP está diseñado para eso", "Que se bloqueen mutuamente los dos servicios", "Que se fusionen automáticamente los dos ámbitos"], "a": 0, "e": "Con dos servidores DHCP activos en la misma red física, un cliente puede recibir una oferta de cualquiera de los dos, sin ningún control sobre cuál."}, {"t": 1, "s": "1.9 Programa completo: montaje cruzado con un compañero", "q": "En una práctica cruzada de este tipo, ¿cuántos servidores DHCP deberían estar activos a la vez en la misma red física?", "o": ["Todos los que haya en el aula", "Solo uno, para evitar ofertas en conflicto", "Exactamente dos", "No importa el número"], "a": 1, "e": "Para evitar el conflicto explicado en la sesión, solo un servidor DHCP debería estar activo en la misma red física en cada momento."}, {"t": 2, "s": "2.1 El árbol DNS: quién manda en cada rama", "q": "En el nombre `www.bodegasalmunia.es.`, ¿qué representa el punto final?", "o": ["La raíz del árbol DNS", "Que el nombre está mal escrito", "El TLD .es", "Un servidor concreto de la empresa"], "a": 0, "e": "El punto final es la raíz, el nudo del que cuelga todo. Casi nunca se escribe, pero cualquier nombre completo termina en él."}, {"t": 2, "s": "2.1 El árbol DNS: quién manda en cada rama", "q": "¿Quién decide qué nombres cuelgan por debajo de `bodegasalmunia.es`?", "o": ["El titular del dominio: la propia empresa", "Red.es, porque gestiona .es", "ICANN, porque gestiona la raíz", "El registrador que tramitó el alta"], "a": 0, "e": "Cada nivel delega en el siguiente: Red.es delega `bodegasalmunia.es` en su titular, y a partir de ahí la empresa crea lo que quiera (www, correo, sanlucar…) sin pedir permiso a nadie."}, {"t": 2, "s": "2.1 El árbol DNS: quién manda en cada rama", "q": "¿Cuántas máquinas forman los servidores raíz?", "o": ["Exactamente 13, una por letra", "Muchas más: cada una de las 13 letras tiene copias repartidas por todo el mundo", "Una sola, en Estados Unidos", "Ninguna: la raíz no existe físicamente"], "a": 1, "e": "Hay 13 nombres (de la a a la m), pero cada uno tiene muchas copias idénticas en distintas ciudades, con la misma dirección IP (anycast). En total son cerca de dos mil instancias."}, {"t": 2, "s": "2.2 Comprar un nombre: registro, registrador y whois", "q": "¿Qué consigues realmente al \"comprar\" un dominio?", "o": ["El derecho a usar ese nombre durante un tiempo, renovable", "La propiedad del nombre para siempre", "Un servidor web con ese nombre", "Una dirección IP pública"], "a": 0, "e": "El dominio se contrata por periodos (normalmente un año). Si no se renueva, caduca y queda libre para otro."}, {"t": 2, "s": "2.2 Comprar un nombre: registro, registrador y whois", "q": "Al dar de alta `bodegasalmunia.es`, ¿qué escribe Red.es en la zona `.es`?", "o": ["Los servidores NS que van a gestionar ese dominio: una delegación", "Las IP de todos los equipos de la empresa", "El contenido de la web", "Nada: la zona .es no cambia"], "a": 0, "e": "El registro solo apunta quién manda en tu dominio (sus NS). A partir de ahí, los nombres de dentro los decides tú en esos servidores."}, {"t": 2, "s": "2.2 Comprar un nombre: registro, registrador y whois", "q": "¿Para qué sirve whois (o RDAP)?", "o": ["Para consultar los datos públicos de un dominio: registrador, fechas, estado y servidores DNS", "Para saber la IP de cualquier equipo", "Para comprar un dominio desde la terminal", "Para comprobar si un servidor web está encendido"], "a": 0, "e": "Whois y RDAP consultan el registro del dominio. Para saber IP se usa DNS (dig, nslookup)."}, {"t": 2, "s": "2.3 Subdividir lo que es tuyo: zonas y servidores no son lo mismo", "q": "¿Puede un mismo servidor DNS ser autoritativo de varias zonas?", "o": ["Sí, incluso de zonas de empresas distintas", "No: cada servidor sirve exactamente una zona", "Solo si todas las zonas son del mismo TLD", "Solo si es un servidor raíz"], "a": 0, "e": "Un servidor es una máquina que carga las zonas que le configures. Los proveedores de DNS sirven miles de zonas de clientes distintos desde los mismos servidores."}, {"t": 2, "s": "2.3 Subdividir lo que es tuyo: zonas y servidores no son lo mismo", "q": "La empresa delega `sanlucar.bodegasalmunia.es` a la sede de Sanlúcar. ¿Dónde se escribe el nombre `tienda.sanlucar.bodegasalmunia.es`?", "o": ["En la zona `sanlucar.bodegasalmunia.es`, que administra la sede", "En la zona `bodegasalmunia.es`, que administra la oficina de Jerez", "En la zona `.es`, en Red.es", "En los dos sitios a la vez, obligatoriamente"], "a": 0, "e": "Al delegar, la zona padre solo guarda \"para sanlucar, pregunta a estos servidores\". Los nombres de dentro los escribe y los cambia la propia sede."}, {"t": 2, "s": "2.3 Subdividir lo que es tuyo: zonas y servidores no son lo mismo", "q": "¿Qué diferencia hay entre el dominio `bodegasalmunia.es` y la zona `bodegasalmunia.es`?", "o": ["El dominio incluye todo lo que cuelga de ese nudo; la zona, solo la parte que no se ha delegado", "Ninguna, son sinónimos", "La zona es más grande que el dominio", "El dominio es un servidor y la zona un archivo"], "a": 0, "e": "La zona termina donde empieza una delegación. Por eso un dominio puede estar repartido en varias zonas con responsables distintos."}, {"t": 2, "s": "2.4 Caso práctico: repartir los nombres de una empresa", "q": "En el caso de Bodegas, ¿por qué `oficina` no se delega y `sanlucar` sí?", "o": ["Porque `oficina` la administra el mismo informático que la zona principal, y `sanlucar` tiene su propio técnico", "Porque `oficina` tiene menos equipos", "Porque Sanlúcar está en otra ciudad y por eso es obligatorio", "Porque los subdominios con nombre de ciudad siempre se delegan"], "a": 0, "e": "Lo que decide si se delega es quién administra los nombres, no el tamaño ni el sitio."}, {"t": 2, "s": "2.4 Caso práctico: repartir los nombres de una empresa", "q": "La web de Bodegas está en un alojamiento de otra empresa, en Alemania. ¿En qué zona está el nombre `www.bodegasalmunia.es`?", "o": ["En la zona `bodegasalmunia.es`: la empresa decide a qué IP apunta", "En una zona de la empresa de alojamiento", "En la zona `.de`", "No puede tener nombre en `.es` si está en Alemania"], "a": 0, "e": "El árbol de nombres es organizativo: el nombre está donde decide su dueño, y apunta a la IP de la máquina esté donde esté."}, {"t": 2, "s": "2.4 Caso práctico: repartir los nombres de una empresa", "q": "Si se apaga `ns.sanlucar.bodegasalmunia.es`, ¿se puede seguir resolviendo `tienda.sanlucar.bodegasalmunia.es`?", "o": ["Sí, porque `ns1.bodegasalmunia.es` tiene una copia secundaria de esa zona", "No, porque la zona solo vive en el servidor de Sanlúcar", "Solo desde la propia tienda", "Solo si se reinicia el servidor de Jerez"], "a": 0, "e": "Por eso cada zona va en al menos dos servidores: el secundario sigue respondiendo con su copia."}, {"t": 2, "s": "2.5 Cómo se busca un nombre de verdad: recursiva e iterativa", "q": "¿Qué espera tu equipo cuando hace una consulta recursiva a su servidor DNS?", "o": ["La respuesta final, sin pasos intermedios", "Solo una pista de a quién más preguntar", "Una lista de todos los servidores raíz", "Nada, tu equipo no hace consultas DNS directamente"], "a": 0, "e": "Una consulta recursiva pide la respuesta completa de una sola vez; el trabajo de encontrarla, si hace falta, lo hace el servidor, no el cliente."}, {"t": 2, "s": "2.5 Cómo se busca un nombre de verdad: recursiva e iterativa", "q": "En una resolución iterativa, ¿qué da un servidor raíz cuando no conoce la respuesta final?", "o": ["Un error NXDOMAIN", "Una referencia: el nombre del servidor al que preguntar después", "La IP correcta directamente", "Nada, no responde nunca"], "a": 1, "e": "El servidor raíz nunca tiene la respuesta final de un dominio concreto, pero sí sabe qué servidor de TLD puede tenerla, y esa pista es lo que devuelve."}, {"t": 2, "s": "2.5 Cómo se busca un nombre de verdad: recursiva e iterativa", "q": "¿Por qué los servidores raíz normalmente rechazan consultas recursivas de cualquiera?", "o": ["Porque solo dan referencias, no hacen ellos mismos el trabajo completo de buscar la respuesta final para otro", "Porque no tienen suficiente capacidad para tantas consultas", "Porque están diseñados solo para consultas de bind9", "No es cierto, los servidores raíz siempre aceptan cualquier tipo de consulta"], "a": 0, "e": "Aceptar consultas recursivas de cualquier origen obligaría a los servidores raíz a hacer, ellos mismos, todo el trabajo iterativo por cada petición del mundo entero, algo que no está pensado para escalar así."}, {"t": 2, "s": "2.6 Instalar bind9 en Debian 13", "q": "¿Cómo se llama el proceso de bind9 en ejecución?", "o": ["bind9", "named", "dns9", "bindd"], "a": 1, "e": "El paquete se llama bind9, pero el proceso se llama named."}, {"t": 2, "s": "2.6 Instalar bind9 en Debian 13", "q": "¿En qué archivo declararás tus propias zonas DNS?", "o": ["named.conf", "named.conf.options", "named.conf.local", "named.conf.default-zones"], "a": 2, "e": "named.conf.local es el archivo reservado para las zonas propias del administrador."}, {"t": 2, "s": "2.6 Instalar bind9 en Debian 13", "q": "¿Por qué validar con named-checkconf antes de recargar?", "o": ["Porque un error de sintaxis puede impedir que el servicio arranque", "Porque es obligatorio por ley", "Porque named-checkconf corrige errores automáticamente", "Porque bind9 no permite editar sin validar antes"], "a": 0, "e": "Un error de sintaxis puede dejar caída toda la resolución de nombres del servidor."}, {"t": 2, "s": "2.7 Zona directa: registros SOA y NS", "q": "¿Qué indica type master al declarar una zona?", "o": ["Que tu servidor es autoritativo de esa zona", "Que la zona es de solo lectura", "Que el servidor actúa como caché", "Que la zona pertenece a otro servidor"], "a": 0, "e": "master indica que tu servidor tiene la copia original de la zona."}, {"t": 2, "s": "2.7 Zona directa: registros SOA y NS", "q": "¿Qué diferencia hay entre `ns.practicas.local.` y `ns.practicas.local` (sin punto)?", "o": ["El primero es un nombre completo; al segundo bind9 le añade el nombre de la zona", "No hay diferencia", "El segundo es más rápido", "El punto solo afecta a MX"], "a": 0, "e": "Sin el punto final, bind9 interpreta el nombre como relativo a la zona."}, {"t": 2, "s": "2.7 Zona directa: registros SOA y NS", "q": "¿Para qué sirve el número de serie del SOA?", "o": ["Para que otros servidores sepan que la zona cambió", "Para identificar el dominio a nivel mundial", "Para cifrar consultas", "Es decorativo"], "a": 0, "e": "Hay que incrementarlo cada vez que se modifica el archivo de zona."}, {"t": 2, "s": "2.8 Registros A y CNAME: nombres y alias", "q": "¿Qué hace un registro A?", "o": ["Asocia un nombre a una IPv4 directamente", "Crea un alias hacia otro nombre", "Define el servidor autoritativo", "Reenvía consultas a otro servidor"], "a": 0, "e": "A es la traducción directa nombre → IP."}, {"t": 2, "s": "2.8 Registros A y CNAME: nombres y alias", "q": "¿A qué apunta un CNAME?", "o": ["Directamente a una IP", "A otro nombre, que debe tener su propio registro A", "Al servidor de correo", "Siempre al SOA"], "a": 1, "e": "CNAME es un alias hacia otro nombre, nunca hacia una IP directa."}, {"t": 2, "s": "2.8 Registros A y CNAME: nombres y alias", "q": "Si la IP del servidor cambia, ¿qué hay que actualizar si hay varios CNAME apuntando a él?", "o": ["Solo el registro A; los CNAME siguen funcionando solos", "Cada CNAME también debe actualizarse", "Hay que borrar y recrear todo", "Nada, DNS lo detecta automáticamente"], "a": 0, "e": "Los CNAME no guardan IP, solo una referencia al nombre, así que se actualizan solos."}, {"t": 2, "s": "2.9 Práctica guiada: tu servidor primario, de cero a probado", "q": "¿Qué indica la marca `aa` en la respuesta de `dig @192.168.77.5 www.practicas.local`?", "o": ["Que la respuesta viene del servidor dueño de la zona: es autoritativa", "Que la respuesta viene de la caché", "Que el nombre es un alias", "Que la consulta ha fallado"], "a": 0, "e": "`aa` (authoritative answer) solo la pone un servidor que tiene los datos de la zona. Tu bind9 es el primario de practicas.local, así que la pone."}, {"t": 2, "s": "2.9 Práctica guiada: tu servidor primario, de cero a probado", "q": "Al preguntar por `www.practicas.local`, `dig` devuelve dos líneas en ANSWER. ¿Por qué?", "o": ["Porque www es un alias (CNAME) de servidor, y el servidor añade también el registro A al que lleva", "Porque hay dos servidores DNS", "Porque www tiene dos IP distintas", "Porque la zona está duplicada"], "a": 0, "e": "Primero aparece el alias (www → servidor) y después la IP de servidor. El cliente recibe las dos cosas en una sola respuesta."}, {"t": 2, "s": "2.9 Práctica guiada: tu servidor primario, de cero a probado", "q": "Recargas bind9 tras editar la zona y `journalctl` muestra un error en `db.practicas.local`. ¿Qué comando te habría avisado antes de recargar?", "o": ["`named-checkzone practicas.local /etc/bind/db.practicas.local`", "`ipconfig /flushdns`", "`systemctl status bind9`", "`ping servidor.practicas.local`"], "a": 0, "e": "named-checkzone revisa el archivo de zona sin tocar el servicio. Por eso cada cambio sigue el orden editar → validar → recargar."}, {"t": 2, "s": "2.10 Servidores secundarios y delegación de subdominios", "q": "¿Cómo obtiene un servidor secundario el contenido de la zona?", "o": ["Lo escribe manualmente el administrador, igual que en el primario", "Lo recibe automáticamente del primario mediante una transferencia de zona", "Lo genera él mismo a partir del tráfico de red que observa", "No puede tener copia, solo redirige las consultas al primario"], "a": 1, "e": "El secundario no tiene su propia fuente de verdad: replica automáticamente lo que dice el primario mediante una transferencia de zona."}, {"t": 2, "s": "2.10 Servidores secundarios y delegación de subdominios", "q": "¿Qué usa un servidor secundario para saber que tiene que pedir una actualización?", "o": ["La hora del sistema", "El número de serie del SOA, comparado con el que tiene guardado", "Un mensaje manual del administrador cada vez", "El tamaño del archivo de zona"], "a": 1, "e": "Si el serial del primario es mayor que el que el secundario tiene almacenado, sabe que hay cambios pendientes de sincronizar."}, {"t": 2, "s": "2.12 MX, TXT y forwarders", "q": "¿Qué campo obligatorio lleva un MX que no llevan A o CNAME?", "o": ["Un número de serie", "Un valor de prioridad", "Una IPv6", "Un TTL especial"], "a": 1, "e": "El MX necesita un número de prioridad para decidir el orden entre varios servidores de correo."}, {"t": 2, "s": "2.12 MX, TXT y forwarders", "q": "¿Para qué sirven los forwarders?", "o": ["Para reenviar consultas que no son de tus propias zonas", "Para declarar tus zonas propias", "Para cifrar el tráfico DNS", "Para bloquear dominios"], "a": 0, "e": "Permiten que un servidor autoritativo de su zona resuelva igualmente cualquier otro nombre externo."}, {"t": 2, "s": "2.12 MX, TXT y forwarders", "q": "¿Qué diferencia hay con y sin forward only?", "o": ["Con ella, el servidor solo usa los forwarders; sin ella, puede resolver por su cuenta si fallan", "forward only ignora los forwarders configurados", "Sin ella, nunca se usan los forwarders", "No hay diferencia"], "a": 0, "e": "forward only restringe al servidor a depender exclusivamente de los forwarders indicados."}, {"t": 2, "s": "2.13 Cliente DNS en Windows y Linux", "q": "¿Qué hace ipconfig /flushdns?", "o": ["Vacía la caché de resolución local", "Cambia el servidor DNS", "Reinicia la tarjeta de red", "Fuerza una renovación DHCP"], "a": 0, "e": "Elimina las entradas cacheadas, evitando respuestas antiguas tras cambiar de servidor."}, {"t": 2, "s": "2.13 Cliente DNS en Windows y Linux", "q": "Cambias un registro y el cliente sigue viendo el valor antiguo. ¿Qué comprobarías primero?", "o": ["La caché del cliente y el TTL del registro", "Reinstalar bind9 directamente", "Cambiar la IP del cliente", "Nada, es imposible que sea caché"], "a": 0, "e": "Es el síntoma típico de una respuesta cacheada, respetando el TTL configurado."}, {"t": 2, "s": "2.14 Diagnóstico DNS: dig, journalctl y NXDOMAIN", "q": "¿Qué significa una respuesta NXDOMAIN?", "o": ["Que el servidor respondió bien, pero ese nombre no existe", "Que el servidor no funciona", "Que hay un problema de red", "Que el firewall bloquea la consulta"], "a": 0, "e": "NXDOMAIN es una respuesta DNS válida y completa, confirmando que el nombre no existe."}, {"t": 2, "s": "2.14 Diagnóstico DNS: dig, journalctl y NXDOMAIN", "q": "¿Qué comando dirige una consulta dig a un servidor concreto?", "o": ["dig -server 192.168.77.5 nombre", "dig @192.168.77.5 nombre", "dig --dns=192.168.77.5 nombre", "dig nombre 192.168.77.5"], "a": 1, "e": "El símbolo @ seguido de la IP indica a qué servidor dirigir la consulta."}, {"t": 2, "s": "2.14 Diagnóstico DNS: dig, journalctl y NXDOMAIN", "q": "¿Qué puerto y protocolo usa DNS principalmente?", "o": ["Puerto 53 TCP exclusivamente", "Puerto 53 UDP (TCP en casos concretos)", "Puerto 80 UDP", "Puerto 67 UDP"], "a": 1, "e": "DNS usa sobre todo UDP en el puerto 53, reservando TCP para casos como transferencias de zona."}, {"t": 2, "s": "2.15 Programa completo: DHCP y DNS integrados", "q": "¿Qué opción del ámbito DHCP entrega la IP del DNS automáticamente?", "o": ["option routers", "option domain-name-servers", "option domain-name", "option broadcast-address"], "a": 1, "e": "Es la opción específica que indica al cliente qué servidor DNS usar."}, {"t": 2, "s": "2.15 Programa completo: DHCP y DNS integrados", "q": "Un cliente con concesión DHCP activa desde antes del cambio, ¿recibe el nuevo DNS automáticamente?", "o": ["Sí, siempre e inmediato", "No necesariamente, hasta que renueve", "Solo si se reinicia el servidor DHCP", "Nunca, hay que reconfigurar a mano"], "a": 1, "e": "Sin renovar, el cliente sigue con la configuración de su concesión previa."}, {"t": 2, "s": "2.15 Programa completo: DHCP y DNS integrados", "q": "¿Por qué no basta con que cada servicio funcione por separado?", "o": ["Porque pueden aparecer fallos justo en el punto donde se conectan", "Porque comparten el mismo archivo de configuración", "Porque no se puede probar por separado", "Si cada uno funciona, ya es suficiente"], "a": 0, "e": "El punto de conexión (una IP mal escrita, una concesión sin renovar) es un fallo propio de la integración."}];
+
+/* ---------- archivos anotados ---------- */
+const ANN = {
+default:{file:'/etc/default/isc-dhcp-server',rows:[
+ ['INTERFACESv4="enp0s3"','La interfaz donde escucha. Pon la que veas en ip a (enp0s3 es típica en VirtualBox).'],
+ ['INTERFACESv6=""','IPv6 vacío: no lo usamos.']]},
+dhcpconf:{file:'/etc/dhcp/dhcpd.conf',rows:[
+ ['# Red 192.168.77.0/27 → hosts .1 a .30','Las líneas con # son comentarios.'],
+ ['subnet 192.168.77.0 netmask 255.255.255.224 {','Abre el ámbito: dirección de RED + máscara en decimal (no /27). Termina en {'],
+ ['  range 192.168.77.10 192.168.77.30;','IPs que se reparten. Dentro de la red. .1–.9 quedan libres para IPs fijas.'],
+ ['  option routers 192.168.77.1;','Puerta de enlace que recibirán los clientes.'],
+ ['  option domain-name-servers 192.168.77.5;','DNS que recibirán (pieza que une con el Tema 2). Varios: separados por comas.'],
+ ['  option domain-name "practicas.local";','Dominio de búsqueda. Va entre comillas.'],
+ ['',''],
+ ['  host servidor-web {','Reserva: nombre libre del bloque.'],
+ ['    hardware ethernet 08:00:27:AA:BB:CC;','MAC del cliente, con dos puntos.'],
+ ['    fixed-address 192.168.77.5;','IP que siempre recibirá. Fuera del range.'],
+ ['  }','Cierra la reserva (sin ;).'],
+ ['}','Cierra el ámbito.'],
+ ['',''],
+ ['subnet 192.168.78.0 netmask 255.255.255.224 {','Segundo ámbito: otra red. El servidor necesita una interfaz en ella.'],
+ ['  range 192.168.78.10 192.168.78.30;',''],
+ ['  option routers 192.168.78.1;','Gateway de SU red, no de la otra.'],
+ ['}','']]},
+namedlocal:{file:'/etc/bind/named.conf.local',rows:[
+ ['zone "practicas.local" {','Nombre de la zona entre comillas.'],
+ ['    type master;','Primario: aquí está el original y aquí se edita. (Secundario = type slave.)'],
+ ['    file "/etc/bind/db.practicas.local";','Ruta del archivo de zona. Tiene que coincidir con el archivo real.'],
+ ['};','La llave de cierre también lleva ;']]},
+zona:{file:'/etc/bind/db.practicas.local',rows:[
+ ['$TTL    604800','TTL por defecto: 1 semana en segundos.'],
+ ['@       IN      SOA     ns.practicas.local. admin.practicas.local. (','@ = la zona. Servidor primario y correo del admin (admin@practicas.local escrito con punto). Ambos con punto final.'],
+ ['                     2026102601         ; serial','Súbelo en cada cambio. AAAAMMDD + revisión.'],
+ ['                         604800         ; refresh','Cada cuánto el secundario mira si hay cambios.'],
+ ['                          86400         ; retry','Si falla el refresh, cuándo reintenta.'],
+ ['                        2419200         ; expire','Si no contacta con el primario en este tiempo, el secundario deja de responder.'],
+ ['                         604800 )       ; negative cache TTL','Cuánto se recuerda un NXDOMAIN. Cierra el paréntesis.'],
+ [';','; inicia comentario en la zona.'],
+ ['@               IN      NS      ns.practicas.local.','Servidor autoritativo de la zona.'],
+ ['ns              IN      A       192.168.77.5','Obligatorio: la IP del NS. Nombres de la izquierda SIN punto.'],
+ ['servidor        IN      A       192.168.77.5',''],
+ ['cliente-win     IN      A       192.168.77.10',''],
+ ['cliente-ubuntu  IN      A       192.168.77.11',''],
+ ['www             IN      CNAME   servidor.practicas.local.','Alias hacia un nombre completo: CON punto final.'],
+ ['intranet        IN      CNAME   servidor.practicas.local.',''],
+ ['@               IN      MX  10  servidor.practicas.local.','Correo. El 10 (prioridad) es obligatorio.'],
+ ['@               IN      TXT     "Red de practicas SRI - 2o SMR"','Texto libre entre comillas.']]},
+dig:{file:'dig @192.168.77.5 www.practicas.local',rows:[
+ [';; ->>HEADER<<- opcode: QUERY, status: NOERROR','NOERROR = ha encontrado el nombre.'],
+ [';; flags: qr aa rd ra; QUERY: 1, ANSWER: 2','aa = respuesta autoritativa: este servidor es dueño de la zona.'],
+ [';; ANSWER SECTION:',''],
+ ['www.practicas.local.      604800 IN CNAME servidor.practicas.local.','Primera línea: el alias.'],
+ ['servidor.practicas.local. 604800 IN A     192.168.77.5','Segunda: la IP del nombre real. Por eso salen dos líneas.']]},
+slave:{file:'secundario · named.conf.local (192.168.77.6)',rows:[
+ ['zone "practicas.local" {',''],
+ ['    type slave;','Copia, no se edita aquí.'],
+ ['    masters { 192.168.77.5; };','IP del PRIMARIO.'],
+ ['    file "/var/cache/bind/db.practicas.local";','En /var/cache/bind: lo escribe bind9 al recibir la zona.'],
+ ['};',''],
+ ['// en el PRIMARIO, dentro de su zone { }:',''],
+ ['    allow-transfer { 192.168.77.6; };','IP del SECUNDARIO autorizada a copiar.'],
+ ['; y en db.practicas.local del primario (+ serial):',''],
+ ['@     IN  NS  ns2.practicas.local.','El secundario figura como NS…'],
+ ['ns2   IN  A   192.168.77.6','…con su A.']]},
+deleg:{file:'en db.practicas.local (zona padre)',rows:[
+ ['alumnos      IN  NS  ns.alumnos.practicas.local.','Delega alumnos.practicas.local.'],
+ ['ns.alumnos   IN  A   192.168.77.30','Glue: el NS está dentro del subdominio delegado.']]},
+options:{file:'/etc/bind/named.conf.options',rows:[
+ ['options {',''],
+ ['    directory "/var/cache/bind";','Carpeta de trabajo de bind9.'],
+ ['    forwarders {','A quién reenviar lo que no es tuyo (google.com…).'],
+ ['        8.8.8.8;','Cada IP con su ;'],
+ ['        1.1.1.1;',''],
+ ['    };',''],
+ ['    dnssec-validation auto;',''],
+ ['    listen-on { any; };','Escucha en todas las interfaces.'],
+ ['};','']]},
+integra:{file:'/etc/dhcp/dhcpd.conf',rows:[
+ ['subnet 192.168.77.0 netmask 255.255.255.224 {',''],
+ ['  range 192.168.77.10 192.168.77.30;',''],
+ ['  option routers 192.168.77.1;',''],
+ ['  option domain-name-servers 192.168.77.5;','LA pieza que une DHCP con DNS: la IP de tu bind9.'],
+ ['  option domain-name "practicas.local";','Así el cliente puede escribir solo "www".'],
+ ['}','']]}
+};
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function copyText(txt, btn){
+  const done = ()=>{btn.textContent='Copiado';setTimeout(()=>btn.textContent='Copiar',1300)};
+  try{ navigator.clipboard.writeText(txt).then(done).catch(()=>sel()); }catch(e){ sel(); }
+  function sel(){ const pre=btn.closest('.codebox').querySelector('pre'); const r=document.createRange(); r.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent='Selecciona y copia'; }
+}
+function codeBox(file, inner, raw){
+  const box=document.createElement('div'); box.className='codebox';
+  box.innerHTML='<div class="codebar"><span>'+esc(file)+'</span><button type="button" class="copy">Copiar</button></div>'+inner;
+  box.querySelector('.copy').addEventListener('click',e=>copyText(raw,e.currentTarget));
+  return box;
+}
+document.querySelectorAll('[data-ann]').forEach(el=>{
+  const a=ANN[el.dataset.ann];
+  const rows=a.rows.map(([c,n])=>'<div class="ann-row"><pre>'+(esc(c)||' ')+'</pre><div>'+esc(n)+'</div></div>').join('');
+  el.replaceWith(codeBox(a.file,'<div class="ann-rows">'+rows+'</div>',a.rows.map(r=>r[0]).filter(l=>!l.startsWith('//')).join('\n')));
+});
+document.querySelectorAll('pre.code[data-file]').forEach(pre=>{
+  const raw=pre.textContent; const file=pre.dataset.file;
+  const p=pre.cloneNode(true); p.removeAttribute('data-file');
+  pre.replaceWith(codeBox(file,p.outerHTML,raw));
+});
+
+/* ---------- navegación ---------- */
+const VIEWS=['inicio','t0','dhcp','dns','errores','escribir','comandos','test'];
+function route(){
+  const h=(location.hash||'#inicio').slice(1);
+  let view=VIEWS.includes(h)?h:null, anchor=null;
+  if(!view){ const el=document.getElementById(h); const sec=el&&el.closest('[data-view]'); if(sec){view=sec.dataset.view;anchor=el;} else view='inicio'; }
+  document.querySelectorAll('[data-view]').forEach(s=>s.hidden=s.dataset.view!==view);
+  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+view?'page':'false'));
+  const cur=document.querySelector('nav.tabs a[aria-current="page"]'); if(cur) cur.scrollIntoView({block:'nearest',inline:'nearest'});
+  if(anchor){ requestAnimationFrame(()=>{const y=anchor.getBoundingClientRect().top+scrollY-70; scrollTo(0,y);}); } else scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+
+/* ---------- entrenador subredes ---------- */
+const ip2n=s=>{const p=s.trim().split('.');if(p.length!==4)return null;let n=0;for(const x of p){if(!/^\d{1,3}$/.test(x)||+x>255)return null;n=n*256+ +x;}return n;};
+const n2ip=n=>[24,16,8,0].map(b=>(n>>>b)&255).join('.');
+let SUB=null;
+function newSub(){
+  const pre=[[10,()=>[10,r(256),r(256),r(256)]],[172,()=>[172,16+r(16),r(256),r(256)]],[192,()=>[192,168,r(256),r(256)]]];
+  function r(n){return Math.floor(Math.random()*n)}
+  const oct=pre[r(3)][1](); const cidr=[22,23,24,25,26,27,27,28,28,29,30][r(11)];
+  const ip=oct.reduce((a,b)=>a*256+b,0)>>>0; const mask=cidr===0?0:(0xFFFFFFFF<<(32-cidr))>>>0;
+  const net=(ip&mask)>>>0, bc=(net|(~mask>>>0))>>>0;
+  if(ip===net||ip===bc) return newSub();
+  SUB={ip,cidr,mask,net,bc,first:net+1,last:bc-1,hosts:Math.pow(2,32-cidr)-2};
+  document.getElementById('sub-q').textContent=n2ip(ip)+'/'+cidr;
+  ['mask','net','bc','first','last','hosts'].forEach(k=>{const i=document.getElementById('sub-'+k);i.value='';i.className='';});
+  document.getElementById('sub-msg').textContent='';
+}
+function checkSub(show){
+  const map={mask:n2ip(SUB.mask),net:n2ip(SUB.net),bc:n2ip(SUB.bc),first:n2ip(SUB.first),last:n2ip(SUB.last),hosts:String(SUB.hosts)};
+  let ok=0;
+  for(const k in map){const i=document.getElementById('sub-'+k); if(show){i.value=map[k];i.className='ok';ok++;continue;}
+    const good=k==='hosts'?i.value.trim()===map[k]:ip2n(i.value)!==null&&n2ip(ip2n(i.value))===map[k];
+    i.className=good?'ok':'ko'; if(good)ok++;}
+  const bits=32-SUB.cidr;
+  document.getElementById('sub-msg').textContent=show?('Bits de host: '+bits+' → 2^'+bits+' − 2 = '+SUB.hosts+'. Salto en el octeto que cambia: '+(bits%8===0?256:Math.pow(2,bits%8))+'.'):(ok+' de 6 correctas');
+}
+document.getElementById('sub-new').addEventListener('click',newSub);
+document.getElementById('sub-check').addEventListener('click',()=>checkSub(false));
+document.getElementById('sub-show').addEventListener('click',()=>checkSub(true));
+newSub();
+
+/* ---------- encuentra el error ---------- */
+const ERRS=[
+{t:'dhcp',title:'El ámbito no arranca',ctx:'Red 192.168.77.0/27, puerta de enlace .1, DNS .5. El servicio queda en failed.',file:'/etc/dhcp/dhcpd.conf',
+ lines:['subnet 192.168.77.0 netmask 255.255.255.224 {','  range 192.168.77.10 192.168.77.40;','  option routers 192.168.77.1','  option domain-name-servers 192.168.77.5;','}'],
+ bad:{1:'192.168.77.40 está fuera de la red: un /27 va de .0 a .31 (broadcast). El rango debe acabar como mucho en .30.',2:'Falta el ; al final. Cada opción de dhcpd.conf termina en punto y coma.'}},
+{t:'dhcp',title:'La reserva no se aplica',ctx:'La impresora tiene la MAC 08:00:27:3A:1F:C2 (ipconfig /all la enseña como 08-00-27-3A-1F-C2).',file:'/etc/dhcp/dhcpd.conf',
+ lines:['subnet 192.168.77.0 netmask 255.255.255.224 {','  range 192.168.77.10 192.168.77.30;','  option routers 192.168.77.1;','  host impresora {','    hardware ethernet 08-00-27-3A-1F-C2;','    fixed address 192.168.77.4;','  }','}'],
+ bad:{4:'dhcpd quiere la MAC con dos puntos: 08:00:27:3A:1F:C2. El formato con guiones es el de Windows.',5:'La directiva es fixed-address, con guion.'}},
+{t:'dhcp',title:'Activo pero no reparte nada',ctx:'systemctl status dice active (running). En el servidor, ip a muestra la tarjeta enp0s3.',file:'/etc/default/isc-dhcp-server',
+ lines:['INTERFACESv4="eth0"','INTERFACESv6=""'],
+ bad:{0:'La interfaz no coincide con la real (enp0s3). El servicio arranca pero no escucha donde están los clientes: fallo silencioso.'}},
+{t:'dhcp',title:'Dos redes en el mismo servidor',ctx:'El servidor tiene interfaz en 192.168.77.0/27 (gateway .77.1) y en 192.168.78.0/27 (gateway .78.1).',file:'/etc/dhcp/dhcpd.conf',
+ lines:['subnet 192.168.77.0 netmask 255.255.255.224 {','  range 192.168.77.10 192.168.77.30;','  option routers 192.168.77.1;','  option domain-name practicas.local;','}','','subnet 192.168.78.0 netmask 255.255.255.0 {','  range 192.168.78.10 192.168.78.30;','  option routers 192.168.77.1;','}'],
+ bad:{3:'El dominio es una cadena: va entre comillas, "practicas.local".',6:'La red es /27: la máscara es 255.255.255.224, no 255.255.255.0.',8:'Cada ámbito lleva la puerta de enlace de su propia red: 192.168.78.1.'}},
+{t:'dhcp',title:'Integración DHCP + DNS',ctx:'El servidor DNS es 192.168.77.5 y el router 192.168.77.1. Los clientes reciben IP pero no resuelven nombres.',file:'/etc/dhcp/dhcpd.conf',
+ lines:['subnet 192.168.77.0 netmask 255.255.255.224 {','  range 192.168.77.10 192.168.77.30;','  option routers 192.168.77.1;','  option domain-name-servers 192.168.77.50;','  option domain-name "practicas.local";','}'],
+ bad:{3:'La IP del DNS está mal escrita: es 192.168.77.5. Además, .50 ni siquiera está en la red /27.'}},
+{t:'dns',title:'named-checkconf da error',ctx:'Declaración de la zona primaria.',file:'/etc/bind/named.conf.local',
+ lines:['zone "practicas.local" {','    type master;','    file "/etc/bind/db.practicas.local"','}'],
+ bad:{2:'Falta el ; al final de la línea file.',3:'En bind9 el cierre del bloque también lleva ;  →  };'}},
+{t:'dns',title:'El SOA tiene fallos',ctx:'Esqueleto de la zona practicas.local.',file:'/etc/bind/db.practicas.local',
+ lines:['$TTL    604800','@   IN  SOA  ns.practicas.local admin@practicas.local. (','            2026110301   ; serial','            604800       ; refresh','            86400        ; retry','            2419200      ; expire','            604800 )     ; negative cache TTL','@   IN  NS   ns.practicas.local.','ns  IN  A    192.168.77.5'],
+ bad:{1:'Dos errores: ns.practicas.local sin punto final (bind9 lo convierte en ns.practicas.local.practicas.local.) y el correo con @. Debe ser admin.practicas.local.'}},
+{t:'dns',title:'Registros mal escritos',ctx:'servidor es 192.168.77.5. Se quiere web, correo e intranet en esa máquina.',file:'/etc/bind/db.practicas.local',
+ lines:['servidor   IN  A      192.168.77.5','www        IN  CNAME  192.168.77.5','@          IN  MX     servidor.practicas.local.','correo     IN  CNAME  servidor.practicas.local.','correo     IN  A      192.168.77.5','@          IN  CNAME  servidor.practicas.local.','intranet   IN  CNAME  servidor.practicas.local.'],
+ bad:{1:'Un CNAME apunta a un nombre, nunca a una IP. Debe ser: www IN CNAME servidor.practicas.local.  (o un registro A).',2:'Al MX le falta la prioridad obligatoria: @ IN MX 10 servidor.practicas.local.',4:'correo ya es un CNAME: un nombre con CNAME no puede tener ningún otro registro. Sobra una de las dos líneas.',5:'No se puede poner CNAME en @, el nombre de la propia zona (ahí están SOA y NS).'}},
+{t:'dns',title:'El secundario no se actualiza',ctx:'Ayer la zona tenía serial 2026110301. Hoy has añadido ftp y el secundario no lo ve.',file:'/etc/bind/db.practicas.local',
+ lines:['$TTL    604800','@   IN  SOA  ns.practicas.local. admin.practicas.local. (','            2026110301   ; serial','            604800 86400 2419200 604800 )','@   IN  NS   ns.practicas.local.','@   IN  NS   ns2.practicas.local.','ns  IN  A    192.168.77.5','ns2 IN  A    192.168.77.6','ftp IN  CNAME servidor.practicas.local.'],
+ bad:{2:'No se ha subido el serial. Debe ser 2026110302 (o mayor): el secundario solo copia si el serial del primario es mayor que el suyo.'}},
+{t:'dns',title:'La transferencia de zona falla',ctx:'Primario 192.168.77.5, secundario 192.168.77.6.',file:'named.conf.local (primario arriba, secundario abajo)',
+ lines:['// PRIMARIO','zone "practicas.local" {','    type master;','    file "/etc/bind/db.practicas.local";','    allow-transfer { 192.168.77.5; };','};','// SECUNDARIO','zone "practicas.local" {','    type slave;','    masters { 192.168.77.6; };','    file "/var/cache/bind/db.practicas.local";','};'],
+ bad:{4:'allow-transfer lleva la IP del SECUNDARIO, que es quien pide la copia: 192.168.77.6.',9:'masters lleva la IP del PRIMARIO, de donde se copia: 192.168.77.5.'}},
+{t:'dns',title:'Delegación que no resuelve',ctx:'Delegar alumnos.practicas.local al servidor ns.alumnos.practicas.local (192.168.77.30).',file:'/etc/bind/db.practicas.local',
+ lines:['@            IN  NS  ns.practicas.local.','ns           IN  A   192.168.77.5','alumnos      IN  NS  ns.alumnos.practicas.local','ns           IN  A   192.168.77.30'],
+ bad:{2:'Falta el punto final: se convierte en ns.alumnos.practicas.local.practicas.local.',3:'El glue debe ser ns.alumnos IN A 192.168.77.30. Escrito como "ns" crea otra IP para el NS de la zona padre.'}},
+{t:'dns',title:'No resuelve google.com',ctx:'practicas.local funciona, pero los nombres de Internet no. bind9 no arranca tras el último cambio.',file:'/etc/bind/named.conf.options',
+ lines:['options {','    directory "/var/cache/bind";','    forwarders {','        8.8.8.8','        1.1.1.1;','    };','    dnssec-validation auto;','    listen-on { any; };','};'],
+ bad:{3:'Falta el ; detrás de 8.8.8.8. Cada IP de la lista termina en punto y coma.'}}
+];
+let errFilter='all'; const errDone={};
+function renderErrs(){
+  const list=document.getElementById('err-list'); list.innerHTML='';
+  ERRS.forEach((e,idx)=>{
+    if(errFilter!=='all'&&e.t!==errFilter) return;
+    const b=document.createElement('div'); b.className='block '+e.t;
+    b.innerHTML='<h3><span class="sid">'+(e.t==='dhcp'?'DHCP':'DNS')+' · '+(idx+1)+'</span>'+esc(e.title)+'</h3><p class="muted">'+esc(e.ctx)+'</p><div class="eyebrow">'+esc(e.file)+'</div><div class="bug-lines"></div><div class="row"><button type="button" class="btn primary">Comprobar</button><button type="button" class="btn">Reiniciar</button><span class="muted">Errores: '+Object.keys(e.bad).length+'</span></div><div class="verdict" hidden></div>';
+    const box=b.querySelector('.bug-lines'); const sel=new Set();
+    e.lines.forEach((l,i)=>{const bt=document.createElement('button');bt.type='button';bt.innerHTML='<span>'+(i+1)+'</span><span>'+(esc(l)||' ')+'</span>';
+      bt.setAttribute('aria-pressed','false');
+      bt.addEventListener('click',()=>{if(b.dataset.done)return; sel.has(i)?sel.delete(i):sel.add(i); bt.classList.toggle('sel'); bt.setAttribute('aria-pressed',sel.has(i));}); box.appendChild(bt);});
+    const [chk,reset]=b.querySelectorAll('.row button'); const v=b.querySelector('.verdict');
+    chk.addEventListener('click',()=>{
+      b.dataset.done='1'; const btns=box.querySelectorAll('button'); let hit=0,fp=0;
+      btns.forEach((bt,i)=>{bt.classList.remove('sel'); const isBad=i in e.bad;
+        if(isBad&&sel.has(i)){bt.classList.add('hit');hit++;} else if(isBad){bt.classList.add('miss');} else if(sel.has(i)){bt.classList.add('fp');fp++;}});
+      const total=Object.keys(e.bad).length;
+      v.hidden=false; v.innerHTML='<b>'+(hit===total&&fp===0?'Perfecto: '+hit+' de '+total:hit+' de '+total+' errores encontrados'+(fp?', '+fp+' línea(s) bien marcadas como error':''))+'</b><ul>'+Object.entries(e.bad).map(([i,t])=>'<li><b>Línea '+(+i+1)+':</b> '+esc(t)+'</li>').join('')+'</ul>';
+      errDone[idx]=hit===total&&fp===0; updErrScore(); chk.disabled=true;
+    });
+    reset.addEventListener('click',()=>{delete b.dataset.done; sel.clear(); box.querySelectorAll('button').forEach(bt=>{bt.className='';bt.setAttribute('aria-pressed','false')}); v.hidden=true; chk.disabled=false;});
+    list.appendChild(b);
+  });
+}
+function updErrScore(){const n=Object.values(errDone).filter(Boolean).length; document.getElementById('err-score').textContent=Object.keys(errDone).length?('Perfectos: '+n+' de '+ERRS.length):'';}
+document.querySelectorAll('#err-filter button').forEach(bt=>bt.addEventListener('click',()=>{errFilter=bt.dataset.f;document.querySelectorAll('#err-filter button').forEach(x=>x.setAttribute('aria-pressed',x===bt));renderErrs();}));
+renderErrs();
+
+/* ---------- escribe el archivo ---------- */
+const W=[
+{t:'dhcp',title:'Un ámbito completo',task:'Red 10.0.5.0/24. Reparte de 10.0.5.100 a 10.0.5.200. Puerta de enlace 10.0.5.1, DNS 10.0.5.2 y dominio empresa.local.',file:'/etc/dhcp/dhcpd.conf',
+ checks:[[/subnet\s+10\.0\.5\.0\s+netmask\s+255\.255\.255\.0\s*\{/,'subnet 10.0.5.0 netmask 255.255.255.0 {'],[/range\s+10\.0\.5\.100\s+10\.0\.5\.200\s*;/,'range 10.0.5.100 10.0.5.200;'],[/option\s+routers\s+10\.0\.5\.1\s*;/,'option routers 10.0.5.1;'],[/option\s+domain-name-servers\s+10\.0\.5\.2\s*;/,'option domain-name-servers 10.0.5.2;'],[/option\s+domain-name\s+"empresa\.local"\s*;/,'option domain-name "empresa.local"; (con comillas)'],[/\}\s*$/,'Cierra el bloque con }']],
+ sol:'subnet 10.0.5.0 netmask 255.255.255.0 {\n  range 10.0.5.100 10.0.5.200;\n  option routers 10.0.5.1;\n  option domain-name-servers 10.0.5.2;\n  option domain-name "empresa.local";\n}'},
+{t:'dhcp',title:'Una reserva por MAC',task:'El PC del jefe (MAC 08:00:27:12:34:56) debe recibir siempre 10.0.5.10. Llama al bloque pc-jefe.',file:'/etc/dhcp/dhcpd.conf',
+ checks:[[/host\s+pc-jefe\s*\{/,'host pc-jefe {'],[/hardware\s+ethernet\s+08:00:27:12:34:56\s*;/i,'hardware ethernet 08:00:27:12:34:56;'],[/fixed-address\s+10\.0\.5\.10\s*;/,'fixed-address 10.0.5.10;'],[/\}\s*$/,'Cierra con }']],
+ sol:'host pc-jefe {\n  hardware ethernet 08:00:27:12:34:56;\n  fixed-address 10.0.5.10;\n}'},
+{t:'dhcp',title:'Interfaz de escucha',task:'El servidor DHCP debe escuchar en la tarjeta enp0s8. Escribe la línea y di en qué archivo va.',file:'/etc/default/isc-dhcp-server',
+ checks:[[/INTERFACESv4\s*=\s*"enp0s8"/,'INTERFACESv4="enp0s8"']],
+ sol:'# /etc/default/isc-dhcp-server\nINTERFACESv4="enp0s8"'},
+{t:'dns',title:'Declarar la zona',task:'Zona primaria empresa.local con su archivo en /etc/bind/db.empresa.local.',file:'/etc/bind/named.conf.local',
+ checks:[[/zone\s+"empresa\.local"\s*\{/,'zone "empresa.local" {'],[/type\s+master\s*;/,'type master;'],[/file\s+"\/etc\/bind\/db\.empresa\.local"\s*;/,'file "/etc/bind/db.empresa.local";'],[/\}\s*;\s*$/,'Cierra con };']],
+ sol:'zone "empresa.local" {\n    type master;\n    file "/etc/bind/db.empresa.local";\n};'},
+{t:'dns',title:'Archivo de zona completo',task:'Zona empresa.local. Servidor de nombres ns = 10.0.5.2. web = 10.0.5.20 con el alias www. Correo: correo = 10.0.5.25 con MX de prioridad 10. Serial de hoy, primera revisión. Contacto: admin.',file:'/etc/bind/db.empresa.local',
+ checks:[[/\$TTL\s+\d+/,'$TTL al principio'],[/@\s+IN\s+SOA\s+ns\.empresa\.local\.\s+admin\.empresa\.local\.\s*\(/,'@ IN SOA ns.empresa.local. admin.empresa.local. ( (puntos finales, sin @ en el correo)'],[/2026110301/,'Serial 2026110301'],[/\)/,'Cierra el paréntesis del SOA'],[/@\s+IN\s+NS\s+ns\.empresa\.local\./,'@ IN NS ns.empresa.local.'],[/(^|\n)\s*ns\s+IN\s+A\s+10\.0\.5\.2\b/,'ns IN A 10.0.5.2'],[/(^|\n)\s*web\s+IN\s+A\s+10\.0\.5\.20\b/,'web IN A 10.0.5.20'],[/(^|\n)\s*www\s+IN\s+CNAME\s+web(\.empresa\.local\.)?\s*(\n|$)/,'www IN CNAME web.empresa.local.'],[/(^|\n)\s*correo\s+IN\s+A\s+10\.0\.5\.25\b/,'correo IN A 10.0.5.25'],[/@\s+IN\s+MX\s+10\s+correo(\.empresa\.local\.)?\s*(\n|$)/,'@ IN MX 10 correo.empresa.local.'],[{test:s=>!/[a-z0-9]\.local\s*(\n|$)/i.test(s.replace(/;.*$/gm,''))},'Ningún nombre completo sin punto final']],
+ sol:'$TTL    604800\n@       IN      SOA     ns.empresa.local. admin.empresa.local. (\n                     2026110301         ; serial\n                         604800         ; refresh\n                          86400         ; retry\n                        2419200         ; expire\n                         604800 )       ; negative cache TTL\n@       IN      NS      ns.empresa.local.\nns      IN      A       10.0.5.2\nweb     IN      A       10.0.5.20\nwww     IN      CNAME   web.empresa.local.\ncorreo  IN      A       10.0.5.25\n@       IN      MX  10  correo.empresa.local.'},
+{t:'dns',title:'Secundario',task:'Primario 10.0.5.2, secundario 10.0.5.3. Escribe el bloque de zona del secundario y la línea que autoriza la transferencia en el primario.',file:'named.conf.local',
+ checks:[[/type\s+slave\s*;/,'type slave;'],[/masters\s*\{\s*10\.0\.5\.2\s*;\s*\}\s*;/,'masters { 10.0.5.2; };'],[/file\s+"\/var\/cache\/bind\/db\.empresa\.local"\s*;/,'file "/var/cache/bind/db.empresa.local";'],[/allow-transfer\s*\{\s*10\.0\.5\.3\s*;\s*\}\s*;/,'allow-transfer { 10.0.5.3; }; (en el primario)']],
+ sol:'// secundario (10.0.5.3)\nzone "empresa.local" {\n    type slave;\n    masters { 10.0.5.2; };\n    file "/var/cache/bind/db.empresa.local";\n};\n\n// primario (10.0.5.2), dentro de su zone { }\n    allow-transfer { 10.0.5.3; };'},
+{t:'dns',title:'Forwarders',task:'Reenvía a 8.8.8.8 y 1.1.1.1 lo que no sea tuyo, y escucha en todas las interfaces.',file:'/etc/bind/named.conf.options',
+ checks:[[/options\s*\{/,'options {'],[/forwarders\s*\{\s*8\.8\.8\.8\s*;\s*1\.1\.1\.1\s*;\s*\}\s*;/,'forwarders { 8.8.8.8; 1.1.1.1; };'],[/listen-on\s*\{\s*any\s*;\s*\}\s*;/,'listen-on { any; };'],[/\}\s*;\s*$/,'Cierra con };']],
+ sol:'options {\n    directory "/var/cache/bind";\n    forwarders {\n        8.8.8.8;\n        1.1.1.1;\n    };\n    dnssec-validation auto;\n    listen-on { any; };\n};'},
+{t:'dns',title:'Los comandos del montaje',task:'Escribe, en orden, los comandos para: instalar bind9 con sus utilidades, validar la configuración, validar la zona empresa.local, recargar el servicio, ver los últimos logs y probar www contra el servidor 10.0.5.2.',file:'terminal del servidor',
+ checks:[[/apt\s+install\s+bind9\b[^\n]*bind9utils/,'sudo apt install bind9 bind9utils'],[/named-checkconf/,'sudo named-checkconf'],[/named-checkzone\s+empresa\.local\s+\/etc\/bind\/db\.empresa\.local/,'sudo named-checkzone empresa.local /etc/bind/db.empresa.local'],[/systemctl\s+(reload|restart)\s+(bind9|named)/,'sudo systemctl reload bind9'],[/journalctl\s+-u\s+(named|bind9)/,'sudo journalctl -u named -n 20'],[/dig\s+@10\.0\.5\.2\s+www\.empresa\.local/,'dig @10.0.5.2 www.empresa.local']],
+ sol:'sudo apt install bind9 bind9utils bind9-doc\nsudo named-checkconf\nsudo named-checkzone empresa.local /etc/bind/db.empresa.local\nsudo systemctl reload bind9\nsudo journalctl -u named -n 20\ndig @10.0.5.2 www.empresa.local'}
+];
+const WK='sri-w-'; const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+W.forEach((w,i)=>{
+  const b=document.createElement('div'); b.className='block '+w.t;
+  b.innerHTML='<h3><span class="sid">'+(w.t==='dhcp'?'DHCP':'DNS')+'</span>'+esc(w.title)+'</h3><p>'+esc(w.task)+'</p><div class="eyebrow">'+esc(w.file)+'</div><textarea id="w-'+i+'" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Tu respuesta"></textarea><div class="row"><button type="button" class="btn primary">Corregir</button><button type="button" class="btn">Ver solución</button></div><ul class="chk" hidden></ul><div class="sol" hidden></div>';
+  const ta=b.querySelector('textarea'); ta.value=store.get(WK+i)||''; ta.addEventListener('input',()=>store.set(WK+i,ta.value));
+  ta.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart;ta.setRangeText('    ',s,ta.selectionEnd,'end');}});
+  const [c,s]=b.querySelectorAll('.row button'); const ul=b.querySelector('.chk'); const sol=b.querySelector('.sol');
+  c.addEventListener('click',()=>{const v=ta.value.replace(/\r/g,''); let ok=0; ul.innerHTML=w.checks.map(([re,l])=>{const y=re.test(v); if(y)ok++; return '<li class="'+(y?'y':'n')+'">'+esc(l)+'</li>';}).join('')+'<li><b>'+ok+' / '+w.checks.length+'</b></li>'; ul.hidden=false;});
+  s.addEventListener('click',()=>{if(!sol.firstChild){sol.appendChild(codeBox('Solución · '+w.file,'<pre class="code">'+esc(w.sol)+'</pre>',w.sol));} sol.hidden=!sol.hidden; s.textContent=sol.hidden?'Ver solución':'Ocultar solución';});
+  document.getElementById('w-list').appendChild(b);
+});
+
+/* ---------- comandos ---------- */
+const CMDS=[
+['t0','Diagnóstico','ipconfig /all','Windows: IP, máscara, gateway, DNS y servidor DHCP.','Primer paso de cualquier diagnóstico en Windows.'],
+['t0','Diagnóstico','ip a','Linux: interfaces y sus IP.','Ver la IP y el nombre de la tarjeta (enp0s3…).'],
+['t0','Diagnóstico','ip route','Linux: tabla de rutas y puerta de enlace (default via).',''],
+['t0','Diagnóstico','ping 192.168.77.1','Comprueba conectividad con ICMP.','Orden: gateway → 8.8.8.8 → google.com.'],
+['t0','Diagnóstico','tracert 8.8.8.8\ntraceroute 8.8.8.8','Cada salto hasta el destino (Windows / Linux).','Localizar en qué router se corta.'],
+['t0','Diagnóstico','netstat -an','Conexiones y puertos: LISTENING / ESTABLISHED.','¿El servicio está escuchando?'],
+['t0','Diagnóstico','arp -a','Caché ARP: pares IP-MAC conocidos.',''],
+['t0','Linux','ip addr add 192.168.77.5/27 dev enp0s3','Asigna una IP temporal (se pierde al reiniciar).',''],
+['t0','Linux','ip link set enp0s3 up','Activa la interfaz.',''],
+['t0','Linux','chmod 640 archivo\nchown root:bind archivo','Permisos (r=4 w=2 x=1) y propietario:grupo.',''],
+['t0','Linux','sudo nano /etc/archivo','Editar un archivo de configuración como superusuario.','Ctrl+O guarda, Ctrl+X sale.'],
+['dhcp','Servidor','sudo apt install isc-dhcp-server','Instala el servidor DHCP.','Es normal que falle al arrancar: aún no hay ámbito.'],
+['dhcp','Servidor','sudo nano /etc/default/isc-dhcp-server','Indicar INTERFACESv4="enp0s3".','Si no coincide con la interfaz real, no reparte.'],
+['dhcp','Servidor','sudo nano /etc/dhcp/dhcpd.conf','Ámbitos, opciones y reservas.',''],
+['dhcp','Servidor','sudo systemctl restart isc-dhcp-server','Aplica los cambios de dhcpd.conf.','Tras cada edición.'],
+['dhcp','Servidor','sudo systemctl status isc-dhcp-server','¿Activo o failed?',''],
+['dhcp','Servidor','sudo systemctl enable isc-dhcp-server','Arranca solo al encender.',''],
+['dhcp','Servidor','sudo journalctl -u isc-dhcp-server -f','Logs en tiempo real: ves DISCOVER, OFFER, REQUEST, ACK.','También dice la línea con error de sintaxis.'],
+['dhcp','Extra','sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf','Valida la sintaxis sin reiniciar.','extra'],
+['dhcp','Extra','cat /var/lib/dhcp/dhcpd.leases','Concesiones repartidas: IP, MAC, hora.','extra'],
+['dhcp','Cliente','ipconfig /release\nipconfig /renew','Windows: suelta la IP y fuerza un DORA nuevo.','Imprescindible tras cambiar el servidor.'],
+['dhcp','Cliente','nmcli connection show','Ubuntu: nombre real de la conexión.','Antes de down/up.'],
+['dhcp','Cliente','nmcli connection down "Wired connection 1"\nnmcli connection up "Wired connection 1"','Ubuntu: fuerza un DORA nuevo.',''],
+['dhcp','Cliente','nmcli device show','Ubuntu: configuración recibida (como ipconfig /all).',''],
+['dhcp','Extra','sudo dhclient -r enp0s3\nsudo dhclient -v enp0s3','Debian sin entorno gráfico: soltar y pedir IP viendo DORA.','extra'],
+['dns','Servidor','sudo apt install bind9 bind9utils bind9-doc','Instala bind9 y sus herramientas de validación.',''],
+['dns','Servidor','sudo named-checkconf','Valida named.conf.*. Sin salida = bien.','Antes de cada recarga.'],
+['dns','Servidor','sudo named-checkzone practicas.local /etc/bind/db.practicas.local','Valida el archivo de zona. Debe acabar en OK.','Muestra el serial cargado.'],
+['dns','Servidor','sudo systemctl reload bind9','Recarga zonas y configuración.','restart si cambias options.'],
+['dns','Servidor','sudo systemctl status bind9','¿active (running)?',''],
+['dns','Servidor','sudo journalctl -u named -n 20','Últimos logs: zone … loaded serial …',''],
+['dns','Servidor','sudo journalctl -u bind9 -f','Logs en tiempo real (forma de los apuntes).',''],
+['dns','Servidor','sudo rndc flush','Vacía la caché del servidor.','Tras validate-except en la delegación.'],
+['dns','Prueba','dig @192.168.77.5 www.practicas.local','Pregunta a un servidor concreto.','Mira status, flags (aa) y ANSWER.'],
+['dns','Prueba','nslookup www.practicas.local','Windows: resolver un nombre.','Servidor: UnKnown es normal.'],
+['dns','Prueba','nslookup pc01.alumnos.practicas.local 192.168.77.30','Preguntar a un servidor concreto con nslookup.','Non-authoritative answer = no es el dueño.'],
+['dns','Prueba','whois wikipedia.org','Registrador, fechas y NS de un dominio.','sudo apt install whois'],
+['dns','Extra','dig +short www.practicas.local','Solo la respuesta.','extra'],
+['dns','Extra','dig @192.168.77.5 practicas.local SOA','Ver el serial que sirve el servidor.','extra'],
+['dns','Extra','dig +trace es.wikipedia.org','Ver la resolución iterativa raíz → TLD → autoritativo.','extra'],
+['dns','Cliente','netsh interface ip set dns "Ethernet" static 192.168.77.5','Windows (admin): fija el DNS.','netsh interface show interface para ver el nombre.'],
+['dns','Cliente','ipconfig /flushdns','Windows: vacía la caché DNS local.',''],
+['dns','Cliente','nmcli connection modify "Wired connection 1" ipv4.dns "192.168.77.5"\nnmcli connection modify "Wired connection 1" ipv4.ignore-auto-dns yes\nnmcli connection up "Wired connection 1"','Ubuntu: fija el DNS sin mezclar con el de DHCP.',''],
+['dns','Cliente','resolvectl status\nresolvectl flush-caches\nresolvectl query www.practicas.local','Ubuntu: ver DNS en uso, vaciar caché y consultar.','']
+];
+let cmdF='all';
+function renderCmds(){
+  const q=document.getElementById('cmd-q').value.trim().toLowerCase();
+  const items=CMDS.filter(c=>(cmdF==='all'||c[0]===cmdF)&&(!q||(c.join(' ').toLowerCase().includes(q))));
+  const box=document.getElementById('cmd-list');
+  if(!items.length){box.innerHTML='<p class="muted">Nada coincide con «'+esc(q)+'».</p>';return;}
+  box.innerHTML='<div class="cmd-list">'+items.map((c,i)=>{const cls=c[0];const extra=c[4]==='extra';
+    return '<div class="cmd '+cls+'"><div class="c"><code>'+esc(c[2])+'</code><button type="button" class="copy" data-i="'+CMDS.indexOf(c)+'">Copiar</button></div><div class="d"><span class="g">'+(cls==='t0'?'T0':cls.toUpperCase())+' · '+esc(c[1])+'</span> '+(extra?'<span class="tag-extra">extra pro</span>':'')+'<br>'+esc(c[3])+(c[4]&&!extra?'<small>'+esc(c[4])+'</small>':'')+'</div></div>';}).join('')+'</div>';
+  box.querySelectorAll('.copy').forEach(bt=>bt.addEventListener('click',()=>{const t=CMDS[+bt.dataset.i][2];try{navigator.clipboard.writeText(t).then(()=>{bt.textContent='Copiado';setTimeout(()=>bt.textContent='Copiar',1300)}).catch(()=>{bt.textContent='Selecciona el texto'})}catch(e){bt.textContent='Selecciona el texto'}}));
+}
+document.getElementById('cmd-q').addEventListener('input',renderCmds);
+document.querySelectorAll('#cmd-filter button').forEach(bt=>bt.addEventListener('click',()=>{cmdF=bt.dataset.f;document.querySelectorAll('#cmd-filter button').forEach(x=>x.setAttribute('aria-pressed',x===bt));renderCmds();}));
+renderCmds();
+
+/* ---------- test ---------- */
+const EXTRA=[
+[1,'¿En qué archivo se indica la interfaz en la que escucha isc-dhcp-server?',['/etc/default/isc-dhcp-server','/etc/dhcp/dhcpd.conf','/etc/network/interfaces','/etc/dhcp/interfaces.conf'],0,'La línea INTERFACESv4="…" va en /etc/default/isc-dhcp-server. dhcpd.conf es para ámbitos y reservas.'],
+[1,'¿Qué directiva de dhcpd.conf entrega la puerta de enlace?',['option routers','option gateway','option default-route','option domain-name-servers'],0,'option routers indica la puerta de enlace que recibe el cliente.'],
+[1,'¿Qué puertos usa DHCP?',['UDP 67 el servidor y UDP 68 el cliente','TCP 67 y 68','UDP 53','TCP 80'],0,'DHCP va sobre UDP: el servidor escucha en el 67 y el cliente en el 68.'],
+[1,'Con subnet 192.168.77.0 netmask 255.255.255.224, ¿cuál es la última IP válida para el range?',['192.168.77.30','192.168.77.31','192.168.77.32','192.168.77.254'],0,'/27 tiene salto 32: red .0, broadcast .31. El último host es .30.'],
+[1,'El range 192.168.77.10 192.168.77.30, ¿cuántas IP reparte?',['21','20','30','31'],0,'De .10 a .30 ambas incluidas: 30 − 10 + 1 = 21.'],
+[1,'Tras editar dhcpd.conf, ¿qué hay que hacer para que el servidor aplique los cambios?',['sudo systemctl restart isc-dhcp-server','Nada, se aplican solos','Reiniciar los clientes','sudo apt install isc-dhcp-server'],0,'El servicio lee el archivo al arrancar: hay que reiniciarlo.'],
+[1,'En una reserva, ¿cómo se escribe la MAC?',['hardware ethernet 08:00:27:AA:BB:CC;','mac 08-00-27-AA-BB-CC;','hardware ethernet 08-00-27-AA-BB-CC','ethernet-address 08:00:27:AA:BB:CC;'],0,'Directiva hardware ethernet, con dos puntos y ; al final.'],
+[1,'Un cliente dice que no recibe IP. ¿Qué compruebas primero?',['Si el servicio DHCP está activo','La MAC de su reserva','El serial de la zona','La categoría del cable'],0,'Orden de diagnóstico: de lo general a lo concreto. Primero, ¿el servicio está activo?'],
+[1,'Hay dos servidores DHCP activos en la misma red en bridge. ¿Qué pasa?',['El cliente se queda con el que responda primero, que puede no ser el tuyo','Se reparten las IP a medias de forma ordenada','El segundo se apaga solo','Nada, DHCP lo detecta y lo resuelve'],0,'Ambos responden al Discover y el cliente no controla cuál gana. Solo debe haber uno activo.'],
+[1,'¿Qué opción del ámbito hace que los clientes reciban el servidor DNS?',['option domain-name-servers','option domain-name','option dns-server','option routers'],0,'domain-name-servers lleva la IP del DNS. domain-name es el sufijo de búsqueda.'],
+[2,'¿En qué archivo se declaran tus propias zonas en bind9?',['/etc/bind/named.conf.local','/etc/bind/named.conf.options','/etc/bind/named.conf.default-zones','/etc/bind/db.local'],0,'named.conf.local es para las zonas del administrador.'],
+[2,'¿Dónde se configuran los forwarders?',['named.conf.options','named.conf.local','En el archivo de zona','/etc/resolv.conf'],0,'Son opciones globales del servidor: van en named.conf.options, dentro de options { }.'],
+[2,'¿Qué comando valida un archivo de zona?',['named-checkzone practicas.local /etc/bind/db.practicas.local','named-checkconf /etc/bind/db.practicas.local','dig practicas.local','systemctl check bind9'],0,'named-checkzone recibe el nombre de la zona y el archivo. named-checkconf valida los named.conf.*'],
+[2,'En un archivo de zona escribes «www IN CNAME servidor.practicas.local» sin punto final. ¿Qué entiende bind9?',['servidor.practicas.local.practicas.local.','servidor.practicas.local.','Da error y no carga nunca','www.practicas.local'],0,'Sin punto final el nombre es relativo y bind9 le añade la zona detrás.'],
+[2,'En el SOA, «admin.practicas.local.» representa…',['El correo admin@practicas.local','Un host llamado admin','El servidor primario','El registro MX'],0,'La @ está reservada en el archivo de zona (es la propia zona), así que el correo se escribe con un punto.'],
+[2,'¿Qué significa la marca aa en la salida de dig?',['Respuesta autoritativa: el servidor es dueño de la zona','Respuesta sacada de la caché','Que es un alias','Que la consulta ha fallado'],0,'aa = authoritative answer. Solo la pone quien tiene los datos de la zona.'],
+[2,'dig devuelve NXDOMAIN. ¿Qué sabes seguro?',['El servidor ha respondido y ese nombre no existe para él','El servidor está caído','Hay un firewall bloqueando el puerto 53','El cliente no tiene IP'],0,'NXDOMAIN es una respuesta válida. Un servidor caído o bloqueado daría timeout.'],
+[2,'Todos los nombres de practicas.local dan SERVFAIL. Causa más probable:',['La zona no se ha cargado (error en el archivo o en la declaración)','Falta un forwarder','El cliente tiene la caché llena','El serial es demasiado alto'],0,'Mira journalctl -u named -n 20: dirá por qué no se cargó la zona.'],
+[2,'¿Qué registro necesita obligatoriamente un número de prioridad?',['MX','A','CNAME','NS'],0,'MX lleva prioridad (menor número = preferido). Sin ella, named-checkzone falla.'],
+[2,'¿Cuál de estas líneas es correcta?',['www IN CNAME servidor.practicas.local.','www IN CNAME 192.168.77.5','@ IN CNAME servidor.practicas.local.','@ IN MX servidor.practicas.local.'],0,'CNAME apunta a un nombre (nunca IP) y no se usa en @. El MX necesita prioridad.'],
+[2,'¿Cómo sabe un servidor secundario que tiene que copiar la zona?',['Comparando el serial del SOA con el suyo','Mirando la fecha del archivo','Copia cada minuto sin comprobar nada','Se lo dice el cliente'],0,'Si el serial del primario es mayor, pide la zona. Por eso hay que subirlo siempre.'],
+[2,'allow-transfer { … }; ¿en qué servidor va y qué IP lleva?',['En el primario, con la IP del secundario','En el secundario, con la IP del primario','En los dos, con la IP del cliente','En named.conf.options del cliente'],0,'El primario autoriza quién puede pedirle la copia: el secundario.'],
+[2,'¿Cuándo hace falta un glue record?',['Cuando el NS delegado tiene un nombre dentro del subdominio que se delega','Siempre que hay un CNAME','Solo en el servidor secundario','Cuando se usan forwarders'],0,'Rompe el círculo: para encontrar el NS habría que preguntarle a él mismo.'],
+[2,'¿Qué puerto y protocolo usan las consultas DNS normales?',['UDP 53','TCP 80','UDP 67','TCP 22'],0,'Consultas por UDP 53. TCP 53 para transferencias de zona y respuestas grandes.'],
+[2,'En Ubuntu, dig muestra «SERVER: 127.0.0.53». ¿Qué significa?',['Es systemd-resolved, el intermediario local que reenvía a tu DNS','Que el DNS está mal configurado','Que bind9 está instalado en el cliente','Que no hay conexión'],0,'Ubuntu pregunta a su resolutor local, que reenvía al DNS configurado. Es normal.'],
+[2,'Cambias un registro y el cliente Windows sigue viendo el valor antiguo. ¿Qué haces primero?',['ipconfig /flushdns','Reinstalar bind9','Bajar el serial','Cambiar el forwarder'],0,'Sospecha primero de la caché del cliente.'],
+[2,'¿Qué hace «forward only;»?',['Obliga a resolver solo a través de los forwarders, sin intentarlo por su cuenta','Hace que el servidor solo responda su zona','Desactiva la caché','Solo reenvía consultas de la red local'],0,'Sin forward only, si los forwarders fallan, bind9 intenta resolver desde la raíz.'],
+[2,'El paquete se llama bind9. ¿Cómo se llama el proceso en ejecución?',['named','bind','dnsd','resolved'],0,'named, nombre heredado de las primeras implementaciones.'],
+[2,'practicas.local resuelve bien, pero google.com no. ¿Dónde está el fallo más probable?',['En los forwarders o en la salida a Internet del servidor','En el SOA de practicas.local','En el registro NS','En la reserva DHCP'],0,'La zona propia y la resolución externa son mecanismos independientes.'],
+[2,'type master y type slave significan…',['Primario (se edita aquí) y secundario (copia recibida)','Servidor raíz y servidor TLD','Zona directa y zona de caché','Servidor con y sin forwarders'],0,'master = primario con el original; slave = secundario con copia por transferencia.'],
+[0,'¿Cuántos hosts utilizables tiene una red /26?',['62','64','30','126'],0,'32 − 26 = 6 bits de host → 2⁶ − 2 = 62.'],
+[0,'¿Es privada la IP 172.20.5.4?',['Sí, está en 172.16.0.0 – 172.31.255.255','No, solo 10.x y 192.168.x son privadas','No, es de clase A','Sí, porque empieza por 172'],0,'Ojo: 172.32.x.x ya sería pública.'],
+[0,'¿Qué significa chmod 640?',['Propietario lectura y escritura, grupo lectura, otros nada','Todos lectura y escritura','Propietario todo, grupo lectura y escritura','Solo lectura para todos'],0,'6 = rw-, 4 = r--, 0 = ---.'],
+[0,'¿En qué capa trabaja un switch y qué dirección mira?',['Capa 2, la MAC de destino','Capa 3, la IP de destino','Capa 1, nada','Capa 4, el puerto'],0,'El switch conmuta tramas según la MAC y su tabla MAC.']
+];
+const ALLQ=BANK.map(b=>({t:b.t,s:b.s,q:b.q,o:b.o,a:b.a,e:b.e})).concat(EXTRA.map(x=>({t:x[0],s:'Práctica tipo examen',q:x[1],o:x[2],a:x[3],e:x[4]})));
+ALLQ.forEach((q,i)=>q.id=i);
+const FK='sri-fallos';
+const getF=()=>{try{return new Set(JSON.parse(store.get(FK)||'[]'))}catch(e){return new Set()}};
+const setF=s=>store.set(FK,JSON.stringify([...s]));
+let tTopic='all',tN=20,RUN=null;
+function pool(){ if(tTopic==='fallos'){const f=getF();return ALLQ.filter(q=>f.has(q.id));} return ALLQ.filter(q=>tTopic==='all'||String(q.t)===tTopic); }
+function updAvail(){document.getElementById('t-avail').textContent=pool().length+' disponibles';}
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function segBind(id,cb){document.querySelectorAll('#'+id+' button').forEach(bt=>bt.addEventListener('click',()=>{document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===bt));cb(bt.dataset.v);}));}
+segBind('t-topic',v=>{tTopic=v;updAvail();}); segBind('t-n',v=>{tN=+v;});
+function start(qs){
+  if(!qs.length){document.getElementById('t-avail').textContent=tTopic==='fallos'?'No tienes fallos guardados todavía.':'No hay preguntas.';return;}
+  RUN={qs,i:0,hits:0,wrong:[]};
+  document.getElementById('test-setup').hidden=true; document.getElementById('test-end').hidden=true; document.getElementById('test-run').hidden=false; showQ();
+}
+document.getElementById('t-start').addEventListener('click',()=>start(shuf(pool()).slice(0,tN)));
+document.getElementById('t-sim').addEventListener('click',()=>{const by=t=>shuf(ALLQ.filter(q=>q.t===t)); start(shuf([...by(0).slice(0,4),...by(1).slice(0,6),...by(2).slice(0,10)]));});
+const NAMES={0:'T0',1:'DHCP',2:'DNS'};
+function showQ(){
+  const q=RUN.qs[RUN.i]; const order=shuf(q.o.map((_,k)=>k));
+  document.getElementById('t-count').textContent=(RUN.i+1)+' / '+RUN.qs.length;
+  document.getElementById('t-hits').textContent=RUN.hits+' aciertos';
+  document.getElementById('t-bar').style.width=(RUN.i/RUN.qs.length*100)+'%';
+  const box=document.getElementById('t-q'); const cls=['t0','dhcp','dns'][q.t]; box.className='q '+cls;
+  box.innerHTML='<div class="meta"><span class="pts">'+NAMES[q.t]+'</span><span class="muted" style="font-size:.85rem">'+esc(q.s)+'</span></div><h3>'+fmt(q.q)+'</h3><div class="opts">'+order.map((k,n)=>'<button type="button" data-k="'+k+'"><b>'+'ABCD'[n]+'</b><span>'+fmt(q.o[k])+'</span></button>').join('')+'</div><div class="expl" hidden></div>';
+  const nx=document.getElementById('t-next'); nx.disabled=true;
+  box.querySelectorAll('.opts button').forEach(bt=>bt.addEventListener('click',()=>{
+    const k=+bt.dataset.k; const ok=k===q.a; const f=getF();
+    box.querySelectorAll('.opts button').forEach(x=>{x.disabled=true; if(+x.dataset.k===q.a)x.classList.add('right');});
+    if(ok){RUN.hits++; f.delete(q.id);} else {bt.classList.add('wrong'); RUN.wrong.push(q); f.add(q.id);}
+    setF(f);
+    const ex=box.querySelector('.expl'); ex.hidden=false; ex.innerHTML='<b>'+(ok?'Correcto. ':'No. ')+'</b>'+fmt(q.e);
+    document.getElementById('t-hits').textContent=RUN.hits+' aciertos';
+    nx.disabled=false; nx.textContent=RUN.i===RUN.qs.length-1?'Ver resultado':'Siguiente'; nx.focus();
+  }));
+}
+function fmt(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>');}
+document.getElementById('t-next').addEventListener('click',()=>{RUN.i++; if(RUN.i>=RUN.qs.length) end(); else showQ();});
+document.getElementById('t-stop').addEventListener('click',()=>{const done=RUN.i+(document.querySelector('#t-q .expl:not([hidden])')?1:0); if(!done){document.getElementById('test-run').hidden=true;document.getElementById('test-setup').hidden=false;return;} RUN.qs=RUN.qs.slice(0,done); end();});
+function end(){
+  const n=RUN.qs.length, pct=Math.round(RUN.hits/n*100);
+  const per={}; RUN.qs.forEach(q=>{per[q.t]=per[q.t]||[0,0];per[q.t][1]++;}); RUN.qs.forEach(q=>{if(!RUN.wrong.includes(q))per[q.t][0]++;});
+  const el=document.getElementById('test-end');
+  el.innerHTML='<h3>Resultado: '+RUN.hits+' de '+n+' ('+pct+' %)</h3><div class="row">'+Object.entries(per).map(([t,[h,tot]])=>'<span class="pts '+['t0','dhcp','dns'][t]+'">'+NAMES[t]+': '+h+'/'+tot+'</span>').join('')+'</div>'+
+   (RUN.wrong.length?'<h4>Repasa estas</h4><ul class="prose" style="padding-left:1.1em">'+RUN.wrong.map(q=>'<li><b>'+fmt(q.q)+'</b><br><span class="muted">Correcta: '+fmt(q.o[q.a])+'</span></li>').join('')+'</ul>':'<p>Sin fallos. Prueba con más preguntas o con el simulacro.</p>')+
+   '<div class="row"><button type="button" class="btn primary" id="t-again">Otro test</button></div>';
+  document.getElementById('test-run').hidden=true; el.hidden=false;
+  document.getElementById('t-again').addEventListener('click',()=>{el.hidden=true;document.getElementById('test-setup').hidden=false;updAvail();});
+}
+updAvail();
+route();
+</script>
