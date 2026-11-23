@@ -14,7 +14,7 @@
   --t0:#8a5a2b; --t0-soft:#f3e9de; --dhcp:#c85a14; --dhcp-soft:#fbe9dc; --dns:#1d5fc2; --dns-soft:#e1ebfa;
   --ok:#1f7a4a; --ok-soft:#dff2e7; --bad:#b3261e; --bad-soft:#f9e1df; --warn:#8a6100; --warn-soft:#fbf0d2;
   --extra:#6b4bb0; --extra-soft:#ece6f7;
-  --seg:#2e7d3c; --seg-soft:#e1f1e3; --calc:#0d7377; --calc-soft:#dcf0f0;
+  --seg:#2e7d3c; --seg-soft:#e1f1e3; --sor:#9b2f6e; --sor-soft:#f7e3ee; --calc:#0d7377; --calc-soft:#dcf0f0;
   --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -23,12 +23,12 @@
   --bg:#0e1419; --surface:#151d24; --ink:#e2e8ee; --muted:#95a3b0; --line:#28333d; --code:#0b1116; --code-ink:#d5dee6;
   --t0:#d39a62; --t0-soft:#2a2016; --dhcp:#f08a45; --dhcp-soft:#2d1d12; --dns:#6ea6f7; --dns-soft:#132238;
   --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
-  --extra:#b49af0; --extra-soft:#221b33; --seg:#6cc77c; --seg-soft:#13261a; --calc:#4ec4c8; --calc-soft:#0f2a2b; color-scheme:dark}}
+  --extra:#b49af0; --extra-soft:#221b33; --seg:#6cc77c; --seg-soft:#13261a; --sor:#ea8fc4; --sor-soft:#2d1623; --calc:#4ec4c8; --calc-soft:#0f2a2b; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1419; --surface:#151d24; --ink:#e2e8ee; --muted:#95a3b0; --line:#28333d; --code:#0b1116; --code-ink:#d5dee6;
   --t0:#d39a62; --t0-soft:#2a2016; --dhcp:#f08a45; --dhcp-soft:#2d1d12; --dns:#6ea6f7; --dns-soft:#132238;
   --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
-  --extra:#b49af0; --extra-soft:#221b33; --seg:#6cc77c; --seg-soft:#13261a; --calc:#4ec4c8; --calc-soft:#0f2a2b; color-scheme:dark}
+  --extra:#b49af0; --extra-soft:#221b33; --seg:#6cc77c; --seg-soft:#13261a; --sor:#ea8fc4; --sor-soft:#2d1623; --calc:#4ec4c8; --calc-soft:#0f2a2b; color-scheme:dark}
 
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -77,9 +77,9 @@ section.view{display:grid;gap:28px}
 .t0 .block>h3 .sid{background:var(--t0-soft);color:var(--t0)}
 .dhcp .block>h3 .sid{background:var(--dhcp-soft);color:var(--dhcp)}
 .dns .block>h3 .sid{background:var(--dns-soft);color:var(--dns)}
-.view.seg .block>h3 .sid,.view.calc .block>h3 .sid{background:var(--cs);color:var(--c)}
+.view.seg .block>h3 .sid,.view.calc .block>h3 .sid,.view.sor .block>h3 .sid{background:var(--cs);color:var(--c)}
 .topic-head{border-left:4px solid var(--c);padding-left:14px}
-.t0{--c:var(--t0);--cs:var(--t0-soft)} .dhcp{--c:var(--dhcp);--cs:var(--dhcp-soft)} .dns{--c:var(--dns);--cs:var(--dns-soft)} .seg{--c:var(--seg);--cs:var(--seg-soft)} .calc{--c:var(--calc);--cs:var(--calc-soft)} .sri{--c:var(--dns);--cs:var(--dns-soft)}
+.t0{--c:var(--t0);--cs:var(--t0-soft)} .dhcp{--c:var(--dhcp);--cs:var(--dhcp-soft)} .dns{--c:var(--dns);--cs:var(--dns-soft)} .seg{--c:var(--seg);--cs:var(--seg-soft)} .calc{--c:var(--calc);--cs:var(--calc-soft)} .sri{--c:var(--dns);--cs:var(--dns-soft)} .sor{--c:var(--sor);--cs:var(--sor-soft)}
 .pts{display:inline-block;font-family:var(--f-mono);font-size:.8rem;font-weight:600;color:var(--c,var(--ink));background:var(--cs,var(--bg));padding:3px 9px;border-radius:999px}
 
 /* avisos */
@@ -226,6 +226,16 @@ table.inv td.tot{white-space:nowrap;font-variant-numeric:tabular-nums;text-align
 .clasif-card{display:grid;gap:12px}
 .clasif-card .segc button.right{background:var(--ok-soft);color:var(--ok)}
 .clasif-card .segc button.wrong{background:var(--bad-soft);color:var(--bad)}
+/* SOR */
+table.sim select{padding:5px 7px;font-size:.88rem}
+table.sim input[type=checkbox]{width:18px;height:18px;accent-color:var(--sor)}
+.quota-bar{position:relative;height:16px;border-radius:8px;background:var(--line);overflow:visible}
+.quota-bar i{display:block;height:100%;border-radius:8px;background:var(--ok);width:0}
+.quota-bar i.warn{background:var(--warn)} .quota-bar i.bad{background:var(--bad)}
+.quota-bar b{position:absolute;top:-4px;width:2px;height:24px;background:var(--ink)}
+details.sol-d summary{cursor:pointer;font-weight:600;color:var(--c)}
+details.sol-d[open] summary{margin-bottom:8px}
+details.sol-d .prose ul,details.sol-d .prose ol{padding-left:1.2em}
 svg text{font-family:var(--f-mono)}
 .diagram{overflow-x:auto}
 .diagram svg{display:block;max-width:100%;height:auto;min-width:480px}
@@ -241,6 +251,7 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;colo
   <nav class="subj" aria-label="Asignaturas">
     <a href="#sri" data-subj="sri"><span class="dot" style="background:var(--dns)"></span>Servicios en Red</a>
     <a href="#seg" data-subj="seg"><span class="dot" style="background:var(--seg)"></span>Seguridad</a>
+    <a href="#sor" data-subj="sor"><span class="dot" style="background:var(--sor)"></span>Sistemas Operativos en Red</a>
   </nav>
   <nav class="tabs" aria-label="Secciones de la asignatura">
     <a href="#sri" data-subj="sri">Resumen</a>
@@ -257,6 +268,14 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;colo
     <a href="#sai" data-subj="seg"><span class="dot" style="background:var(--seg)"></span>SAI</a>
     <a href="#calculos" data-subj="seg"><span class="dot" style="background:var(--calc)"></span>Cálculos</a>
     <a href="#seg-test" data-subj="seg">Test</a>
+    <a href="#sor" data-subj="sor">Resumen</a>
+    <a href="#gpo" data-subj="sor"><span class="dot" style="background:var(--sor)"></span>GPO</a>
+    <a href="#herencia" data-subj="sor"><span class="dot" style="background:var(--sor)"></span>Herencia</a>
+    <a href="#derechos" data-subj="sor"><span class="dot" style="background:var(--sor)"></span>Derechos y seguridad</a>
+    <a href="#cuotas" data-subj="sor"><span class="dot" style="background:var(--sor)"></span>Cuotas de disco</a>
+    <a href="#supuestos" data-subj="sor">Supuestos</a>
+    <a href="#sor-rutas" data-subj="sor">Rutas y comandos</a>
+    <a href="#sor-test" data-subj="sor">Test</a>
   </nav>
 </div></header>
 
@@ -281,6 +300,12 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;colo
       <h3>Seguridad Informática</h3>
       <ul><li>UD1 Introducción a la seguridad</li><li>UD2 Seguridad física y el SAI</li><li>Cálculos: SAI, baterías, potencia y costes</li><li>Clasificador y test teórico</li></ul>
       <span class="go">Entrar en Seguridad →</span>
+    </a>
+    <a class="home-card sor" href="#sor">
+      <span class="eyebrow">Asignatura</span>
+      <h3>Sistemas Operativos en Red</h3>
+      <ul><li>Directivas de grupo (GPO) en Windows Server</li><li>Herencia, No reemplazar y Bloquear herencia, con simulador</li><li>Derechos de usuario, contraseñas y cuotas de disco</li><li>Supuestos, rutas y test</li></ul>
+      <span class="go">Entrar en Sistemas Operativos en Red →</span>
     </a>
   </div>
 </section>
@@ -1597,8 +1622,436 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
   <div id="test-seg"></div>
 </section>
 
+<!-- ============ SOR · RESUMEN ============ -->
+<section class="view sor" id="v-sor" data-view="sor" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Sistemas Operativos en Red · Windows Server</span>
+    <h2>Repaso de directivas de grupo (GPO)</h2>
+    <p class="lead">Directivas de grupo, herencia, derechos de usuario, directivas de cuenta y cuotas de disco. Con un simulador de herencia, supuestos resueltos, la chuleta de rutas y un test.</p>
+  </div>
+  <div class="legend">
+    <a href="#gpo" class="sor"><b>GPO</b>Qué son, dónde se crean, tipos, equipo frente a usuario, actualización y los ejemplos de clase.</a>
+    <a href="#herencia" class="sor"><b>Herencia</b>Arriba-abajo, No reemplazar, Bloquear herencia, filtrado por permiso Leer. Con simulador.</a>
+    <a href="#derechos" class="sor"><b>Derechos y seguridad</b>Derechos frente a permisos, grupos Builtin, contraseñas, bloqueo de cuentas y opciones de seguridad.</a>
+    <a href="#cuotas" class="sor"><b>Cuotas de disco</b>Límite y advertencia por volumen, entradas por usuario y el ejemplo de la carpeta «datos».</a>
+  </div>
+  <div class="grid2">
+    <div class="block">
+      <h3>Plan de estudio</h3>
+      <ol class="steps" style="--c:var(--sor);--cs:var(--sor-soft)">
+        <li><div><b>GPO: conceptos y rutas</b><span class="muted">Qué es un GPO, dónde se guarda, los tres tipos y Configuración del equipo frente a la del usuario.</span></div></li>
+        <li><div><b>Herencia con el simulador</b><span class="muted">Juega con No reemplazar y Bloquear herencia hasta predecir siempre el resultado.</span></div></li>
+        <li><div><b>Derechos y directivas de cuenta</b><span class="muted">Privilegio frente a permiso, los derechos de la práctica y los valores de contraseña y bloqueo.</span></div></li>
+        <li><div><b>Cuotas</b><span class="muted">Se aplican a un volumen, no a carpetas. Prueba el simulador de cuota.</span></div></li>
+        <li><div><b>Supuestos y test</b><span class="muted">Resuelve los supuestos antes de abrir la solución y termina con el test.</span></div></li>
+      </ol>
+    </div>
+    <div class="block">
+      <h3>Las 10 cosas que más se fallan</h3>
+      <ol class="plan prose" style="padding-left:1.2em">
+        <li>Las GPO se vinculan a <b>sitios, dominios y unidades organizativas</b>. Las carpetas <b>Users</b> y <b>Computers</b> no son UO y <b>no admiten GPO</b>.</li>
+        <li>La herencia va <b>de arriba abajo</b> (sitio → dominio → UO → UO hija) y las directivas <b>se suman</b>.</li>
+        <li>Si chocan, gana la del <b>contenedor más cercano</b> al objeto… salvo que la de arriba tenga <b>No reemplazar</b>.</li>
+        <li><b>No reemplazar gana a Bloquear herencia.</b></li>
+        <li>Las directivas <b>no se heredan entre dominios</b>.</li>
+        <li>Una GPO solo se aplica a quien tiene el permiso <b>Leer</b> sobre ella: así se filtra el ámbito.</li>
+        <li>Los cambios no llegan solos al instante: <code>gpupdate /force</code>, reinicio o inicio de sesión.</li>
+        <li><b>Configuración del equipo</b> afecta al equipo sea quien sea el usuario; <b>configuración del usuario</b>, al usuario cuando inicia sesión.</li>
+        <li>Cuando un <b>privilegio</b> choca con un <b>permiso</b>, gana el privilegio.</li>
+        <li>Las <b>cuotas</b> se aplican a una <b>unidad o partición entera</b>, no a carpetas, y vienen <b>desactivadas</b>.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="note pro"><b class="k">Leyenda</b><p>Basado en vuestros apuntes de <b>Directivas de grupo</b> y <b>Cuotas de disco</b> (Windows Server 2003 con clientes XP) y en la página de somebooks «Asignación de derechos a usuarios y grupos» (Windows Server 2008). Lo marcado con <span class="tag-extra">extra pro</span> es cómo se hace en versiones actuales de Windows Server: úsalo para entender, pero en el examen responde con lo de clase.</p></div>
+</section>
+
+<!-- ============ GPO ============ -->
+<section class="view sor" id="v-gpo" data-view="gpo" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">SOR · Directivas de grupo</span>
+    <h2>Directivas de grupo (GPO)</h2>
+    <p class="lead">En vez de configurar cada equipo y cada usuario uno a uno, se definen reglas en el servidor y se aplican solas, de forma centralizada, a quien corresponda.</p>
+  </div>
+  <div class="toc"><a href="#gpo-que">Qué son</a><a href="#gpo-acceso">Dónde se crean</a><a href="#gpo-tipos">Tipos</a><a href="#gpo-eu">Equipo o usuario</a><a href="#gpo-clasif">Clasificador</a><a href="#gpo-act">Actualizar</a><a href="#gpo-ej">Ejemplos de clase</a></div>
+
+  <div class="block" id="gpo-que">
+    <h3><span class="sid">1</span>Qué es una directiva y qué es un GPO</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>Las <b>directivas de seguridad</b> nacen de la necesidad de limitar el acceso a la información y a los recursos sin configurar cada objeto por separado.</p>
+        <p><b>Directivas locales</b>: en un solo equipo, con <code>gpedit.msc</code>. Ejemplo: Configuración del usuario › Plantillas administrativas › Panel de control › Pantalla, para impedir que el usuario cambie el escritorio.</p>
+        <p><b>Directivas a nivel de red</b>: en el controlador de dominio, para sitios, dominios y unidades organizativas.</p>
+      </div>
+      <div class="prose">
+        <div class="note key"><b class="k">GPO</b><p>Toda la configuración de una directiva de grupo se guarda en un <b>objeto de directiva de grupo</b> (GPO, Group Policy Object), que se <b>replica en todos los controladores de dominio</b> del dominio.</p></div>
+        <p>En el equipo, las directivas acaban en cuatro ramas del registro. Al cambiar una directiva, se borran y se vuelven a escribir:</p>
+        <pre class="code" data-file="Registro de Windows">HKEY_LOCAL_MACHINE\Software\Policies
+HKEY_CURRENT_USER\Software\Policies
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="gpo-acceso">
+    <h3><span class="sid">1.1</span>Dónde se crean y editan</h3>
+    <div class="tw"><table>
+      <tr><th>Ámbito</th><th>Cómo se llega (apuntes, Windows Server 2003)</th></tr>
+      <tr><td>Equipo local</td><td>Inicio › Panel de control › Herramientas administrativas › <b>Directiva de seguridad local</b> (o <code>gpedit.msc</code>)</td></tr>
+      <tr><td>Consola MMC</td><td>Inicio › Ejecutar › <code>mmc</code> › Archivo › Agregar complemento › Directiva de grupo</td></tr>
+      <tr><td>Dominio</td><td>Usuarios y equipos de AD › clic derecho en el <b>dominio</b> › Propiedades › ficha <b>Directiva de grupo</b></td></tr>
+      <tr><td>Unidad organizativa</td><td>Usuarios y equipos de AD › clic derecho en la <b>UO</b> › Propiedades › ficha <b>Directiva de grupo</b></td></tr>
+      <tr><td>Sitio</td><td>Clic derecho en el <b>sitio</b> › Propiedades › ficha <b>Directiva de grupo</b></td></tr>
+    </table></div>
+    <div class="note key"><b class="k">En Windows Server 2008 (somebooks)</b><p>Se usa la consola <b>Administración de directivas de grupo</b>: Bosque › Dominios › tu dominio › <b>Objetos de directiva de grupo</b>. Clic derecho en un GPO › <b>Editar</b> abre el editor; la pestaña <b>Configuración</b> enseña lo que tiene configurado.</p></div>
+    <div class="note pro"><b class="k">Extra pro</b><p>Esa consola es <code>gpmc.msc</code>, y en Windows Server actual es la única forma: la ficha «Directiva de grupo» de las propiedades de la UO ya no existe. Allí «No reemplazar» se llama <b>Exigido</b> (Enforced).</p></div>
+  </div>
+
+  <div class="block" id="gpo-tipos">
+    <h3><span class="sid">1.2</span>Los tres tipos de directiva de seguridad</h3>
+    <div class="tw"><table>
+      <tr><th>Tipo</th><th>Cuándo se usa</th></tr>
+      <tr><td><b>Directiva de seguridad del dominio</b></td><td>El servidor es controlador de dominio y quieres cambiar la seguridad de <b>todos los miembros del dominio</b>. Ej.: longitud mínima de contraseña para todo el dominio.</td></tr>
+      <tr><td><b>Directiva de seguridad del controlador de dominio</b></td><td>Para el <b>propio equipo que hace de controlador</b>: asegurar esa máquina.</td></tr>
+      <tr><td><b>Directiva de seguridad local</b></td><td>El servidor es <b>independiente o miembro</b>, no controlador de dominio.</td></tr>
+    </table></div>
+    <p class="muted">Dentro de la directiva de seguridad del dominio aparecen: Directivas de cuentas, Directivas locales, Registro de sucesos, Grupos restringidos, Servicios del sistema, Registro y Sistema de archivos.</p>
+    <div class="note pro"><b class="k">Extra pro</b><p>En la consola de administración de directivas, estos tres se corresponden con los GPO <b>Default Domain Policy</b> (dominio), <b>Default Domain Controllers Policy</b> (la que usa somebooks) y la directiva local de cada equipo.</p></div>
+  </div>
+
+  <div class="block" id="gpo-eu">
+    <h3><span class="sid">2</span>Configuración del equipo o del usuario</h3>
+    <div class="grid2">
+      <div class="note key"><b class="k">Configuración del equipo</b><p>Afecta a <b>cada equipo</b>, inicie sesión quien inicie. Se aplica al arrancar. Aquí están las <b>directivas de cuenta</b> (contraseñas, bloqueo), la <b>asignación de derechos</b>, las <b>opciones de seguridad</b> y el intervalo de actualización para equipos.</p></div>
+      <div class="note key"><b class="k">Configuración del usuario</b><p>Afecta a <b>cada usuario</b> cuando inicia sesión, en el equipo que sea. Aquí están el <b>redireccionamiento de carpetas</b>, el Panel de control, el escritorio, el menú Inicio, Internet Explorer y la restricción de software de los ejemplos.</p></div>
+    </div>
+    <p class="muted">Cada una se divide en <b>Configuración de software</b>, <b>Configuración de Windows</b> (aquí está Configuración de seguridad) y <b>Plantillas administrativas</b>.</p>
+  </div>
+
+  <div class="block" id="gpo-clasif">
+    <h3><span class="sid">práctica</span>Clasificador: ¿equipo o usuario?</h3>
+    <p class="muted">Según dónde la configuran vuestros apuntes.</p>
+    <div class="clasif" id="clasif-eu"></div>
+  </div>
+
+  <div class="block" id="gpo-act">
+    <h3><span class="sid">1.3</span>Actualizar las directivas</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>Los cambios <b>no se propagan al momento</b>. El cliente actualiza cuando:</p>
+        <ul><li>El equipo se inicia.</li><li>Un usuario inicia sesión.</li><li>Una aplicación pide una renovación.</li><li>Un usuario pide una renovación.</li><li>Pasa el intervalo de renovación configurado.</li></ul>
+        <pre class="code" data-file="Ejecutar / cmd">gpupdate /force</pre>
+        <p>El de los apuntes para la directiva del equipo local (sistemas antiguos): <code>secedit /refreshpolicy machine_policy</code></p>
+      </div>
+      <div class="prose">
+        <h4>Intervalo de actualización</h4>
+        <p>Configuración del equipo › Plantillas administrativas › Sistema › Directiva de grupo › <b>Intervalo de actualización de la directiva de grupo para equipos</b> › Habilitada.</p>
+        <div class="note trap"><b class="k">Trampa</b><p>Un intervalo muy corto genera <b>mucho tráfico</b> de red. Y el intervalo de los controladores de dominio se configura aparte.</p></div>
+        <div class="note pro"><b class="k">Extra pro</b><p><code>gpresult /r</code> enseña qué GPO se están aplicando al equipo y al usuario, y por qué alguna se filtra. Es lo primero que se mira cuando «la directiva no funciona». Por defecto los clientes refrescan cada 90 minutos más un margen aleatorio de hasta 30.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="gpo-ej">
+    <h3><span class="sid">2.1–2.7</span>Los ejemplos de clase</h3>
+    <p class="muted">Todos se crean como una GPO nueva vinculada a la UO «usuarios» (con usu1 dentro), se editan, y después <code>gpupdate /force</code> en servidor y cliente.</p>
+    <div class="tw"><table>
+      <tr><th>Objetivo</th><th>Dónde</th><th>Clave</th></tr>
+      <tr><td><b>Impedir navegar</b> (2.1)</td><td>Usuario › Config. de Windows › Mantenimiento de Internet Explorer › Conexión › Configuración de los servidores proxy</td><td>Proxy falso <code>127.1.1.1</code> para todo. Con eso solo no basta: el usuario lo cambia en Opciones de Internet. Hay que habilitar también Plantillas administrativas › Componentes de Windows › Internet Explorer › Panel de control de Internet › <b>Deshabilitar la página Conexiones</b>.</td></tr>
+      <tr><td><b>Limitar el Panel de control</b> (2.2)</td><td>Usuario › Plantillas administrativas › Panel de control › <b>Mostrar solo los subprogramas especificados</b></td><td>Habilitada › Mostrar › añadir los <code>.cpl</code>: <code>sysdm.cpl</code> (sistema), <code>main.cpl</code> (ratón), <code>desk.cpl</code> (pantalla). Están en <code>C:\Windows\System32</code>.</td></tr>
+      <tr><td><b>Impedir ejecutar e instalar software</b> (2.3)</td><td>Usuario › Config. de Windows › Config. de seguridad › Directivas de restricción de software › <b>Niveles de seguridad</b></td><td><b>No permitido</b> › Propiedades › Establecer como predeterminado. En la prueba, el Paint ya no abre.</td></tr>
+      <tr><td><b>Restringir Internet Explorer</b> (2.4)</td><td>Usuario › Plantillas administrativas › Componentes de Windows › Internet Explorer</td><td>Pantalla completa, deshabilitar opciones avanzadas, idioma y proxy, no dejar habilitar complementos, configurar botones de la barra. Se marca <b>Bloquear herencia</b> en la UO para que otras GPO no interfieran.</td></tr>
+      <tr><td><b>Fondo de escritorio obligatorio</b> (2.5)</td><td>Usuario › Plantillas administrativas › Escritorio › Active Desktop › <b>Papel tapiz de Active Desktop</b></td><td>Imagen en una carpeta compartida con ruta UNC: <code>\\dc01\Perfiles\Mifondo.bmp</code>, estilo Expandir.</td></tr>
+      <tr><td><b>Redirigir Mis documentos</b> (2.6)</td><td>Usuario › Config. de Windows › <b>Redireccionamiento de carpetas</b> › Mis documentos › Propiedades</td><td>Básico: todos a la misma ubicación. Ruta UNC con variable: <code>\\servidor\carpeta\%username%</code>. Por defecto: derechos exclusivos al usuario y mover el contenido.</td></tr>
+      <tr><td><b>Bloquear un programa por hash</b> (2.7)</td><td>Usuario › Config. de Windows › Config. de seguridad › Directivas de restricción de software › <b>Reglas adicionales › Regla de nuevo hash</b></td><td>Se elige el ejecutable (<code>sol.exe</code>) y se guarda su hash.</td></tr>
+    </table></div>
+    <div class="grid2">
+      <div class="note key"><b class="k">Regla hash: ventaja</b><p>Aunque se <b>cambie el nombre</b> del ejecutable, sigue bloqueado: el hash depende del contenido del archivo, no del nombre.</p></div>
+      <div class="note trap"><b class="k">Regla hash: inconveniente</b><p>Si se <b>actualiza</b> el programa, el archivo cambia, cambia el hash y la regla deja de bloquearlo.</p></div>
+    </div>
+    <div class="note key"><b class="k">¿Por qué rutas UNC?</b><p><code>\\Nombre_Servidor\Recurso_Compartido</code> no depende de la letra de unidad del cliente. Un error típico de la práctica es poner mal el <b>nombre del servidor</b> en la ruta: la redirección no hace nada.</p></div>
+    <div class="note key"><b class="k">Quitar una GPO</b><p>Propiedades de la UO › Directiva de grupo › seleccionar › Eliminar › «<b>Quitar el vínculo y eliminar el objeto de directiva de grupo permanentemente</b>». Otra opción es solo quitar el vínculo: el GPO sigue existiendo y se puede vincular en otro sitio.</p></div>
+  </div>
+</section>
+
+<!-- ============ HERENCIA ============ -->
+<section class="view sor" id="v-herencia" data-view="herencia" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">SOR · Gestión de las directivas</span>
+    <h2>Herencia, No reemplazar, Bloquear herencia y filtrado</h2>
+    <p class="lead">La parte que más se pregunta: con varias GPO a distintos niveles, ¿cuál acaba aplicándose al usuario?</p>
+  </div>
+  <div class="toc"><a href="#her-reglas">Reglas</a><a href="#her-sim">Simulador</a><a href="#her-filtro">Filtrado de ámbito</a></div>
+
+  <div class="block" id="her-reglas">
+    <h3><span class="sid">1.3</span>Las reglas de la herencia</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 620 200" role="img" aria-label="Orden de aplicación: sitio, dominio, UO padre y UO hija; la última gana salvo No reemplazar">
+        <defs><marker id="hr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--sor)"/></marker></defs>
+        <rect x="10" y="30" width="120" height="44" rx="6" fill="var(--surface)" stroke="var(--line)"/><text x="70" y="57" text-anchor="middle" font-size="13" fill="var(--ink)">Sitio</text>
+        <rect x="165" y="30" width="120" height="44" rx="6" fill="var(--surface)" stroke="var(--line)"/><text x="225" y="57" text-anchor="middle" font-size="13" fill="var(--ink)">Dominio</text>
+        <rect x="320" y="30" width="120" height="44" rx="6" fill="var(--surface)" stroke="var(--line)"/><text x="380" y="57" text-anchor="middle" font-size="13" fill="var(--ink)">UO padre</text>
+        <rect x="475" y="30" width="135" height="44" rx="6" fill="var(--sor-soft)" stroke="var(--sor)"/><text x="542" y="57" text-anchor="middle" font-size="13" fill="var(--sor)">UO hija → objetos</text>
+        <line x1="130" y1="52" x2="161" y2="52" stroke="var(--sor)" stroke-width="2" marker-end="url(#hr)"/>
+        <line x1="285" y1="52" x2="316" y2="52" stroke="var(--sor)" stroke-width="2" marker-end="url(#hr)"/>
+        <line x1="440" y1="52" x2="471" y2="52" stroke="var(--sor)" stroke-width="2" marker-end="url(#hr)"/>
+        <text x="310" y="110" text-anchor="middle" font-size="12" fill="var(--ink)">Se aplican en este orden y se suman.</text>
+        <text x="310" y="132" text-anchor="middle" font-size="12" fill="var(--ink)">Si dos chocan, gana la más cercana al objeto (la última aplicada)…</text>
+        <text x="310" y="154" text-anchor="middle" font-size="12" fill="var(--sor)">…salvo que una de arriba tenga No reemplazar: entonces gana esa.</text>
+        <text x="310" y="182" text-anchor="middle" font-size="11" fill="var(--muted)">Bloquear herencia corta lo de arriba, pero no puede con No reemplazar.</text>
+      </svg>
+    </div>
+    <div class="grid2">
+      <ul class="prose" style="padding-left:1.2em">
+        <li>Se transmite <b>de arriba abajo</b>: sitio → dominio → contenedores primarios → secundarios → usuarios y equipos. Las directivas <b>se heredan y se suman</b>.</li>
+        <li>Una UO puede tener <b>varias GPO</b> y una GPO puede aplicarse a <b>varias UO</b>.</li>
+        <li>Se aplican <b>por dominio</b>: <b>no se heredan entre dominios</b>.</li>
+        <li>Se aplican a <b>contenedores de AD</b>, no a carpetas: <b>Users</b> y <b>Computers</b> no son UO, no pueden tener GPO.</li>
+      </ul>
+      <ul class="prose" style="padding-left:1.2em">
+        <li>Si la GPO de la UO hija <b>contradice</b> a la del padre, se aplica la de la <b>hija</b>.</li>
+        <li>Un ajuste <b>Deshabilitado</b> se hereda como deshabilitado; uno <b>No configurado</b>, como no configurado (no cambia nada).</li>
+        <li><b>No reemplazar</b> (en la GPO de arriba): los niveles de abajo <b>no pueden sustituirla</b>.</li>
+        <li><b>Bloquear herencia</b> (en la UO de abajo): no hereda nada de los contenedores de arriba.</li>
+        <li>Si chocan: <b>No reemplazar siempre tiene preferencia</b> sobre Bloquear herencia.</li>
+      </ul>
+    </div>
+    <div class="note trap"><b class="k">Dos «deshabilitada» distintas</b><p>Un <b>ajuste deshabilitado</b> dentro de una GPO es un valor que se aplica y se hereda (por ejemplo, «Deshabilitado: no mostrar X»). La opción <b>Deshabilitada de la GPO</b> (junto a No reemplazar) significa que esa GPO <b>no se aplica</b> a ese contenedor.</p></div>
+  </div>
+
+  <div class="block" id="her-sim">
+    <h3><span class="sid">práctica</span>Simulador de herencia</h3>
+    <p class="muted">Una misma directiva, «Prohibir el acceso al Panel de control», configurada en una GPO de cada nivel. Cambia valores y opciones y mira qué le llega a un usuario de la UO <b>1ESO</b>.</p>
+    <div class="tw"><table class="sim" id="sim-table">
+      <thead><tr><th>Nivel</th><th>Valor de la directiva</th><th>No reemplazar</th><th>GPO deshabilitada</th><th>Bloquear herencia</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="row"><b>Escenarios</b><div class="segc" id="sim-pre" role="group" aria-label="Escenarios"><button type="button" data-p="0" aria-pressed="false">Gana la hija</button><button type="button" data-p="1" aria-pressed="false">No reemplazar</button><button type="button" data-p="2" aria-pressed="false">Bloquear herencia</button><button type="button" data-p="3" aria-pressed="false">Bloquear contra No reemplazar</button><button type="button" data-p="4" aria-pressed="false">No configurada</button></div></div>
+    <div class="calc-out" id="sim-out" aria-live="polite"></div>
+  </div>
+
+  <div class="block" id="her-filtro">
+    <h3><span class="sid">1.3</span>¿A quién se aplica? Filtrado del ámbito</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>Una GPO se aplica a <b>todos los usuarios y equipos</b> de la UO, pero puede que haya algunos a los que no quieras aplicarla.</p>
+        <p>Regla: las directivas <b>solo se aplican a quien tiene el permiso Leer</b> sobre la GPO. Para limitarla, crea <b>grupos de seguridad</b> y da el permiso Leer solo a ellos.</p>
+      </div>
+      <div class="prose">
+        <h4>Cómo se hace</h4>
+        <p>Con el editor de listas de control de acceso (<b>ACL</b>): clic derecho sobre la directiva › Propiedades › pestaña <b>Seguridad</b>. Allí permites o deniegas el acceso a la GPO para cada grupo.</p>
+        <p class="muted">Conviene que los usuarios y equipos estén dentro de la UO a la que va vinculada la GPO.</p>
+        <div class="note pro"><b class="k">Extra pro</b><p>Para aplicarse hacen falta dos permisos: <b>Leer</b> y <b>Aplicar directiva de grupo</b>. En la consola moderna se hace desde «Filtrado de seguridad» en la pestaña Ámbito.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DERECHOS ============ -->
+<section class="view sor" id="v-derechos" data-view="derechos" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">SOR · Seguridad del dominio</span>
+    <h2>Derechos de usuario y directivas de seguridad</h2>
+    <p class="lead">Quién puede hacer qué en el sistema, y cómo asegurar el controlador de dominio: contraseñas, bloqueo de cuentas y opciones de seguridad.</p>
+  </div>
+  <div class="toc"><a href="#der-concepto">Derechos y privilegios</a><a href="#der-formas">Cómo se otorgan</a><a href="#der-lista">Derechos de la práctica</a><a href="#der-cuenta">Directivas de cuenta</a><a href="#der-opc">Opciones de seguridad</a></div>
+
+  <div class="block" id="der-concepto">
+    <h3><span class="sid">somebooks 5.5</span>Derechos, privilegios y permisos</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>Un <b>derecho</b> da a un usuario la capacidad de hacer ciertas acciones <b>sobre el sistema</b>. Se puede asignar al crear el usuario o después, a un usuario o a un <b>grupo</b> (sus miembros lo heredan).</p>
+        <ul><li><b>Derechos de conexión</b> (logon rights): <b>cómo</b> puede iniciar sesión (localmente, desde la red).</li><li><b>Privilegios</b>: <b>qué</b> puede hacer una vez dentro (apagar el sistema, hacer copias de seguridad).</li></ul>
+      </div>
+      <div class="note trap"><b class="k">Privilegio contra permiso</b><p>Cuando un privilegio entra en contradicción con un permiso, <b>siempre prevalece el privilegio</b>. Ejemplo: un <b>operador de copias de seguridad</b> puede copiar archivos aunque <b>no tenga permiso de lectura</b> sobre ellos.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="der-formas">
+    <h3><span class="sid">somebooks 5.5</span>Dos formas de otorgar privilegios</h3>
+    <div class="grid2">
+      <div class="prose">
+        <h4>1. Grupos predeterminados (Builtin)</h4>
+        <p>Basta con meter al usuario en el grupo. Ejemplo: hacer a <i>fulanito</i> operador de copias:</p>
+        <ol style="padding-left:1.2em"><li>Usuarios y equipos de Active Directory › <b>Builtin</b>.</li><li>Grupo <b>Operadores de copia de seguridad</b> › Propiedades › pestaña <b>Miembros</b>.</li><li><b>Agregar</b> › escribir el nombre › <b>Comprobar nombres</b> › Aceptar › Aceptar.</li></ol>
+      </div>
+      <div class="prose">
+        <h4>2. Directivas de grupo</h4>
+        <p>Para dar un privilegio concreto o ver quién lo tiene:</p>
+        <ol style="padding-left:1.2em"><li>Administración de directivas de grupo › … › Objetos de directiva de grupo › <b>Default Domain Controllers Policy</b> › clic derecho › <b>Editar</b>.</li><li>Configuración del equipo › Directivas › Configuración de Windows › Configuración de seguridad › Directivas locales › <b>Asignación de derechos de usuario</b>.</li><li>Doble clic en el derecho (p. ej. <b>Permitir el inicio de sesión local</b>) › Agregar usuario o grupo › Examinar › Comprobar nombres › Aceptar.</li></ol>
+        <p class="muted">Para solo consultarlo: selecciona la GPO y mira la pestaña <b>Configuración</b>; la segunda columna dice quién lo tiene.</p>
+      </div>
+    </div>
+    <div class="note trap"><b class="k">Cuidado</b><p>Dar <b>inicio de sesión local</b> en un controlador de dominio puede comprometer gravemente su seguridad, hasta perder el control del servidor. Solo a usuarios de <b>absoluta confianza</b>. Para comprobarlo: reiniciar › Cambiar de usuario › Otro usuario. El primer inicio tarda más porque se crea el perfil local.</p></div>
+  </div>
+
+  <div class="block" id="der-lista">
+    <h3><span class="sid">supuesto</span>Derechos de usuario de la práctica</h3>
+    <p class="muted">Configuración del equipo › Configuración de Windows › Configuración de seguridad › Directivas locales › Asignación de derechos de usuario.</p>
+    <div class="tw"><table>
+      <tr><th>Derecho</th><th>Qué controla</th><th>Para asegurar el servidor</th></tr>
+      <tr><td><b>Apagar el sistema</b></td><td>Quién puede apagar el equipo</td><td>Dejar solo a Administradores (quitar operadores)</td></tr>
+      <tr><td><b>Cambiar la hora del sistema</b></td><td>Quién puede cambiar la hora</td><td>Solo quien lo necesite</td></tr>
+      <tr><td><b>Forzar el apagado desde un sistema remoto</b></td><td>Quién puede apagar el servidor a distancia</td><td>Solo administradores</td></tr>
+      <tr><td><b>Tener acceso a este equipo desde la red</b></td><td>Quién puede acceder a los recursos de la máquina por red</td><td>Quitar a quien no lo necesite</td></tr>
+      <tr><td><b>Permitir el inicio de sesión local</b></td><td>Quién puede iniciar sesión sentado en el equipo</td><td>Solo usuarios de absoluta confianza</td></tr>
+      <tr><td><b>Copia de seguridad</b> (vía grupo Operadores de copia de seguridad)</td><td>Hacer copias aunque no haya permiso de lectura</td><td>Es el ejemplo de privilegio que gana a un permiso</td></tr>
+    </table></div>
+  </div>
+
+  <div class="block" id="der-cuenta">
+    <h3><span class="sid">supuesto</span>Directivas de cuenta</h3>
+    <p class="muted">Configuración de seguridad › Directivas de cuenta. Se dividen en tres: <b>Directiva de contraseñas</b>, <b>Directiva de bloqueo de cuentas</b> y <b>Directiva Kerberos</b>.</p>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Directiva de contraseñas</th><th>Qué hace</th></tr>
+        <tr><td>Longitud mínima de la contraseña</td><td>Número mínimo de caracteres</td></tr>
+        <tr><td>La contraseña debe cumplir los requisitos de complejidad</td><td>Mezcla de mayúsculas, minúsculas y números, y que no contenga el nombre del usuario. Con ella, <code>usu1_2012</code> para usu1 ya no vale.</td></tr>
+        <tr><td>Vigencia máxima</td><td>Número máximo de días que puede durar la contraseña</td></tr>
+        <tr><td>Vigencia mínima</td><td>Días mínimos antes de poder cambiarla</td></tr>
+      </table></div>
+      <div class="tw"><table>
+        <tr><th>Directiva de bloqueo</th><th>Qué hace</th></tr>
+        <tr><td>Umbral de bloqueo de cuenta</td><td><b>Cuántos intentos</b> fallidos antes de bloquear</td></tr>
+        <tr><td>Duración del bloqueo de cuenta</td><td><b>Cuántos minutos</b> dura el bloqueo</td></tr>
+        <tr><td>Restablecer el contador de bloqueos después de</td><td>Minutos tras los que se pone a cero el contador de intentos fallidos</td></tr>
+      </table></div>
+    </div>
+    <div class="note key"><b class="k">Para hacer que una directiva cuente</b><p>Doble clic › marcar <b>Definir esta configuración de directiva</b> › Habilitada (o el valor) › Aceptar.</p></div>
+    <div class="note pro"><b class="k">Extra pro</b><p>Según los apuntes, la longitud mínima se puede poner en la GPO de una UO (4 caracteres para ESO, 5 para Bachillerato…). En dominios Windows Server reales, las directivas de contraseña de una GPO de UO <b>no afectan a las cuentas del dominio</b>: solo cuenta la del dominio (Default Domain Policy). Para contraseñas distintas por grupos se usan las directivas de contraseña específicas (PSO). En el examen, responde como en los apuntes.</p></div>
+  </div>
+
+  <div class="block" id="der-opc">
+    <h3><span class="sid">supuesto</span>Directivas locales: auditoría y opciones de seguridad</h3>
+    <div class="grid2">
+      <div class="prose"><p>Dentro de Directivas locales hay tres grupos: <b>Directivas de auditoría</b>, <b>Asignación de derechos de usuario</b> y <b>Opciones de seguridad</b>.</p></div>
+      <div class="tw"><table>
+        <tr><th>Opción de seguridad</th><th>En un servidor</th></tr>
+        <tr><td>Permitir apagar el sistema sin tener que iniciar sesión</td><td>Definir › <b>Deshabilitada</b></td></tr>
+        <tr><td>Estado de la cuenta de invitado</td><td>Definir › <b>Deshabilitada</b> (suele venir ya deshabilitada)</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CUOTAS ============ -->
+<section class="view sor" id="v-cuotas" data-view="cuotas" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">SOR · Cuotas de disco</span>
+    <h2>Cuotas de disco</h2>
+    <p class="lead">Un límite de espacio por usuario en una unidad del servidor, para que nadie la llene con películas y música. Va de la mano de la redirección de Mis documentos: primero llevas los datos al servidor, después los limitas.</p>
+  </div>
+  <div class="toc"><a href="#cuo-que">Qué son</a><a href="#cuo-activar">Activarlas</a><a href="#cuo-usuario">Por usuario</a><a href="#cuo-sim">Simulador</a><a href="#cuo-ej">Ejemplo carpeta datos</a></div>
+
+  <div class="block" id="cuo-que">
+    <h3><span class="sid">1.1</span>Qué son</h3>
+    <div class="grid2">
+      <p class="prose">Una <b>cuota de disco</b> es el límite de capacidad permitido a uno o varios usuarios en una unidad de almacenamiento. Se pone un valor general para todos y después se personaliza para usuarios concretos.</p>
+      <div class="note trap"><b class="k">Trampa</b><p>Se aplican sobre una <b>unidad de disco o partición entera</b> (C:, E:), <b>no sobre carpetas</b>. Y <b>no están activadas por defecto</b>. Si hay una partición de datos, mejor ahí que en C:.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="cuo-activar">
+    <h3><span class="sid">1.2</span>Activarlas y poner los valores predeterminados</h3>
+    <ol class="steps" style="--c:var(--sor);--cs:var(--sor-soft)">
+      <li><div><b>Abrir la pestaña Cuota</b><span class="muted">Mi PC › clic derecho en la unidad › Propiedades › pestaña <b>Cuota</b> › «Las cuotas de disco están deshabilitadas» › <b>Habilitar la administración de cuota</b>.</span></div></li>
+      <li><div><b>Denegar espacio</b><span class="muted">Marcar «<b>Denegar espacio de disco a usuarios que excedan el límite de cuota</b>». Sin esto, el límite solo avisa.</span></div></li>
+      <li><div><b>Límite y nivel de advertencia para usuarios nuevos</b><span class="muted">«Limitar espacio de disco a» (ej.: 50 MB) y «Establecer el nivel de advertencia en» (cuándo se avisa de que se acerca al límite). Son valores <b>generales</b>.</span></div></li>
+      <li><div><b>Registrar sucesos</b><span class="muted">Las dos últimas casillas: registrar cuando un usuario <b>supera el límite</b> y cuando <b>supera el nivel de advertencia</b>.</span></div></li>
+      <li><div><b>Aceptar</b><span class="muted">Avisa de que va a revisar el disco entero para ver de quién es cada archivo y cuánto ocupa.</span></div></li>
+    </ol>
+  </div>
+
+  <div class="block" id="cuo-usuario">
+    <h3><span class="sid">1.3</span>Personalizar la cuota de un usuario</h3>
+    <div class="grid2">
+      <ol class="prose" style="padding-left:1.2em"><li>Pestaña Cuota › <b>Valores de cuota</b>.</li><li>Cuota › <b>Nueva entrada de cuota</b>.</li><li>Seleccionar el usuario (usu1) › Aceptar.</li><li>Limitar espacio a <b>25 MB</b>, advertencia en <b>15 MB</b> › Aceptar.</li><li>Repetir para usu2: cada usuario es una entrada nueva.</li></ol>
+      <div class="note key"><b class="k">General frente a personalizada</b><p>El valor general se aplica a los usuarios <b>nuevos</b> en ese volumen; una <b>entrada de cuota</b> fija el valor de un usuario concreto y manda sobre el general.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="cuo-sim">
+    <h3><span class="sid">práctica</span>Simulador de cuota</h3>
+    <div class="calc-grid">
+      <label>Límite (MB)<input type="text" id="cq-lim" value="25" inputmode="decimal"></label>
+      <label>Nivel de advertencia (MB)<input type="text" id="cq-adv" value="15" inputmode="decimal"></label>
+      <label>Ocupado por el usuario (MB)<input type="text" id="cq-uso" value="12" inputmode="decimal"></label>
+      <label>Archivo que quiere guardar (MB)<input type="text" id="cq-file" value="5" inputmode="decimal"></label>
+      <label>Denegar espacio al exceder<select id="cq-den"><option value="1">Sí, marcado</option><option value="0">No</option></select></label>
+    </div>
+    <div class="quota-bar" aria-hidden="true"><i id="cq-bar"></i><b id="cq-advmark"></b></div>
+    <div class="calc-out" id="cq-out" aria-live="polite"></div>
+  </div>
+
+  <div class="block" id="cuo-ej">
+    <h3><span class="sid">2</span>Ejemplo: la carpeta «datos» por departamentos</h3>
+    <ol class="steps" style="--c:var(--sor);--cs:var(--sor-soft)">
+      <li><div><b>Compartir C:\datos</b><span class="muted">Compartir y seguridad › Compartir esta carpeta › Permisos › <b>Todos: Cambiar y Leer</b>.</span></div></li>
+      <li><div><b>Subcarpetas por departamento</b><span class="muted"><code>C:\datos\Informática</code>, <code>C:\datos\Matemáticas</code>. En la pestaña Seguridad de cada una, el grupo del departamento (<b>GInformática</b>, <b>GMatemáticas</b>) con <b>lectura y modificación</b>.</span></div></li>
+      <li><div><b>Limpiar permisos heredados</b><span class="muted">Opciones avanzadas › «Reemplazar las entradas de permisos en todos los objetos secundarios…» para propagar; y desmarcar «Permitir que los permisos heredables del primario se propaguen…» › <b>Quitar</b>, para eliminar lo heredado de C: (como que todos puedan leer).</span></div></li>
+      <li><div><b>En el cliente</b><span class="muted">Herramientas › Conectar a unidad de red › <b>Z:</b> › <code>\\PC01\datos\Informática</code> › marcar «Conectar de nuevo al iniciar sesión».</span></div></li>
+      <li><div><b>Mover Mis documentos</b><span class="muted">Clic derecho en Mis documentos › Propiedades › Mover › unidad Z: › mover los documentos: Sí. Ahora se guardan en el servidor y cuentan para su cuota.</span></div></li>
+    </ol>
+    <div class="grid2">
+      <div class="note key"><b class="k">¿Por qué «Todos» en el recurso compartido?</b><p>Según los apuntes, los permisos <b>reales</b> se ponen en el sistema de archivos de cada subcarpeta, y esos son los que mandan sobre los del recurso compartido.</p></div>
+      <div class="note pro"><b class="k">Extra pro</b><p>Con acceso por red se aplican los dos tipos de permisos y gana el <b>más restrictivo</b>. Por eso se deja el recurso compartido abierto y se afina en la pestaña Seguridad (NTFS).</p></div>
+    </div>
+    <div class="note key"><b class="k">Ventaja</b><p>Con todos los datos de usuario en un servidor, las <b>copias de seguridad</b> y el <b>control de acceso</b> son mucho más fáciles, y si el usuario cambia de equipo solo hay que volver a apuntar Mis documentos.</p></div>
+  </div>
+</section>
+
+<!-- ============ SUPUESTOS ============ -->
+<section class="view sor" id="v-supuestos" data-view="supuestos" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">SOR · Práctica</span>
+    <h2>Supuestos prácticos</h2>
+    <p class="lead">Los requisitos del supuesto de clase y otros del mismo estilo. Piensa la respuesta (dónde, qué directiva, qué valor) y después abre la solución.</p>
+  </div>
+  <div id="sup-list" style="display:grid;gap:14px"></div>
+</section>
+
+<!-- ============ RUTAS ============ -->
+<section class="view sor" id="v-sor-rutas" data-view="sor-rutas" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">SOR · Chuleta</span>
+    <h2>Rutas y comandos</h2>
+    <p class="lead">Dónde está cada cosa en el editor de directivas y qué comando usar.</p>
+  </div>
+  <div class="block">
+    <h3>Comandos y consolas</h3>
+    <div class="tw"><table>
+      <tr><th>Comando</th><th>Para qué</th></tr>
+      <tr><td><code>gpedit.msc</code></td><td>Editor de directivas de grupo <b>local</b></td></tr>
+      <tr><td><code>mmc</code></td><td>Consola vacía para agregar el complemento Directiva de grupo</td></tr>
+      <tr><td><code>gpupdate /force</code></td><td>Aplicar ya las directivas, en servidor y cliente</td></tr>
+      <tr><td><code>secedit /refreshpolicy machine_policy</code></td><td>Actualizar la directiva del equipo (sistemas antiguos, el de los apuntes)</td></tr>
+      <tr><td><code>\\servidor\recurso</code></td><td>Ruta UNC: no depende de la letra de unidad</td></tr>
+      <tr><td><code>%username%</code></td><td>Variable con el nombre del usuario, para una carpeta por usuario</td></tr>
+      <tr><td><code>sysdm.cpl</code> · <code>main.cpl</code> · <code>desk.cpl</code></td><td>Sistema · Ratón · Pantalla (subprogramas del Panel de control)</td></tr>
+      <tr><td><code>gpmc.msc</code> <span class="tag-extra">extra pro</span></td><td>Consola Administración de directivas de grupo</td></tr>
+      <tr><td><code>gpresult /r</code> <span class="tag-extra">extra pro</span></td><td>Ver qué GPO se aplican al equipo y al usuario</td></tr>
+      <tr><td><code>rsop.msc</code> <span class="tag-extra">extra pro</span></td><td>Ver el resultado final de todas las directivas</td></tr>
+    </table></div>
+  </div>
+  <div class="block">
+    <h3>Rutas en el editor de directivas</h3>
+    <div class="row"><input type="text" id="ruta-q" placeholder="Buscar: contraseña, proxy, fondo, hash…" aria-label="Buscar ruta" style="flex:1;min-width:180px"></div>
+    <div id="ruta-list"></div>
+  </div>
+</section>
+
+<!-- ============ TEST SOR ============ -->
+<section class="view sor" id="v-sor-test" data-view="sor-test" hidden>
+  <div class="head">
+    <span class="eyebrow">SOR · Autoevaluación</span>
+    <h2>Test de directivas de grupo</h2>
+    <p class="lead">GPO, herencia, derechos y directivas de cuenta, y cuotas. Cada respuesta trae su explicación y los fallos se guardan en este navegador.</p>
+  </div>
+  <div id="test-sor"></div>
+</section>
+
 </main>
-<footer><div class="wrap">Servicios en Red: basado en el curso phergar23.github.io/Servicios-De-Red (Temas 0, 1 y 2, solo lo dado en clase). Seguridad: basado en los apuntes UD01 y UD02 del IES Almunia y las prácticas SAI I y Potencia y costes. Lo marcado como «extra pro» no está en los apuntes.</div></footer>
+<footer><div class="wrap">Servicios en Red: basado en el curso phergar23.github.io/Servicios-De-Red (Temas 0, 1 y 2, solo lo dado en clase). Seguridad: basado en los apuntes UD01 y UD02 del IES Almunia y las prácticas SAI I y Potencia y costes. Sistemas Operativos en Red: basado en los apuntes «Directivas de grupo» y «Cuotas de disco» y en somebooks.es (5.5 Asignación de derechos a usuarios y grupos). Lo marcado como «extra pro» no está en los apuntes.</div></footer>
 
 <script>
 'use strict';
@@ -1701,8 +2154,8 @@ document.querySelectorAll('pre.code[data-file]').forEach(pre=>{
 });
 
 /* ---------- navegación ---------- */
-const VIEWS=['inicio','sri','t0','dhcp','dns','errores','escribir','comandos','test','seg','ud1','ud2','sai','calculos','seg-test'];
-const SUBJ=v=>v==='inicio'?null:(['seg','ud1','ud2','sai','calculos','seg-test'].includes(v)?'seg':'sri');
+const VIEWS=['inicio','sri','t0','dhcp','dns','errores','escribir','comandos','test','seg','ud1','ud2','sai','calculos','seg-test','sor','gpo','herencia','derechos','cuotas','supuestos','sor-rutas','sor-test'];
+const SUBJ=v=>v==='inicio'?null:(['seg','ud1','ud2','sai','calculos','seg-test'].includes(v)?'seg':['sor','gpo','herencia','derechos','cuotas','supuestos','sor-rutas','sor-test'].includes(v)?'sor':'sri');
 function route(){
   const h=(location.hash||'#inicio').slice(1);
   let view=VIEWS.includes(h)?h:null, anchor=null;
@@ -1712,7 +2165,7 @@ function route(){
   document.querySelector('nav.tabs').hidden=!subj;
   document.querySelectorAll('nav.tabs a').forEach(a=>{a.hidden=a.dataset.subj!==subj; a.setAttribute('aria-current',a.getAttribute('href')==='#'+view?'page':'false');});
   document.querySelectorAll('nav.subj a').forEach(a=>a.setAttribute('aria-current',a.dataset.subj===subj?'page':'false'));
-  document.title=subj==='seg'?'Seguridad · Repaso 2.º SMR':subj==='sri'?'Servicios en Red · Repaso 2.º SMR':'Repaso 2.º SMR';
+  document.title=subj==='sor'?'Sistemas Operativos en Red · Repaso 2.º SMR':subj==='seg'?'Seguridad · Repaso 2.º SMR':subj==='sri'?'Servicios en Red · Repaso 2.º SMR':'Repaso 2.º SMR';
   const cur=document.querySelector('nav.tabs a[aria-current="page"]'); if(cur) cur.scrollIntoView({block:'nearest',inline:'nearest'});
   if(anchor){ requestAnimationFrame(()=>{const y=anchor.getBoundingClientRect().top+scrollY-document.querySelector('header.top').offsetHeight-12; scrollTo(0,y);}); } else scrollTo(0,0);
 }
@@ -2282,6 +2735,244 @@ const GEN = {
   ans.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('tr-check').click();});
   next();
 })();
+
+/* ================= SISTEMAS OPERATIVOS EN RED ================= */
+
+/* ---------- clasificador equipo/usuario ---------- */
+const EU = [
+ ['Longitud mínima de la contraseña','Equipo','Directivas de cuenta: Configuración del equipo › Config. de Windows › Config. de seguridad.'],
+ ['Umbral de bloqueo de cuenta','Equipo','Directiva de bloqueo de cuentas, dentro de Directivas de cuenta.'],
+ ['Apagar el sistema (asignación de derechos)','Equipo','Directivas locales › Asignación de derechos de usuario, en Configuración del equipo.'],
+ ['Estado de la cuenta de invitado','Equipo','Directivas locales › Opciones de seguridad.'],
+ ['Permitir apagar el sistema sin iniciar sesión','Equipo','Opciones de seguridad: es del equipo, no hay nadie con sesión iniciada.'],
+ ['Intervalo de actualización de la directiva de grupo para equipos','Equipo','Configuración del equipo › Plantillas administrativas › Sistema › Directiva de grupo.'],
+ ['Redirigir la carpeta Mis documentos','Usuario','Configuración del usuario › Config. de Windows › Redireccionamiento de carpetas.'],
+ ['Mostrar solo los subprogramas especificados del Panel de control','Usuario','Configuración del usuario › Plantillas administrativas › Panel de control.'],
+ ['Papel tapiz de Active Desktop','Usuario','Configuración del usuario › Plantillas administrativas › Escritorio › Active Desktop.'],
+ ['Servidor proxy de Internet Explorer','Usuario','Configuración del usuario › Config. de Windows › Mantenimiento de Internet Explorer.'],
+ ['Regla de hash para bloquear un programa','Usuario','En los apuntes: Configuración del usuario › Config. de seguridad › Directivas de restricción de software.'],
+ ['Quitar el icono Mi PC del escritorio','Usuario','Configuración del usuario › Plantillas administrativas › Escritorio.'],
+ ['Quitar el menú Ejecutar del menú Inicio','Usuario','Configuración del usuario › Plantillas administrativas › Menú Inicio y barra de tareas.'],
+ ['Impedir cambiar la configuración de Pantalla (gpedit.msc)','Usuario','Configuración del usuario › Plantillas administrativas › Panel de control › Pantalla.']
+];
+(function(){
+  const root=document.getElementById('clasif-eu'); let order=shuf(EU.map((_,i)=>i)), i=0, hits=0, done=0;
+  function render(){
+    const it=EU[order[i]];
+    root.innerHTML='<div class="clasif-card"><div class="eyebrow">Directiva '+(i+1)+' de '+EU.length+'</div><h3>'+esc(it[0])+'</h3><div class="segc" role="group" aria-label="Equipo o usuario"><button type="button" data-v="Equipo">Configuración del equipo</button><button type="button" data-v="Usuario">Configuración del usuario</button></div><div class="row"><button type="button" class="btn" data-a="nx">Siguiente</button><span class="muted" data-a="sc">'+hits+' de '+done+' bien</span></div><div class="expl" hidden></div></div>';
+    root.querySelectorAll('.segc button').forEach(b=>b.addEventListener('click',()=>{
+      if(root.dataset.done)return; root.dataset.done='1';
+      const ok=b.dataset.v===it[1]; done++; if(ok)hits++;
+      root.querySelectorAll('.segc button').forEach(x=>{x.classList.toggle('right',x.dataset.v===it[1]); if(x===b&&!ok)x.classList.add('wrong');});
+      const ex=root.querySelector('.expl'); ex.hidden=false; ex.innerHTML='<b>'+(ok?'Correcto. ':'No. ')+'</b>Configuración del '+it[1].toLowerCase()+'. '+esc(it[2]);
+      root.querySelector('[data-a="sc"]').textContent=hits+' de '+done+' bien';
+    }));
+    root.querySelector('[data-a="nx"]').addEventListener('click',()=>{delete root.dataset.done; i++; if(i>=EU.length){i=0;order=shuf(order);} render();});
+  }
+  render();
+})();
+
+/* ---------- simulador de herencia ---------- */
+const LV=['Sitio','Dominio','UO Alumnos (padre)','UO 1ESO (hija)'];
+const VAL={nc:'No configurada',hab:'Habilitada',des:'Deshabilitada'};
+let SIM=[{v:'nc',e:0,d:0,b:0},{v:'hab',e:0,d:0,b:0},{v:'nc',e:0,d:0,b:0},{v:'des',e:0,d:0,b:0}];
+const PRESETS=[
+ [{v:'nc'},{v:'hab'},{v:'nc'},{v:'des'}],
+ [{v:'nc'},{v:'hab',e:1},{v:'nc'},{v:'des'}],
+ [{v:'nc'},{v:'hab'},{v:'nc'},{v:'nc',b:1}],
+ [{v:'nc'},{v:'hab',e:1},{v:'nc'},{v:'des',b:1}],
+ [{v:'nc'},{v:'hab'},{v:'nc'},{v:'nc'}]
+];
+function drawSim(){
+  const tb=document.querySelector('#sim-table tbody');
+  tb.innerHTML=SIM.map((s,i)=>'<tr><td><b>'+LV[i]+'</b></td><td><select data-i="'+i+'" data-k="v" aria-label="Valor en '+LV[i]+'">'+Object.entries(VAL).map(([k,t])=>'<option value="'+k+'"'+(s.v===k?' selected':'')+'>'+t+'</option>').join('')+'</select></td>'+
+   '<td><input type="checkbox" data-i="'+i+'" data-k="e"'+(s.e?' checked':'')+' aria-label="No reemplazar en '+LV[i]+'"></td>'+
+   '<td><input type="checkbox" data-i="'+i+'" data-k="d"'+(s.d?' checked':'')+' aria-label="GPO deshabilitada en '+LV[i]+'"></td>'+
+   '<td>'+(i===0?'<span class="muted">—</span>':'<input type="checkbox" data-i="'+i+'" data-k="b"'+(s.b?' checked':'')+' aria-label="Bloquear herencia en '+LV[i]+'">')+'</td></tr>').join('');
+  tb.querySelectorAll('select,input').forEach(el=>el.addEventListener('input',()=>{const s=SIM[+el.dataset.i]; s[el.dataset.k]=el.type==='checkbox'?(el.checked?1:0):el.value; document.querySelectorAll('#sim-pre button').forEach(x=>x.setAttribute('aria-pressed','false')); calcSim();}));
+  calcSim();
+}
+function calcSim(){
+  let blk=-1; SIM.forEach((s,i)=>{if(s.b)blk=i;});
+  const trace=[], inc=[];
+  SIM.forEach((s,i)=>{
+    let st;
+    if(s.v==='nc') st='No configurada: no aporta nada, se hereda lo de arriba.';
+    else if(s.d) st='La GPO está <b>deshabilitada</b>: no se aplica.';
+    else if(i<blk && !s.e) st='Cortada por <b>Bloquear herencia</b> en '+LV[blk]+'.';
+    else { inc.push(i); st=VAL[s.v]+(s.e?' con <b>No reemplazar</b>':'')+(i<blk&&s.e?'. Pasa el bloqueo porque tiene No reemplazar.':'.'); }
+    trace.push([i,st]);
+  });
+  const enf=inc.filter(i=>SIM[i].e);
+  let win=null, why='';
+  if(enf.length){ win=enf[0]; why='Hay una GPO con <b>No reemplazar</b>: gana la de nivel más alto con esa opción ('+LV[win]+'), aunque las de abajo digan otra cosa.'; }
+  else if(inc.length){ win=inc[inc.length-1]; why=inc.length>1?'Varias GPO configuran la directiva: gana la <b>más cercana</b> al usuario ('+LV[win]+').':'Solo '+LV[win]+' la configura, así que se aplica (las de abajo no dicen nada).'; }
+  const res = win===null ? ['nc','<b>Ninguna GPO la aplica.</b> El usuario se queda con el comportamiento por defecto: puede abrir el Panel de control.']
+    : SIM[win].v==='hab' ? ['hab','<b>Panel de control prohibido</b> (Habilitada, viene de '+LV[win]+').'] : ['des','<b>Panel de control permitido</b> (Deshabilitada, viene de '+LV[win]+').'];
+  document.getElementById('sim-out').innerHTML='<div class="verdict-pill '+(res[0]==='hab'?'bad':res[0]==='des'?'ok':'warn')+'">'+res[1]+'</div>'+(why?'<p>'+why+'</p>':'')+
+   '<ol class="calc-steps">'+trace.map(([i,t])=>'<li><b>'+LV[i]+'</b>: '+t+(i===win?' ← <b>gana</b>':'')+'</li>').join('')+'</ol>';
+}
+document.querySelectorAll('#sim-pre button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#sim-pre button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  SIM=PRESETS[+b.dataset.p].map(p=>Object.assign({v:'nc',e:0,d:0,b:0},p)); drawSim();
+}));
+drawSim();
+
+/* ---------- simulador de cuota ---------- */
+function calcQuota(){
+  const lim=num(v('cq-lim')), adv=num(v('cq-adv')), uso=num(v('cq-uso')), f=num(v('cq-file')), den=v('cq-den')==='1', out=document.getElementById('cq-out');
+  if([lim,adv,uso,f].some(isNaN)||lim<=0){out.innerHTML='<p class="muted">Rellena los cuatro valores con números.</p>';return;}
+  if(adv>lim){out.innerHTML='<p class="bad-t">El nivel de advertencia debe ser menor que el límite.</p>';return;}
+  const after=uso+f; let pill, txt;
+  if(after>lim){ if(den){pill='bad'; txt='<b>No se guarda.</b> '+nf(uso)+' + '+nf(f)+' = '+nf(after)+' MB supera el límite de '+nf(lim)+' MB y está marcado «Denegar espacio»: Windows responde que no hay espacio suficiente. El usuario se queda en '+nf(uso)+' MB.';}
+    else {pill='warn'; txt='<b>Se guarda igualmente</b> ('+nf(after)+' MB de '+nf(lim)+'). Sin «Denegar espacio», el límite solo sirve para avisar y <b>registrar el suceso</b>.';} }
+  else if(after>adv){pill='warn'; txt='<b>Se guarda.</b> Queda en '+nf(after)+' MB: ha pasado el nivel de advertencia ('+nf(adv)+' MB). Se registra el suceso si esa casilla está marcada. Le quedan '+nf(lim-after)+' MB.';}
+  else {pill='ok'; txt='<b>Se guarda sin avisos.</b> Queda en '+nf(after)+' MB, por debajo de la advertencia. Le quedan '+nf(lim-after)+' MB.';}
+  out.innerHTML='<div class="verdict-pill '+pill+'">'+txt+'</div>';
+  const shown=(pill==='bad')?uso:after;
+  document.getElementById('cq-bar').style.width=Math.min(100,shown/lim*100)+'%';
+  document.getElementById('cq-bar').className=pill;
+  document.getElementById('cq-advmark').style.left=Math.min(100,adv/lim*100)+'%';
+}
+['cq-lim','cq-adv','cq-uso','cq-file','cq-den'].forEach(id=>document.getElementById(id).addEventListener('input',calcQuota));
+calcQuota();
+
+/* ---------- supuestos ---------- */
+const SUP=[
+ ['Del supuesto de clase','Asegurar el controlador de dominio','Quiero hacer más segura la máquina que hace de controlador de dominio: contraseñas, accesos remotos y número de intentos al iniciar sesión.',
+  '<p><b>Dónde:</b> Directiva de seguridad del <b>controlador de dominio</b> (o editar Default Domain Controllers Policy).</p><ul><li><b>Directivas de cuenta › Directiva de contraseñas</b>: longitud mínima, cumplir requisitos de complejidad, vigencia máxima y mínima.</li><li><b>Directivas de cuenta › Directiva de bloqueo</b>: umbral (intentos), duración del bloqueo, restablecer contador.</li><li><b>Directivas locales › Asignación de derechos</b>: «Forzar el apagado desde un sistema remoto» y «Apagar el sistema» solo para Administradores; revisar «Tener acceso a este equipo desde la red».</li><li><b>Opciones de seguridad</b>: deshabilitar «Permitir apagar el sistema sin tener que iniciar sesión» y la cuenta de invitado.</li></ul><p>Después, <code>gpupdate /force</code>.</p>'],
+ ['Del supuesto de clase','Contraseña mínima por etapas','Los usuarios de la ESO tendrán contraseña de al menos 4 caracteres, los de Bachillerato 5 y los de CF 6.',
+  '<p>Una <b>GPO por UO</b> (ESO, Bachillerato, CF), cada una vinculada a su UO.</p><p>Editar › <b>Configuración del equipo › Configuración de Windows › Configuración de seguridad › Directivas de cuenta › Directiva de contraseñas › Longitud mínima de la contraseña</b> › Definir › 4, 5 o 6.</p><p><code>gpupdate /force</code> y probar con 1234, 12345 y 123456.</p><p class="muted">Ver el aviso «extra pro» de la pestaña Derechos sobre cómo funciona esto en dominios reales.</p>'],
+ ['Del supuesto de clase','Mis documentos al servidor','Los usuarios de ESO, Bachillerato y CF redirigirán su carpeta Mis documentos a una carpeta del servidor, para limitarla después con cuotas.',
+  '<ol><li>Crear la carpeta en el servidor (ej. <code>C:\\doc_UO_1ESO</code>), <b>compartirla</b> y dar permisos en Compartir y en Seguridad a los usuarios de esa UO.</li><li>GPO de la UO › <b>Configuración del usuario › Configuración de Windows › Redireccionamiento de carpetas › Mis documentos</b> › Propiedades.</li><li>Pestaña Destino: <b>Básico: redirigir la carpeta de todos a la misma ubicación</b>, ruta UNC <code>\\\\PC01\\doc_UO_1ESO</code>.</li><li>Pestaña Configuración: derechos exclusivos y mover el contenido (marcadas).</li><li>Cerrar y abrir sesión en el cliente y comprobar que los archivos aparecen en el servidor, cada uno en la carpeta con el nombre del usuario.</li></ol><p>Si no aparecen: revisar el <b>nombre del servidor</b> en la ruta y los <b>permisos</b> de la carpeta.</p>'],
+ ['Del supuesto de clase','Ver el escritorio de Bachillerato','Desde el servidor quiero saber qué tienen los usuarios de Bachillerato en el escritorio.',
+  '<p>Igual que con Mis documentos, pero con la carpeta <b>Escritorio</b>: GPO de la UO Bachillerato › Configuración del usuario › Configuración de Windows › Redireccionamiento de carpetas › <b>Escritorio</b> › Básico › ruta UNC a una carpeta compartida del servidor.</p>'],
+ ['Cuotas','Limitar el espacio de cada usuario','Ya tengo Mis documentos en la unidad E: del servidor. Cada usuario puede usar 50 MB con aviso a los 40 MB, y a usu1 le quiero dar 100 MB.',
+  '<ol><li>E: › Propiedades › pestaña <b>Cuota</b> › Habilitar la administración de cuota.</li><li>Marcar <b>Denegar espacio de disco a usuarios que excedan el límite</b>.</li><li>Límite predeterminado <b>50 MB</b>, advertencia <b>40 MB</b>. Marcar los dos registros de sucesos.</li><li><b>Valores de cuota › Nueva entrada de cuota</b> › usu1 › límite 100 MB (y su advertencia).</li></ol><p>Se aplica a la <b>unidad entera</b>, no a la carpeta.</p>'],
+ ['Herencia','Un usuario que no debe recibir la GPO','La GPO «Restringir Panel» de la UO Profesores debe aplicarse a todos los profesores menos al jefe de departamento.',
+  '<p><b>Filtrado del ámbito</b>: GPO › Propiedades › pestaña <b>Seguridad</b> (ACL). Quitar o denegar el permiso <b>Leer</b> al jefe (o a un grupo de seguridad en el que esté). Sin Leer, la directiva no se le aplica.</p>'],
+ ['Herencia','Una GPO que nadie se puede saltar','La GPO del dominio pone el fondo corporativo, pero la UO Marketing tiene Bloquear herencia. Quiero que Marketing también lo reciba.',
+  '<p>Marcar <b>No reemplazar</b> en la GPO del dominio. No reemplazar siempre tiene preferencia sobre Bloquear herencia, así que llega igualmente a Marketing.</p>'],
+ ['Herencia','La GPO no llega a nadie','He vinculado una GPO a los usuarios que están en la carpeta Users del dominio y no se les aplica.',
+  '<p><b>Users</b> (y <b>Computers</b>) son <b>carpetas</b>, no unidades organizativas: no admiten GPO. Hay que crear una <b>UO</b>, mover allí los usuarios y vincular la GPO a la UO.</p>'],
+ ['Actualización','He cambiado la GPO y el cliente sigue igual','Acabo de habilitar una directiva y en el cliente no se nota nada.',
+  '<p>Los cambios no se propagan al momento. Ejecutar <code>gpupdate /force</code> en el cliente (y en el servidor), o reiniciar o cerrar y abrir sesión. Si es de <b>usuario</b>, se aplica al iniciar sesión; si es de <b>equipo</b>, al arrancar. Si sigue igual, revisa a qué UO está vinculada y el filtrado (permiso Leer).</p>'],
+ ['Derechos','Copias de seguridad sin permiso de lectura','Un técnico tiene que hacer copias de seguridad de carpetas en las que no tiene permiso de lectura.',
+  '<p>Añadirlo al grupo <b>Operadores de copia de seguridad</b> (Usuarios y equipos de AD › Builtin › Propiedades › Miembros › Agregar). Es un <b>privilegio</b> y, cuando un privilegio choca con un permiso, gana el privilegio.</p>'],
+ ['Derechos','Que solo los administradores apaguen el servidor','Ahora mismo los operadores pueden apagar el controlador de dominio, en local y en remoto.',
+  '<p>Asignación de derechos de usuario › <b>Apagar el sistema</b> y <b>Forzar el apagado desde un sistema remoto</b>: quitar a los operadores y dejar solo Administradores. Y en Opciones de seguridad, deshabilitar «Permitir apagar el sistema sin tener que iniciar sesión».</p>'],
+ ['Ejemplos','Que no ejecuten el solitario aunque le cambien el nombre','Los alumnos renombran los juegos para saltarse las restricciones.',
+  '<p><b>Regla de hash</b>: Configuración del usuario › Configuración de Windows › Configuración de seguridad › Directivas de restricción de software › Reglas adicionales › <b>Regla de nuevo hash</b> › elegir <code>sol.exe</code>. El hash depende del contenido, no del nombre. Ojo: si se actualiza el programa, cambia el hash.</p>'],
+ ['Ejemplos','Sin Internet, de verdad','Puse un proxy falso por GPO, pero los alumnos marcan «Detectar la configuración automáticamente» y vuelven a navegar.',
+  '<p>Además del proxy falso (<code>127.1.1.1</code>), habilitar <b>Plantillas administrativas › Componentes de Windows › Internet Explorer › Panel de control de Internet › Deshabilitar la página Conexiones</b>, para que no puedan cambiarlo.</p>']
+];
+document.getElementById('sup-list').innerHTML=SUP.map((s,i)=>'<div class="block sor"><h3><span class="sid">'+esc(s[0])+'</span>'+esc(s[1])+'</h3><p>'+esc(s[2])+'</p><details class="sol-d"><summary>Ver la solución</summary><div class="prose">'+s[3]+'</div></details></div>').join('');
+
+/* ---------- rutas ---------- */
+const RUTAS=[
+ ['Contraseñas','Configuración del equipo › Configuración de Windows › Configuración de seguridad › Directivas de cuenta › Directiva de contraseñas','Longitud mínima, complejidad, vigencia máxima y mínima'],
+ ['Bloqueo de cuentas','Configuración del equipo › Configuración de Windows › Configuración de seguridad › Directivas de cuenta › Directiva de bloqueo de cuentas','Umbral, duración, restablecer contador'],
+ ['Derechos de usuario','Configuración del equipo › Configuración de Windows › Configuración de seguridad › Directivas locales › Asignación de derechos de usuario','Apagar el sistema, cambiar la hora, apagado remoto, acceso desde la red, inicio de sesión local'],
+ ['Opciones de seguridad','Configuración del equipo › Configuración de Windows › Configuración de seguridad › Directivas locales › Opciones de seguridad','Apagar sin iniciar sesión, cuenta de invitado'],
+ ['Intervalo de actualización','Configuración del equipo › Plantillas administrativas › Sistema › Directiva de grupo','Intervalo de actualización de la directiva de grupo para equipos'],
+ ['Redirigir carpetas','Configuración del usuario › Configuración de Windows › Redireccionamiento de carpetas','Mis documentos, Escritorio, Menú Inicio, Datos de programa'],
+ ['Panel de control','Configuración del usuario › Plantillas administrativas › Panel de control','Mostrar solo los subprogramas especificados, prohibir el acceso'],
+ ['Pantalla (gpedit local)','Configuración del usuario › Plantillas administrativas › Panel de control › Pantalla','Impedir cambiar el escritorio, ocultar fichas'],
+ ['Fondo de escritorio','Configuración del usuario › Plantillas administrativas › Escritorio › Active Desktop','Papel tapiz de Active Desktop (ruta UNC)'],
+ ['Escritorio','Configuración del usuario › Plantillas administrativas › Escritorio','Quitar los iconos Mi PC y Papelera'],
+ ['Menú Inicio','Configuración del usuario › Plantillas administrativas › Menú Inicio y barra de tareas','Quitar Ejecutar, bloquear la barra, menú clásico'],
+ ['Proxy de Internet Explorer','Configuración del usuario › Configuración de Windows › Mantenimiento de Internet Explorer › Conexión','Configuración de los servidores proxy'],
+ ['Opciones de Internet Explorer','Configuración del usuario › Plantillas administrativas › Componentes de Windows › Internet Explorer','Pantalla completa, proxy, complementos, Panel de control de Internet › Deshabilitar la página Conexiones'],
+ ['Restricción de software','Configuración del usuario › Configuración de Windows › Configuración de seguridad › Directivas de restricción de software','Niveles de seguridad (No permitido), Reglas adicionales › Regla de nuevo hash'],
+ ['Instalar paquetes MSI','Configuración del usuario › Configuración de software','Nuevo paquete'],
+ ['Grupos predeterminados','Usuarios y equipos de Active Directory › Builtin','Operadores de copia de seguridad › Propiedades › Miembros'],
+ ['GPO del dominio (2008)','Administración de directivas de grupo › Bosque › Dominios › dominio › Objetos de directiva de grupo','Default Domain Controllers Policy › Editar'],
+ ['Filtrar la GPO','Propiedades de la GPO › Seguridad','Permiso Leer a quien deba recibirla'],
+ ['Cuotas de disco','Mi PC › clic derecho en la unidad › Propiedades › Cuota','Habilitar, denegar, límite, advertencia, Valores de cuota']
+];
+function drawRutas(){
+  const q=document.getElementById('ruta-q').value.trim().toLowerCase();
+  const it=RUTAS.filter(r=>!q||r.join(' ').toLowerCase().includes(q));
+  document.getElementById('ruta-list').innerHTML=it.length?'<div class="cmd-list">'+it.map(r=>'<div class="cmd sor"><div class="c"><code>'+esc(r[1])+'</code></div><div class="d"><span class="g">'+esc(r[0])+'</span><br>'+esc(r[2])+'</div></div>').join('')+'</div>':'<p class="muted">Nada coincide con «'+esc(q)+'».</p>';
+}
+document.getElementById('ruta-q').addEventListener('input',drawRutas); drawRutas();
+
+/* ---------- test SOR ---------- */
+const SORQ=[
+['gpo','¿Por qué surgen las directivas de seguridad?',['Para limitar el acceso a la información y los recursos sin configurar cada objeto por separado','Para acelerar la red','Para sustituir al antivirus','Para hacer copias de seguridad'],0,'Se configuran reglas centralizadas en lugar de ir equipo por equipo.'],
+['gpo','¿Qué es un GPO?',['El objeto de directiva de grupo donde se guarda toda la configuración de una directiva','Un tipo de usuario','Una unidad organizativa','Un comando de consola'],0,'Group Policy Object. Se replica en todos los controladores de dominio del dominio.'],
+['gpo','¿Dónde se replica un GPO?',['En todos los controladores de dominio del dominio','Solo en el cliente','En todos los dominios del bosque','En la carpeta Users'],0,'Por eso las directivas no se heredan entre dominios: viven en cada dominio.'],
+['gpo','¿Con qué comando se abre el editor de directivas de grupo local?',['gpedit.msc','gpupdate /force','mmc /local','regedit'],0,'gpedit.msc abre el editor local. gpupdate aplica directivas.'],
+['gpo','¿A qué se pueden vincular las directivas de grupo en Active Directory?',['A sitios, dominios y unidades organizativas','A carpetas compartidas','A usuarios sueltos directamente','Solo al bosque'],0,'Se aplican a contenedores de AD.'],
+['gpo','En los apuntes (Windows Server 2003), ¿cómo se crea una GPO para una UO?',['Clic derecho en la UO › Propiedades › ficha Directiva de grupo › Nueva','Inicio › Ejecutar › gpupdate','Mi PC › Propiedades › Cuota','Panel de control › Cuentas'],0,'En 2008 se usa la consola Administración de directivas de grupo.'],
+['gpo','¿Qué directiva se usa cuando el servidor es miembro o independiente, no controlador de dominio?',['Directiva de seguridad local','Directiva de seguridad del dominio','Directiva del controlador de dominio','Directiva del sitio'],0,'Los tres tipos: dominio, controlador de dominio y local.'],
+['gpo','Quieres fijar la longitud mínima de contraseña para todos los miembros del dominio. ¿Qué directiva usas?',['Directiva de seguridad del dominio','Directiva de seguridad local de un cliente','Directiva del controlador de dominio','Ninguna, se hace usuario a usuario'],0,'Afecta a todos los miembros del dominio.'],
+['gpo','Una directiva en Configuración del equipo…',['Afecta al equipo sea cual sea el usuario que inicie sesión','Solo afecta al administrador','Afecta al usuario en cualquier equipo','No se aplica nunca a servidores'],0,'La de usuario se aplica al usuario cuando inicia sesión, en cualquier equipo.'],
+['gpo','¿Dónde está el redireccionamiento de carpetas?',['Configuración del usuario › Configuración de Windows › Redireccionamiento de carpetas','Configuración del equipo › Plantillas administrativas › Sistema','Directivas de cuenta','Opciones de seguridad'],0,'Es una configuración de usuario.'],
+['gpo','¿Qué comando aplica inmediatamente las directivas en un equipo?',['gpupdate /force','gpedit.msc','secpol /now','ipconfig /renew'],0,'Se ejecuta en el servidor y en el cliente.'],
+['gpo','¿Cuándo actualiza un cliente las directivas, según los apuntes?',['Al iniciar el equipo, al iniciar sesión, cuando lo pide una aplicación o el usuario, o cuando vence el intervalo','Solo cuando se reinstala Windows','Cada segundo','Solo cuando lo pide el administrador desde el servidor'],0,'Los cambios no se propagan solos al instante.'],
+['gpo','¿Por qué no conviene un intervalo de actualización de directivas muy corto?',['Genera mucho tráfico en la red','Borra las directivas','Bloquea las cuentas','Desactiva las cuotas'],0,'Cada actualización consulta al controlador de dominio.'],
+['gpo','¿Dónde se configura el intervalo de actualización para equipos?',['Configuración del equipo › Plantillas administrativas › Sistema › Directiva de grupo','Configuración del usuario › Escritorio','Directivas de cuenta','Pestaña Cuota'],0,'«Intervalo de actualización de la directiva de grupo para equipos».'],
+['gpo','¿En qué ramas del registro guarda Windows las directivas?',['Software\\Policies y Software\\Microsoft\\Windows\\CurrentVersion\\Policies de HKLM y HKCU','HKEY_CLASSES_ROOT','Solo en HKEY_USERS','En C:\\Windows\\Temp'],0,'Cuatro ramas: las dos rutas en HKEY_LOCAL_MACHINE y en HKEY_CURRENT_USER.'],
+['gpo','Pones un proxy falso por GPO para impedir navegar, pero el usuario marca «Detectar la configuración automáticamente». ¿Qué falta?',['Deshabilitar la página Conexiones de las opciones de Internet','Reiniciar el router','Crear otra UO','Poner una cuota'],0,'Así no puede cambiar la configuración de conexión.'],
+['gpo','¿Qué tipo de archivo son los subprogramas del Panel de control?',['.cpl','.msc','.exe solo','.inf'],0,'Están en C:\\Windows\\System32; ej.: sysdm.cpl (sistema), main.cpl (ratón), desk.cpl (pantalla).'],
+['gpo','¿Qué ventaja tiene bloquear un programa con una regla de hash?',['Sigue bloqueado aunque se le cambie el nombre','Funciona aunque se actualice el programa','No necesita gpupdate','Bloquea todos los programas'],0,'El hash depende del contenido del archivo.'],
+['gpo','¿Qué inconveniente tiene la regla de hash?',['Si el programa se actualiza, cambia el hash y deja de bloquearse','Que no funciona con .exe','Que bloquea al administrador','Que hay que reiniciar el servidor'],0,'Un archivo distinto tiene un hash distinto.'],
+['gpo','¿Por qué se usan rutas UNC (\\\\servidor\\recurso) en las directivas?',['Porque no dependen de la letra de unidad del cliente','Porque son más rápidas','Porque no necesitan permisos','Porque cifran los datos'],0,'Convención universal de nombres.'],
+['gpo','¿Para qué sirve %username% en la ruta de redirección?',['Para crear una carpeta por cada usuario con su nombre','Para pedir la contraseña','Para ocultar la carpeta','Para aplicar cuotas'],0,'Ej.: \\\\servidor\\carpeta\\%username%.'],
+['gpo','Para impedir ejecutar cualquier software no autorizado, en los apuntes se usa…',['Directivas de restricción de software › Niveles de seguridad › No permitido como predeterminado','Una cuota de disco','La directiva de contraseñas','Bloquear herencia'],0,'Después el Paint, por ejemplo, ya no abre.'],
+
+['her','¿En qué sentido se transmite la directiva de grupo?',['De arriba abajo: sitio → dominio → UO → UO hija → usuarios y equipos','De abajo arriba','Solo entre dominios','Al azar'],0,'Las directivas se heredan y se suman.'],
+['her','¿Pueden tener GPO las carpetas Users y Computers de Usuarios y equipos de AD?',['No, porque no son unidades organizativas','Sí, como cualquier contenedor','Solo Users','Solo si son del dominio raíz'],0,'Hay que mover los objetos a una UO.'],
+['her','¿Se heredan las directivas entre dominios?',['No, se aplican por dominio','Sí, siempre','Solo con No reemplazar','Solo las de usuario'],0,'Cada dominio tiene sus GPO.'],
+['her','La GPO del dominio prohíbe el Panel de control y la de la UO hija lo permite. Sin opciones especiales, ¿qué recibe un usuario de la UO hija?',['Lo permite: gana la del contenedor más cercano','Lo prohíbe: gana la de arriba','Ninguna de las dos','Error de configuración'],0,'Si el secundario contradice al primario, se aplica la del secundario.'],
+['her','Una directiva «No configurada» en la UO hija…',['No cambia nada: se mantiene lo heredado','Anula lo de arriba','Bloquea la herencia','Deshabilita la GPO'],0,'Se hereda como no configurada.'],
+['her','¿Qué hace la opción No reemplazar en una GPO?',['Impide que los contenedores de abajo la sustituyan','Impide que se herede','Borra la GPO','Desactiva la GPO'],0,'Viene impuesta a todos los niveles de abajo.'],
+['her','¿Qué hace Bloquear herencia en una UO?',['La UO no hereda las directivas de los contenedores de arriba','Impide que la GPO se edite','Bloquea las cuentas de la UO','Aplica la GPO a otros dominios'],0,'Se marca en la ficha Directiva de grupo de la UO.'],
+['her','Si una GPO de arriba tiene No reemplazar y la UO de abajo tiene Bloquear herencia, ¿qué pasa?',['Se aplica la GPO de arriba: No reemplazar siempre tiene preferencia','Gana el bloqueo','No se aplica ninguna','Depende del orden alfabético'],0,'Es una de las preguntas más típicas.'],
+['her','La opción «Deshabilitada» de una GPO (junto a No reemplazar) significa…',['Que esa GPO no se aplica a ese contenedor','Que el ajuste vale Deshabilitado y se hereda','Que bloquea la herencia','Que se borra la GPO'],0,'No confundir con un ajuste en estado Deshabilitado dentro de la GPO.'],
+['her','¿A quién se aplica una GPO vinculada a una UO?',['A los usuarios y equipos de la UO que tengan permiso Leer sobre la GPO','A todo el bosque','Solo al administrador','A todos los dominios'],0,'Filtrado del ámbito.'],
+['her','¿Cómo evitas que una GPO se aplique a un usuario concreto de la UO?',['Quitándole (o denegándole) el permiso Leer en la pestaña Seguridad de la GPO','Moviéndolo a la carpeta Users','Poniéndole una cuota','Cambiándole la contraseña'],0,'Con la ACL de la GPO: Propiedades › Seguridad.'],
+['her','¿Puede una UO tener varias GPO, y una GPO aplicarse a varias UO?',['Sí, las dos cosas','Solo una GPO por UO','Una GPO solo puede ir a una UO','No, salvo en el dominio raíz'],0,'La relación es de muchos a muchos.'],
+['her','En la práctica de restringir Internet Explorer, ¿para qué se marca Bloquear herencia en la UO?',['Para que otras directivas de arriba no interfieran con esta','Para que no se aplique la GPO','Para acelerar el inicio de sesión','Para que los usuarios puedan cambiar el proxy'],0,'Así solo cuentan las GPO de esa UO (salvo las de No reemplazar).'],
+
+['der','¿Qué es un derecho de usuario?',['La capacidad de realizar determinadas acciones sobre el sistema','Un permiso sobre un archivo','Una contraseña','Una cuota'],0,'Se puede dar a un usuario o a un grupo.'],
+['der','Los derechos de conexión (logon rights) definen…',['Cómo puede iniciar sesión el usuario (local, desde la red)','Qué archivos puede leer','Cuánto espacio puede usar','Qué fondo de pantalla tiene'],0,'Los privilegios definen qué puede hacer una vez dentro.'],
+['der','Cuando un privilegio choca con un permiso, ¿qué prevalece?',['El privilegio','El permiso','El más restrictivo','Ninguno'],0,'Ej.: un operador de copias copia archivos sin permiso de lectura.'],
+['der','¿Cuáles son las dos formas de otorgar privilegios según somebooks?',['Meter al usuario en un grupo predeterminado (Builtin) o asignarlo por directivas de grupo','Con cuotas o con contraseñas','Editando el registro o con gpupdate','Con el Panel de control o con la BIOS'],0,'Builtin para heredar los privilegios del grupo; GPO para privilegios concretos.'],
+['der','¿Dónde están los grupos predeterminados como Operadores de copia de seguridad?',['En Builtin, dentro de Usuarios y equipos de AD','En la carpeta Computers','En la pestaña Cuota','En el registro'],0,'Propiedades › Miembros › Agregar.'],
+['der','¿Qué GPO se edita en somebooks para dar el inicio de sesión local en el controlador?',['Default Domain Controllers Policy','Default User Policy','Local Admin Policy','Directiva de cuotas'],0,'Configuración del equipo › Directivas › Config. de Windows › Config. de seguridad › Directivas locales › Asignación de derechos.'],
+['der','¿Por qué hay que tener cuidado al dar «Permitir el inicio de sesión local» en un controlador de dominio?',['Puede comprometer gravemente su seguridad, incluso perder el control del servidor','Porque borra los perfiles','Porque desactiva las cuotas','No hay que tener cuidado'],0,'Solo para usuarios de absoluta confianza.'],
+['der','¿Dónde está la asignación de derechos de usuario?',['Configuración del equipo › Config. de Windows › Config. de seguridad › Directivas locales','Configuración del usuario › Plantillas administrativas','Directivas de cuenta','Pestaña Cuota'],0,'Junto a Directivas de auditoría y Opciones de seguridad.'],
+['der','¿Qué derecho decide quién puede apagar el servidor a distancia?',['Forzar el apagado desde un sistema remoto','Apagar el sistema','Cambiar la hora del sistema','Tener acceso desde la red'],0,'Conviene dejarlo solo a administradores.'],
+['der','¿Qué derecho controla quién puede acceder por red a los recursos de la máquina?',['Tener acceso a este equipo desde la red','Permitir el inicio de sesión local','Apagar el sistema','Cambiar la hora del sistema'],0,'Quitar a quien no lo necesite aumenta la seguridad.'],
+['der','¿En qué tres partes se dividen las Directivas de cuenta?',['Contraseñas, bloqueo de cuentas y Kerberos','Auditoría, derechos y opciones de seguridad','Equipo, usuario y software','Sitio, dominio y UO'],0,'Las otras tres son las de Directivas locales.'],
+['der','El «umbral de bloqueo de cuenta» indica…',['Cuántos intentos fallidos se permiten antes de bloquear','Cuántos minutos dura el bloqueo','La longitud de la contraseña','Los días de vigencia'],0,'La duración del bloqueo es otra directiva.'],
+['der','Con «La contraseña debe cumplir los requisitos de complejidad» habilitada, ¿qué contraseña no vale para usu1?',['usu1_2012','Tr3s!Perros','Az9kLm2q','Hola2026x'],0,'No puede contener el nombre del usuario.'],
+['der','¿Qué significa la vigencia máxima de la contraseña?',['Número máximo de días que puede usarse antes de tener que cambiarla','Número máximo de caracteres','Intentos máximos','Tiempo máximo de sesión'],0,'La mínima: días antes de poder cambiarla.'],
+['der','En un servidor, ¿qué se hace con «Permitir apagar el sistema sin tener que iniciar sesión»?',['Definirla y deshabilitarla','Habilitarla','Dejarla sin configurar siempre','Borrarla'],0,'Es una opción de seguridad.'],
+['der','Para que una directiva de seguridad tenga efecto hay que marcar…',['Definir esta configuración de directiva','No reemplazar','Bloquear herencia','Denegar espacio'],0,'Luego se elige el valor.'],
+
+['cuo','¿Qué es una cuota de disco?',['El límite de capacidad permitido a uno o varios usuarios en una unidad de almacenamiento','Una copia de seguridad','Un tipo de partición','Un permiso de lectura'],0,'Evita que un usuario sature el servidor.'],
+['cuo','¿Sobre qué se aplican las cuotas de disco?',['Sobre una unidad o partición entera','Sobre una carpeta concreta','Sobre un archivo','Sobre una UO'],0,'No sobre carpetas determinadas.'],
+['cuo','¿Están activadas las cuotas por defecto?',['No, hay que activarlas en la pestaña Cuota de la unidad','Sí, siempre','Solo en C:','Solo para administradores'],0,'Propiedades de la unidad › Cuota.'],
+['cuo','Si no marcas «Denegar espacio de disco a usuarios que excedan el límite»…',['El usuario puede seguir guardando: el límite solo avisa y registra','El usuario no puede guardar nada','Se borran sus archivos','Se bloquea su cuenta'],0,'Con la casilla marcada, Windows le niega el espacio.'],
+['cuo','¿Qué es el nivel de advertencia?',['El punto en que se avisa al usuario de que se acerca al límite','El límite máximo','El tamaño de la partición','El número de usuarios'],0,'Ej.: límite 25 MB, advertencia 15 MB.'],
+['cuo','¿Cómo se pone una cuota distinta a un usuario concreto?',['Valores de cuota › Nueva entrada de cuota','Con gpupdate','En Directivas de cuenta','Cambiando su contraseña'],0,'Cada usuario es una entrada nueva.'],
+['cuo','Los valores de cuota de la pestaña principal se aplican a…',['Los usuarios nuevos en ese volumen (valores generales)','Solo al administrador','Solo a usu1','A otros servidores'],0,'Las entradas de cuota personalizan por usuario.'],
+['cuo','Al activar las cuotas, ¿qué avisa Windows que va a hacer?',['Revisar el disco para ver de quién es cada archivo y cuánto ocupa','Formatear la unidad','Reiniciar el servidor','Borrar los perfiles'],0,'La cuota se calcula por propietario de los archivos.'],
+['cuo','¿Qué registros se pueden activar en la pestaña Cuota?',['Cuando un usuario supera el límite y cuando supera el nivel de advertencia','Cuando se apaga el servidor','Cuando cambia una GPO','Cuando falla un disco'],0,'Así hay constancia de quién se pasa.'],
+['cuo','En el ejemplo de la carpeta «datos», ¿qué permiso del recurso compartido se da a Todos?',['Cambiar y Leer','Control total','Solo Leer','Ninguno'],0,'Los permisos reales se ponen en la pestaña Seguridad de cada subcarpeta.'],
+['cuo','¿Por qué se desmarca «Permitir que los permisos heredables del primario se propaguen…» en las subcarpetas?',['Para quitar los permisos heredados de C:, como que todos puedan leer','Para activar la cuota','Para compartir la carpeta','Para cifrarla'],0,'Luego se pulsa Quitar.'],
+['cuo','En el cliente, ¿cómo se conecta la carpeta del departamento?',['Conectar a unidad de red › Z: › \\\\PC01\\datos\\Informática, con reconexión al iniciar sesión','Con gpedit.msc','Copiando la carpeta al escritorio','Con una cuota'],0,'Después se mueve Mis documentos a Z:.'],
+['cuo','¿Qué ventaja tiene guardar Mis documentos de todos en el servidor?',['Copias de seguridad más efectivas y mejor control de acceso','Más espacio en el cliente','No hacen falta contraseñas','Internet más rápido'],0,'Y se puede limitar con cuotas.']
+];
+makeTest(document.getElementById('test-sor'), {
+  key:'sor-fallos',
+  questions: SORQ.map(x=>({t:x[0], s:{gpo:'Directivas de grupo',her:'Herencia y filtrado',der:'Derechos y seguridad',cuo:'Cuotas de disco'}[x[0]], q:x[1], o:x[2], a:x[3], e:x[4]})),
+  topics:[{v:'gpo',label:'GPO',cls:'sor'},{v:'her',label:'Herencia',cls:'sor'},{v:'der',label:'Derechos',cls:'sor'},{v:'cuo',label:'Cuotas',cls:'sor'}],
+  sim:{label:'Repaso mezclado de los cuatro bloques', fn:Q=>{const by=t=>shuf(Q.filter(q=>q.t===t)); return shuf([...by('gpo').slice(0,7),...by('her').slice(0,6),...by('der').slice(0,6),...by('cuo').slice(0,5)]);}}
+});
 
 route();
 </script>
