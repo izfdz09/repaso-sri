@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Repaso SRI T0–T2</title>
+<title>Repaso 2.º SMR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -14,6 +14,7 @@
   --t0:#8a5a2b; --t0-soft:#f3e9de; --dhcp:#c85a14; --dhcp-soft:#fbe9dc; --dns:#1d5fc2; --dns-soft:#e1ebfa;
   --ok:#1f7a4a; --ok-soft:#dff2e7; --bad:#b3261e; --bad-soft:#f9e1df; --warn:#8a6100; --warn-soft:#fbf0d2;
   --extra:#6b4bb0; --extra-soft:#ece6f7;
+  --seg:#2e7d3c; --seg-soft:#e1f1e3; --calc:#0d7377; --calc-soft:#dcf0f0;
   --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -22,12 +23,12 @@
   --bg:#0e1419; --surface:#151d24; --ink:#e2e8ee; --muted:#95a3b0; --line:#28333d; --code:#0b1116; --code-ink:#d5dee6;
   --t0:#d39a62; --t0-soft:#2a2016; --dhcp:#f08a45; --dhcp-soft:#2d1d12; --dns:#6ea6f7; --dns-soft:#132238;
   --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
-  --extra:#b49af0; --extra-soft:#221b33; color-scheme:dark}}
+  --extra:#b49af0; --extra-soft:#221b33; --seg:#6cc77c; --seg-soft:#13261a; --calc:#4ec4c8; --calc-soft:#0f2a2b; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1419; --surface:#151d24; --ink:#e2e8ee; --muted:#95a3b0; --line:#28333d; --code:#0b1116; --code-ink:#d5dee6;
   --t0:#d39a62; --t0-soft:#2a2016; --dhcp:#f08a45; --dhcp-soft:#2d1d12; --dns:#6ea6f7; --dns-soft:#132238;
   --ok:#5cc58c; --ok-soft:#12271c; --bad:#f07b72; --bad-soft:#2e1614; --warn:#e3b54a; --warn-soft:#2a2210;
-  --extra:#b49af0; --extra-soft:#221b33; color-scheme:dark}
+  --extra:#b49af0; --extra-soft:#221b33; --seg:#6cc77c; --seg-soft:#13261a; --calc:#4ec4c8; --calc-soft:#0f2a2b; color-scheme:dark}
 
 [hidden]{display:none!important}
 *{box-sizing:border-box}
@@ -76,8 +77,9 @@ section.view{display:grid;gap:28px}
 .t0 .block>h3 .sid{background:var(--t0-soft);color:var(--t0)}
 .dhcp .block>h3 .sid{background:var(--dhcp-soft);color:var(--dhcp)}
 .dns .block>h3 .sid{background:var(--dns-soft);color:var(--dns)}
+.view.seg .block>h3 .sid,.view.calc .block>h3 .sid{background:var(--cs);color:var(--c)}
 .topic-head{border-left:4px solid var(--c);padding-left:14px}
-.t0{--c:var(--t0);--cs:var(--t0-soft)} .dhcp{--c:var(--dhcp);--cs:var(--dhcp-soft)} .dns{--c:var(--dns);--cs:var(--dns-soft)}
+.t0{--c:var(--t0);--cs:var(--t0-soft)} .dhcp{--c:var(--dhcp);--cs:var(--dhcp-soft)} .dns{--c:var(--dns);--cs:var(--dns-soft)} .seg{--c:var(--seg);--cs:var(--seg-soft)} .calc{--c:var(--calc);--cs:var(--calc-soft)} .sri{--c:var(--dns);--cs:var(--dns-soft)}
 .pts{display:inline-block;font-family:var(--f-mono);font-size:.8rem;font-weight:600;color:var(--c,var(--ink));background:var(--cs,var(--bg));padding:3px 9px;border-radius:999px}
 
 /* avisos */
@@ -118,7 +120,7 @@ ol.steps>li>div{display:grid;gap:8px;min-width:0}
 
 /* inicio */
 .exam-bar{display:flex;height:54px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
-.exam-bar a{display:flex;flex-direction:column;justify-content:center;padding:0 10px;text-decoration:none;color:#fff;font-size:.78rem;line-height:1.2;min-width:0}
+.exam-bar a{display:flex;flex-direction:column;justify-content:center;padding:0 10px;text-decoration:none;color:var(--surface);font-size:.78rem;line-height:1.2;min-width:0}
 .exam-bar a b{font:700 1rem var(--f-mono)}
 .exam-bar a span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px}
@@ -136,10 +138,10 @@ button.btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 input[type=text],select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:7px 10px;min-width:0}
 textarea{font-family:var(--f-mono);font-size:.85rem;width:100%;min-height:200px;line-height:1.45;resize:vertical}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
-.seg button{font:600 .85rem var(--f-body);background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line);padding:7px 12px;cursor:pointer}
-.seg button:last-child{border-right:0}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.segc{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-wrap:wrap}
+.segc button{font:600 .85rem var(--f-body);background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line);padding:7px 12px;cursor:pointer}
+.segc button:last-child{border-right:0}
+.segc button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 
 /* encuentra el error */
 .bug-lines{border-radius:8px;background:var(--code);border:1px solid var(--line);overflow-x:auto;padding:6px 0}
@@ -189,6 +191,41 @@ textarea{font-family:var(--f-mono);font-size:.85rem;width:100%;min-height:200px;
 .sub-grid input.ko{border-color:var(--bad);background:var(--bad-soft)}
 .big-ip{font:600 clamp(1.3rem,4vw,1.8rem) var(--f-mono);letter-spacing:.02em}
 
+
+/* cabecera por asignaturas */
+.top .wrap{flex-wrap:wrap;row-gap:2px}
+.subj{display:flex;gap:4px;flex-wrap:wrap}
+.subj a{text-decoration:none;font:700 .86rem var(--f-display);font-stretch:92%;color:var(--muted);padding:6px 11px;border-radius:999px;border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
+.subj a .dot{width:8px;height:8px;border-radius:50%}
+.subj a[aria-current="page"]{color:var(--surface);background:var(--ink);border-color:var(--ink)}
+nav.tabs{flex-basis:100%}
+.home-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.home-card{display:grid;gap:12px;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:20px}
+.home-card:hover{border-color:var(--c)}
+.home-card h3{font-size:1.45rem}
+.home-card ul{margin:0;padding-left:1.1em;display:grid;gap:4px;color:var(--muted)}
+.home-card .go{font-weight:600;color:var(--c)}
+/* cálculos */
+.formula{font:600 1rem var(--f-mono);background:var(--cs,var(--bg));color:var(--c,var(--ink));padding:10px 14px;border-radius:8px;text-align:center}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.calc-grid label{display:grid;gap:4px;font-size:.85rem;color:var(--muted)}
+.calc-out{display:grid;gap:10px;background:var(--bg);border-radius:8px;padding:12px 14px}
+.calc-steps{margin:0;padding-left:1.3em;display:grid;gap:4px;font-variant-numeric:tabular-nums}
+.calc-card{background:var(--bg);border-radius:8px;padding:12px 14px;display:grid;gap:8px;min-width:0}
+.verdict-pill{border-radius:8px;padding:10px 12px}
+.verdict-pill.ok{background:var(--ok-soft)} .verdict-pill.ok b{color:var(--ok)}
+.verdict-pill.warn{background:var(--warn-soft)} .verdict-pill.warn b{color:var(--warn)}
+.verdict-pill.bad{background:var(--bad-soft)} .verdict-pill.bad b{color:var(--bad)}
+.bad-t{color:var(--bad)}
+table.inv input,table.inv select{width:100%;min-width:5em;padding:5px 7px;font-size:.88rem}
+table.inv input.n{max-width:7em;text-align:right;font-variant-numeric:tabular-nums}
+table.inv td.tot{white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
+#tr-ans.ok{border-color:var(--ok);background:var(--ok-soft)} #tr-ans.ko{border-color:var(--bad);background:var(--bad-soft)}
+.train-q{font-size:1.05rem;background:var(--bg);border-radius:8px;padding:12px 14px}
+/* clasificador */
+.clasif-card{display:grid;gap:12px}
+.clasif-card .segc button.right{background:var(--ok-soft);color:var(--ok)}
+.clasif-card .segc button.wrong{background:var(--bad-soft);color:var(--bad)}
 svg text{font-family:var(--f-mono)}
 .diagram{overflow-x:auto}
 .diagram svg{display:block;max-width:100%;height:auto;min-width:480px}
@@ -200,16 +237,26 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;colo
 <body>
 
 <header class="top"><div class="wrap">
-  <div class="brand"><span class="pairs" aria-hidden="true"><i style="background:var(--t0)"></i><i style="background:var(--dhcp)"></i><i style="background:var(--dns)"></i></span>SRI · T0–T2</div>
-  <nav class="tabs" aria-label="Secciones">
-    <a href="#inicio">Inicio</a>
-    <a href="#t0"><span class="dot" style="background:var(--t0)"></span>T0 Repaso</a>
-    <a href="#dhcp"><span class="dot" style="background:var(--dhcp)"></span>T1 DHCP</a>
-    <a href="#dns"><span class="dot" style="background:var(--dns)"></span>T2 DNS</a>
-    <a href="#errores">Encuentra el error</a>
-    <a href="#escribir">Escribe el archivo</a>
-    <a href="#comandos">Comandos</a>
-    <a href="#test">Test</a>
+  <a class="brand" href="#inicio" style="text-decoration:none;color:var(--ink)"><span class="pairs" aria-hidden="true"><i style="background:var(--dhcp)"></i><i style="background:var(--seg)"></i><i style="background:var(--dns)"></i><i style="background:var(--t0)"></i></span>Repaso 2.º SMR</a>
+  <nav class="subj" aria-label="Asignaturas">
+    <a href="#sri" data-subj="sri"><span class="dot" style="background:var(--dns)"></span>Servicios en Red</a>
+    <a href="#seg" data-subj="seg"><span class="dot" style="background:var(--seg)"></span>Seguridad</a>
+  </nav>
+  <nav class="tabs" aria-label="Secciones de la asignatura">
+    <a href="#sri" data-subj="sri">Resumen</a>
+    <a href="#t0" data-subj="sri"><span class="dot" style="background:var(--t0)"></span>T0 Repaso</a>
+    <a href="#dhcp" data-subj="sri"><span class="dot" style="background:var(--dhcp)"></span>T1 DHCP</a>
+    <a href="#dns" data-subj="sri"><span class="dot" style="background:var(--dns)"></span>T2 DNS</a>
+    <a href="#errores" data-subj="sri">Encuentra el error</a>
+    <a href="#escribir" data-subj="sri">Escribe el archivo</a>
+    <a href="#comandos" data-subj="sri">Comandos</a>
+    <a href="#test" data-subj="sri">Test</a>
+    <a href="#seg" data-subj="seg">Resumen</a>
+    <a href="#ud1" data-subj="seg"><span class="dot" style="background:var(--seg)"></span>UD1 Introducción</a>
+    <a href="#ud2" data-subj="seg"><span class="dot" style="background:var(--seg)"></span>UD2 Seguridad física</a>
+    <a href="#sai" data-subj="seg"><span class="dot" style="background:var(--seg)"></span>SAI</a>
+    <a href="#calculos" data-subj="seg"><span class="dot" style="background:var(--calc)"></span>Cálculos</a>
+    <a href="#seg-test" data-subj="seg">Test</a>
   </nav>
 </div></header>
 
@@ -217,6 +264,29 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:.85rem;colo
 
 <!-- ============ INICIO ============ -->
 <section class="view" id="v-inicio" data-view="inicio">
+  <div class="head">
+    <span class="eyebrow">2.º SMR · IES Almunia · Curso 2026/27</span>
+    <h1>Repaso para los exámenes</h1>
+    <p class="lead">Elige la asignatura. Cada una tiene su resumen, sus apartados prácticos y su propio test.</p>
+  </div>
+  <div class="home-cards">
+    <a class="home-card sri" href="#sri">
+      <span class="eyebrow">Asignatura</span>
+      <h3>Servicios en Red</h3>
+      <ul><li>T0 Repaso de primero, T1 DHCP y T2 DNS</li><li>Archivos de configuración comentados</li><li>Encuentra el error y escribe el archivo</li><li>Chuleta de comandos y test con simulacro</li></ul>
+      <span class="go">Entrar en Servicios en Red →</span>
+    </a>
+    <a class="home-card seg" href="#seg">
+      <span class="eyebrow">Asignatura</span>
+      <h3>Seguridad Informática</h3>
+      <ul><li>UD1 Introducción a la seguridad</li><li>UD2 Seguridad física y el SAI</li><li>Cálculos: SAI, baterías, potencia y costes</li><li>Clasificador y test teórico</li></ul>
+      <span class="go">Entrar en Seguridad →</span>
+    </a>
+  </div>
+</section>
+
+<!-- ============ SERVICIOS EN RED · RESUMEN ============ -->
+<section class="view" id="v-sri" data-view="sri" hidden>
   <div class="head">
     <span class="eyebrow">Servicios en Red · 2.º SMR · Debian 13</span>
     <h1>Repaso para el examen de T0, DHCP y DNS</h1>
@@ -885,7 +955,7 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
     <h2>Encuentra el error</h2>
     <p class="lead">Toca las líneas que están mal y pulsa <b>Comprobar</b>. Verde: acertaste. Rojo: había un error y no lo marcaste. Tachado: marcaste una línea que estaba bien.</p>
   </div>
-  <div class="row"><div class="seg" id="err-filter" role="group" aria-label="Filtrar por tema"><button type="button" data-f="all" aria-pressed="true">Todos</button><button type="button" data-f="dhcp" aria-pressed="false">DHCP</button><button type="button" data-f="dns" aria-pressed="false">DNS</button></div><span class="muted" id="err-score"></span></div>
+  <div class="row"><div class="segc" id="err-filter" role="group" aria-label="Filtrar por tema"><button type="button" data-f="all" aria-pressed="true">Todos</button><button type="button" data-f="dhcp" aria-pressed="false">DHCP</button><button type="button" data-f="dns" aria-pressed="false">DNS</button></div><span class="muted" id="err-score"></span></div>
   <div id="err-list" style="display:grid;gap:20px"></div>
 </section>
 
@@ -906,33 +976,629 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
     <h2>Comandos importantes</h2>
     <p class="lead">Los que más se usan, con para qué sirven y cuándo usarlos. Busca o filtra.</p>
   </div>
-  <div class="row"><input type="text" id="cmd-q" placeholder="Buscar: dig, renew, serial…" aria-label="Buscar comando" style="flex:1;min-width:180px"><div class="seg" id="cmd-filter" role="group" aria-label="Filtrar"><button type="button" data-f="all" aria-pressed="true">Todos</button><button type="button" data-f="t0" aria-pressed="false">T0</button><button type="button" data-f="dhcp" aria-pressed="false">DHCP</button><button type="button" data-f="dns" aria-pressed="false">DNS</button></div></div>
+  <div class="row"><input type="text" id="cmd-q" placeholder="Buscar: dig, renew, serial…" aria-label="Buscar comando" style="flex:1;min-width:180px"><div class="segc" id="cmd-filter" role="group" aria-label="Filtrar"><button type="button" data-f="all" aria-pressed="true">Todos</button><button type="button" data-f="t0" aria-pressed="false">T0</button><button type="button" data-f="dhcp" aria-pressed="false">DHCP</button><button type="button" data-f="dns" aria-pressed="false">DNS</button></div></div>
   <div id="cmd-list"></div>
 </section>
 
 <!-- ============ TEST ============ -->
-<section class="view" id="v-test" data-view="test" hidden>
+<section class="view sri" id="v-test" data-view="test" hidden>
   <div class="head">
     <span class="eyebrow">Autoevaluación</span>
     <h2>Test</h2>
     <p class="lead">Preguntas del propio curso más preguntas prácticas tipo examen. Cada respuesta trae su explicación. Los fallos se guardan en este navegador para repasarlos.</p>
   </div>
-  <div class="block" id="test-setup">
-    <div class="row"><b>Tema</b><div class="seg" id="t-topic" role="group" aria-label="Tema"><button type="button" data-v="all" aria-pressed="true">Todo</button><button type="button" data-v="0" aria-pressed="false">T0</button><button type="button" data-v="1" aria-pressed="false">DHCP</button><button type="button" data-v="2" aria-pressed="false">DNS</button><button type="button" data-v="fallos" aria-pressed="false">Mis fallos</button></div></div>
-    <div class="row"><b>Preguntas</b><div class="seg" id="t-n" role="group" aria-label="Número de preguntas"><button type="button" data-v="10" aria-pressed="false">10</button><button type="button" data-v="20" aria-pressed="true">20</button><button type="button" data-v="40" aria-pressed="false">40</button><button type="button" data-v="999" aria-pressed="false">Todas</button></div><span class="muted" id="t-avail"></span></div>
-    <div class="row"><button class="btn primary" id="t-start" type="button">Empezar</button><button class="btn" id="t-sim" type="button">Simulacro con el peso del examen</button></div>
+  <div id="test-sri"></div>
+</section>
+
+<!-- ============ SEGURIDAD · RESUMEN ============ -->
+<section class="view seg" id="v-seg" data-view="seg" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Seguridad Informática · 2.º SMR · IES Almunia</span>
+    <h2>Repaso de Seguridad: UD1, UD2 y el SAI</h2>
+    <p class="lead">La teoría de los dos primeros temas resumida, con las trampas típicas de cada concepto, un test teórico y un apartado práctico con los cálculos del SAI y de potencia eléctrica.</p>
   </div>
-  <div class="block" id="test-run" hidden>
-    <div class="row" style="justify-content:space-between"><span class="score" id="t-count"></span><span class="muted" id="t-hits"></span></div>
-    <div class="progress"><i id="t-bar"></i></div>
-    <div class="q" id="t-q"></div>
-    <div class="row"><button class="btn primary" id="t-next" type="button" disabled>Siguiente</button><button class="btn" id="t-stop" type="button">Terminar</button></div>
+  <div class="legend">
+    <a href="#ud1" class="seg"><b>UD1 · Introducción</b>Activos, tríada CID, autenticidad, no repudio y trazabilidad, activa/pasiva, física/lógica, amenazas y malware.</a>
+    <a href="#ud2" class="seg"><b>UD2 · Seguridad física</b>Plan de contingencia, CPD (ubicación, clima, acceso, incendios, electricidad, red), centro de respaldo y equipos de usuario.</a>
+    <a href="#sai" class="seg"><b>UD2 · SAI</b>Qué es, tipos (offline, inline, online), VA y W, tomas, baterías, puerto de datos y configuración del apagado.</a>
+    <a href="#calculos" class="calc"><b>Cálculos</b>Potencia real del SAI, ¿es suficiente?, baterías en serie y paralelo, potencia a contratar con margen del 20 % y coste anual.</a>
   </div>
-  <div class="block" id="test-end" hidden></div>
+  <div class="grid2">
+    <div class="block">
+      <h3>Plan de estudio</h3>
+      <ol class="steps" style="--c:var(--seg);--cs:var(--seg-soft)">
+        <li><div><b>UD1 con el clasificador</b><span class="muted">Lee la UD1 y practica «¿Activa o pasiva? ¿Física o lógica?» hasta no fallar.</span></div></li>
+        <li><div><b>Memoriza el malware</b><span class="muted">Virus, gusano, troyano, rootkit, backdoor, spyware, adware, hijackers. Es carne de test.</span></div></li>
+        <li><div><b>UD2: los números del CPD</b><span class="muted">20–25 °C, 40–60 % de humedad, 1.ª o 2.ª planta, 2 sensores, CO₂, ~15 min de SAI, generador a los 1–2 min.</span></div></li>
+        <li><div><b>SAI y cálculos</b><span class="muted">Fórmula W = VA × factor y la práctica de potencia. Haz el entrenador hasta acertar 10 seguidas.</span></div></li>
+        <li><div><b>Test final</b><span class="muted">Test de Seguridad con todas las preguntas. Repasa con «Mis fallos».</span></div></li>
+      </ol>
+    </div>
+    <div class="block">
+      <h3>Las 10 cosas que más se fallan</h3>
+      <ol class="plan prose" style="padding-left:1.2em">
+        <li>La <b>seguridad total no existe</b>: siempre queda un riesgo residual.</li>
+        <li><b>Cifrado y copias de seguridad son seguridad pasiva</b>, no activa. Activa es lo que detecta y responde en tiempo real (antivirus, cortafuegos, IDS/IPS).</li>
+        <li><b>Vulnerabilidad</b> = el agujero (un SO sin actualizar). <b>Amenaza</b> = quien lo aprovecha (un virus, un apagón).</li>
+        <li><b>Hacker ≠ cracker</b>: el hacker busca fallos para arreglarlos; el cracker, para delinquir.</li>
+        <li>El <b>gusano</b> se propaga solo por la red; el <b>virus</b> necesita un programa huésped.</li>
+        <li>El CPD, ni en el sótano (inundación) ni en la última planta (calor, goteras): <b>1.ª o 2.ª planta, sala interior</b>.</li>
+        <li>Fuego en el CPD: <b>gas (CO₂)</b>, nunca agua ni espuma, y con retardo para que salgan las personas.</li>
+        <li><b>VA es potencia aparente y W potencia real</b>: W = VA × factor (0,5–0,6 gama baja, ~0,9 gama alta).</li>
+        <li><b>Nunca</b> conectes una <b>impresora láser</b> a las tomas de batería del SAI.</li>
+        <li>Baterías <b>en paralelo suman Ah</b>; <b>en serie</b>, la capacidad es la de una sola.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="note pro"><b class="k">Leyenda</b><p>Todo sale de vuestros apuntes (UD01, UD02) y de las dos prácticas (SAI I y Potencia y costes). Lo marcado con <span class="tag-extra">extra pro</span> no está en los apuntes: úsalo para entender, pero en el examen responde con lo de clase.</p></div>
+</section>
+
+<!-- ============ UD1 ============ -->
+<section class="view seg" id="v-ud1" data-view="ud1" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Seguridad · UD1</span>
+    <h2>Introducción a la seguridad</h2>
+    <p class="lead">La pregunta de partida: ¿qué estamos protegiendo, de qué, y con qué tipo de medida? Y el dilema del administrador: mantener la información segura sin impedir que los usuarios autorizados trabajen.</p>
+  </div>
+  <div class="toc"><a href="#ud1-activos">Activos</a><a href="#ud1-cid">Tríada CID</a><a href="#ud1-ext">Autenticidad, no repudio, trazabilidad</a><a href="#ud1-tipos">Tipos de seguridad</a><a href="#ud1-clasif">Clasificador</a><a href="#ud1-amen">Vulnerabilidad y amenaza</a><a href="#ud1-humanas">Amenazas humanas</a><a href="#ud1-malware">Malware</a><a href="#ud1-fisicas">Amenazas físicas</a><a href="#ud1-red">Seguridad en red</a></div>
+
+  <div class="block" id="ud1-activos">
+    <h3><span class="sid">1</span>Activos: lo que hay que proteger</h3>
+    <p class="prose">Un <b>activo</b> es cualquier recurso con valor para la organización. Si se destruye, se altera, se roba o deja de estar accesible, la organización sufre un daño.</p>
+    <div class="grid2">
+      <div class="note key"><b class="k">Personas</b><p>El activo <b>más valioso e indefenso</b>: su salud y seguridad física, su privacidad y su identidad. Además, son la diana principal de la <b>ingeniería social</b>.</p></div>
+      <div class="note key"><b class="k">Información y datos</b><p>El corazón de la empresa: clientes, finanzas, credenciales, correos. Un servidor roto se compra; perder o filtrar los datos puede llevar a la quiebra.</p></div>
+      <div class="note key"><b class="k">Software (activos lógicos)</b><p>Sistemas operativos, bases de datos, aplicaciones de gestión y servicios de red (DNS, web, correo).</p></div>
+      <div class="note key"><b class="k">Hardware e infraestructuras (activos físicos)</b><p>Servidores, PCs, móviles, routers, switches, puntos de acceso, almacenamiento, cableado y las propias salas (CPD).</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="ud1-cid">
+    <h3><span class="sid">2</span>La tríada CID</h3>
+    <p class="prose">El objetivo de la seguridad es <b>reducir riesgos</b>, no eliminarlos: <b>la seguridad total o el riesgo cero no existen</b>. Siempre queda un <b>riesgo residual</b>, porque las amenazas evolucionan y los sistemas cambian.</p>
+    <div class="tw"><table>
+      <tr><th>Objetivo</th><th>También llamado</th><th>Qué garantiza</th><th>Ejemplo de los apuntes</th></tr>
+      <tr><td><b>C</b>onfidencialidad</td><td>Privacidad</td><td>Que solo accedan los usuarios o sistemas <b>autorizados</b></td><td>Cifrar un archivo con una contraseña que conocen pocos</td></tr>
+      <tr><td><b>I</b>ntegridad</td><td>Confiabilidad</td><td>Que la información se conserve <b>tal como se generó</b>: ni manipulada ni corrompida</td><td>Generar un <b>hash</b> del archivo; copias de seguridad periódicas</td></tr>
+      <tr><td><b>D</b>isponibilidad</td><td>Accesibilidad</td><td>Que quien tiene permiso <b>pueda acceder cuando lo necesita</b></td><td>Protección eléctrica (SAI) en un servidor web</td></tr>
+    </table></div>
+    <div class="note trap"><b class="k">Trampa</b><p>Si te piden «¿qué objetivo se cumple?», mira qué se evita: que otro lo <b>lea</b> → confidencialidad; que se <b>modifique</b> → integridad; que <b>deje de funcionar</b> → disponibilidad.</p></div>
+  </div>
+
+  <div class="block" id="ud1-ext">
+    <h3><span class="sid">2.1</span>Dimensiones extendidas</h3>
+    <div class="tw"><table>
+      <tr><th>Dimensión</th><th>Qué asegura</th><th>Ejemplo</th></tr>
+      <tr><td><b>Autenticidad</b></td><td>La <b>identidad</b> del usuario o equipo que generó la información. A veces se usa una tercera parte confiable (<b>TTP</b>, Trusted Third Party).</td><td>Firmar digitalmente un fichero</td></tr>
+      <tr><td><b>No repudio en origen</b></td><td>Quien <b>envía</b> no puede negar que lo envió</td><td>Mensaje firmado digitalmente por el emisor</td></tr>
+      <tr><td><b>No repudio en destino</b></td><td>Quien <b>recibe</b> no puede negar que lo recibió</td><td>Acuse de recibo de un correo</td></tr>
+      <tr><td><b>Trazabilidad</b> (auditoría)</td><td>Que cada acción se asocie de forma inequívoca a un usuario o equipo</td><td>Logs: saber qué cuenta borró un archivo a las 3:00</td></tr>
+    </table></div>
+    <div class="note key"><b class="k">Para relacionarlo</b><p>La trazabilidad une la <b>autenticidad</b> (saber quién es) con el <b>registro de sus actos</b> (los logs).</p></div>
+  </div>
+
+  <div class="block" id="ud1-tipos">
+    <h3><span class="sid">3</span>Tipos de seguridad</h3>
+    <p class="prose">Dos criterios distintos que <b>no son excluyentes</b>: una medida puede ser a la vez pasiva y física (un SAI) o pasiva y lógica (el cifrado).</p>
+    <div class="grid2">
+      <div class="prose">
+        <h4>Según el momento: activa o pasiva</h4>
+        <p><b>Activa</b>: funciona en <b>tiempo real</b> para prevenir, mitigar o responder. Regla: <i>si detecta, analiza y responde por sí misma ante un ataque, es activa.</i></p>
+        <ul><li>Cortafuegos (firewall): filtra el tráfico por reglas.</li><li>IDS/IPS: analizan paquetes y comportamiento para cazar intrusos.</li><li>Antivirus/antimalware: escanea en tiempo real y para el código malicioso.</li></ul>
+        <p><b>Pasiva</b>: no responde en tiempo real; <b>minimiza el impacto</b> cuando el daño ya ha ocurrido o la activa ha fallado. Regla: <i>si es una barrera fija, un blindaje o un mecanismo de recuperación, es pasiva.</i></p>
+        <ul><li>Copias de seguridad (backups): permiten restaurar tras un ransomware.</li><li>Cifrado: un disco robado no sirve de nada al ladrón.</li><li>SAI: mantiene el servidor ante un apagón o lo apaga de forma controlada.</li></ul>
+      </div>
+      <div class="prose">
+        <h4>Según lo que protege: física o lógica</h4>
+        <p><b>Física</b>: protege el <b>hardware y las instalaciones</b> frente a amenazas ambientales (incendios, inundaciones) o humanas (robos, sabotajes).</p>
+        <ul><li>Refrigeración de servidores</li><li>Alarmas de incendios por gas (no dañan la electrónica)</li><li>Cámaras de videovigilancia (CCTV)</li><li>Control de acceso con tarjeta o biometría</li></ul>
+        <p><b>Lógica</b>: protege el <b>software y los datos</b> «por dentro» del sistema.</p>
+        <ul><li>Usuarios y contraseñas robustas</li><li>Permisos de lectura/escritura</li><li>Cifrado</li><li>Protocolos seguros (HTTPS)</li></ul>
+      </div>
+    </div>
+    <div class="note trap"><b class="k">Trampa clásica</b><p>El <b>cifrado</b> y las <b>copias de seguridad</b> son <b>pasivas</b> aunque sean software: no reaccionan ante el ataque, solo hacen que el daño importe menos.</p></div>
+  </div>
+
+  <div class="block" id="ud1-clasif">
+    <h3><span class="sid">práctica</span>Clasificador: ¿activa o pasiva? ¿física o lógica?</h3>
+    <p class="muted">Solo se pregunta lo que dicen los apuntes de cada medida. Elige y pulsa Comprobar.</p>
+    <div class="clasif" id="clasif"></div>
+  </div>
+
+  <div class="block" id="ud1-amen">
+    <h3><span class="sid">4</span>Vulnerabilidad y amenaza</h3>
+    <div class="grid2">
+      <div class="note key"><b class="k">Vulnerabilidad</b><p>Una <b>debilidad</b> del sistema: el «agujero en la muralla». Un SO sin actualizar, un puerto abierto por error, la falta de extintor en el CPD o un usuario sin formación.</p></div>
+      <div class="note key"><b class="k">Amenaza</b><p>El elemento o evento que puede <b>aprovechar</b> esa vulnerabilidad: el peligro al otro lado de la muralla. Un cracker, un virus, un apagón, una inundación.</p></div>
+    </div>
+    <p class="muted">Las amenazas se clasifican en tres grupos: <b>humanas</b>, <b>lógicas</b> (software) y <b>físicas</b> o ambientales.</p>
+  </div>
+
+  <div class="block" id="ud1-humanas">
+    <h3><span class="sid">4.1.1</span>Amenazas humanas: el eslabón más débil</h3>
+    <div class="tw"><table>
+      <tr><th>Tipo</th><th>Quién</th><th>Qué hace</th></tr>
+      <tr><td rowspan="3"><b>Activas</b> (intencionadas)</td><td>Hacker</td><td>Experto que busca vulnerabilidades para <b>reportarlas y solucionarlas</b>, de forma legal (hacking ético)</td></tr>
+      <tr><td>Cracker</td><td>Rompe la seguridad con <b>fines ilícitos</b>: dañar, sabotear o lucrarse (ciberdelincuente)</td></tr>
+      <tr><td>Insider</td><td>Empleado o ex-empleado descontento que usa sus <b>credenciales legítimas</b> para sabotear o robar</td></tr>
+      <tr><td><b>Pasivas</b> (involuntarias)</td><td>Cualquier usuario o técnico</td><td>Errores sin mala intención: borrar una base de datos sin querer, perder un pendrive con datos, hacer clic en un enlace sospechoso</td></tr>
+    </table></div>
+  </div>
+
+  <div class="block" id="ud1-malware">
+    <h3><span class="sid">4.1.2</span>Amenazas lógicas y malware</h3>
+    <p class="prose"><b>Bugs</b>: fallos de programación o situaciones no previstas. Al software que los aprovecha para atacar se le llama <b>exploit</b>. <b>Malware</b>: programas hechos para infiltrarse y dañar sin consentimiento.</p>
+    <div class="tw"><table>
+      <tr><th>Malware</th><th>Cómo reconocerlo</th></tr>
+      <tr><td><b>Canal oculto</b></td><td>Envía información a un destino no autorizado. Ej.: un <b>keylogger</b> que manda lo que tecleas a un atacante.</td></tr>
+      <tr><td><b>Virus</b></td><td>Código que se ejecuta al lanzar un <b>programa huésped</b> infectado. Malware infeccioso.</td></tr>
+      <tr><td><b>Gusano</b> (worm)</td><td>Como el virus, pero <b>se propaga por redes</b> privadas y públicas.</td></tr>
+      <tr><td><b>Troyano</b></td><td><b>Aparenta ser otra cosa</b> y hace funciones ocultas, a menudo administración remota. Malware oculto.</td></tr>
+      <tr><td><b>Rootkit</b></td><td>Técnica para <b>esconder</b> un malware, incluso del antivirus. El <b>bootkit</b> se instala en el <b>sector de arranque</b> y controla el equipo desde el inicio.</td></tr>
+      <tr><td><b>Backdoor</b></td><td>Puerta trasera olvidada por el programador o creada por el atacante para <b>saltarse la autenticación</b>.</td></tr>
+      <tr><td><b>Spyware</b></td><td>Recopila información (sobre todo de navegación: credenciales, hábitos) y la envía por la red.</td></tr>
+      <tr><td><b>Adware</b></td><td>Muestra <b>publicidad</b>. No necesariamente dañino, pero molesto.</td></tr>
+      <tr><td><b>Hijacker</b></td><td>«<b>Secuestra</b>» el sistema, normalmente para sacar dinero.</td></tr>
+    </table></div>
+    <h4>Tipos de hijacker</h4>
+    <div class="grid2">
+      <div class="note key"><b class="k">De página de inicio</b><p>Cambia la página de inicio del navegador por la del secuestrador y desvía las búsquedas.</p></div>
+      <div class="note key"><b class="k">De módem (dialers)</b><p>Falsa conexión telefónica de pago (902/807), ya casi extinta. Hoy su versión es la <b>suscripción premium o SMS fraudulento</b> en el móvil.</p></div>
+      <div class="note key"><b class="k">De sistema = ransomware</b><p>No te deja trabajar con el sistema hasta que <b>pagas</b>.</p></div>
+      <div class="note key"><b class="k">De página web</b><p>Cambia una web por otra para engañar, pedir pagos o reivindicar algo.</p></div>
+    </div>
+    <div class="note trap"><b class="k">Trampa</b><p>Virus = necesita huésped. Gusano = se propaga solo por la red. Troyano = disfraz. Rootkit = escondite. Backdoor = puerta para saltarse el login.</p></div>
+  </div>
+
+  <div class="block" id="ud1-fisicas">
+    <h3><span class="sid">4.1.3</span>Amenazas físicas</h3>
+    <ul class="prose" style="padding-left:1.2em">
+      <li><b>Catástrofes</b> naturales o artificiales: incendios, inundaciones, terremotos, humo.</li>
+      <li><b>Cortes o variaciones bruscas</b> del suministro eléctrico: dañan componentes y corrompen sistemas de archivos.</li>
+      <li><b>Averías de hardware</b>: un disco mecánico gastado, la climatización del CPD que falla y apaga las CPU por calor.</li>
+      <li><b>Robos, sabotajes</b> y destrucción intencionada.</li>
+      <li><b>Condiciones ambientales adversas</b>: humedad, temperatura, tormentas, zonas industriales.</li>
+    </ul>
+  </div>
+
+  <div class="block" id="ud1-red">
+    <h3><span class="sid">5</span>Necesidad de la seguridad en red</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>La seguridad «a secas» protege el equipo local. La <b>seguridad en red</b> protege los <b>datos en tránsito</b>, los que viajan por cables y wifi.</p>
+        <p>El caso de los apuntes: un servidor «búnker» (antivirus, parches, backups, rack con llave), pero los datos viajan por la LAN en <b>texto plano</b>. Un atacante en una toma libre con <b>Wireshark</b> puede leerlos o modificarlos.</p>
+      </div>
+      <div class="prose">
+        <p>Cómo se protege la red:</p>
+        <ol style="padding-left:1.2em"><li><b>Protocolos seguros</b>: canales cifrados como <b>HTTPS, SSH o VPN</b>.</li><li><b>Segmentación</b> en subredes lógicas (<b>VLAN</b>): si comprometen un PC de la oficina, no salta a la red de los servidores.</li></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UD2 ============ -->
+<section class="view seg" id="v-ud2" data-view="ud2" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Seguridad · UD2</span>
+    <h2>Seguridad física</h2>
+    <p class="lead">«De nada sirve tener el mejor antivirus o una contraseña de 20 caracteres si alguien puede entrar en la sala del servidor y llevarse el disco duro en la mochila.»</p>
+  </div>
+  <div class="toc"><a href="#ud2-intro">Amenazas</a><a href="#ud2-plan">Plan de contingencia</a><a href="#ud2-ubic">Ubicación del CPD</a><a href="#ud2-clima">Clima y sala</a><a href="#ud2-acceso">Control de acceso</a><a href="#ud2-fuego">Incendios</a><a href="#ud2-monit">Monitorización</a><a href="#ud2-elec">Electricidad</a><a href="#ud2-redcpd">Red</a><a href="#ud2-senal">Señalización</a><a href="#ud2-respaldo">Centro de respaldo</a><a href="#ud2-usuario">Equipos de usuario</a></div>
+
+  <div class="block" id="ud2-intro">
+    <h3><span class="sid">1</span>Qué es y de qué protege</h3>
+    <p class="prose">Medidas, barreras y controles para proteger el <b>hardware y las instalaciones</b>. Tres tipos de amenaza:</p>
+    <div class="grid3">
+      <div class="note key"><b class="k">Ambientales</b><p>Incendios, inundaciones, temperaturas extremas, fallos eléctricos.</p></div>
+      <div class="note key"><b class="k">Humanas</b><p>Robos, sabotajes, descuidos, manipulación por personal no cualificado.</p></div>
+      <div class="note key"><b class="k">Electromagnéticas</b><p>Interferencias de motores pesados o líneas de alta tensión que corrompen datos en los cables.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="ud2-plan">
+    <h3><span class="sid">2</span>Evaluación de riesgos, plan de contingencia y simulacros</h3>
+    <div class="grid3">
+      <div class="prose"><h4>Evaluación de riesgos</h4><p>Identificar las vulnerabilidades (incendio, inundación, apagón largo, robo) y <b>calcular el impacto</b> de que paren los servidores. Se hace <b>antes</b> de gastar en medidas.</p></div>
+      <div class="prose"><h4>Plan de contingencia</h4><p><b>Manual por escrito</b> que responde a «¿qué hacemos si ocurre una catástrofe?»: proteger al personal, mitigar daños y recuperar los sistemas cuanto antes, <b>sin improvisar</b>.</p></div>
+      <div class="prose"><h4>Pruebas y simulacros</h4><p>Un plan en un cajón no sirve. Simulacros de evacuación y fallos provocados (un <b>apagón controlado</b> para ver si el SAI y el generador responden).</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="ud2-ubic">
+    <h3><span class="sid">3.1 · 3.2</span>Dónde poner el CPD</h3>
+    <div class="grid2">
+      <div class="prose">
+        <h4>El edificio: evitar</h4>
+        <ul><li>Zonas de desastres naturales: terremotos, inundaciones, temporales, incendios forestales.</li><li>Zonas de riesgo no natural: aeropuertos, autopistas, bases militares, centrales, polígonos con actividades peligrosas.</li><li>Zonas con muchas interferencias de radiofrecuencia.</li><li>Zonas de mucho calor y humedad (climatizar sale muy caro).</li></ul>
+        <p>Valorar también el suministro eléctrico y de datos, y en casos extremos <b>no revelar ni señalizar</b> dónde está el CPD.</p>
+      </div>
+      <div class="prose">
+        <h4>Dentro del edificio</h4>
+        <ul><li><b>Plantas intermedias</b> (1.ª o 2.ª). Ni <b>sótano</b> (inundación por tuberías o lluvia) ni <b>última planta</b> (calor del tejado, goteras, más afectada en un incendio).</li><li><b>Sala interior</b>, sin paredes exteriores ni ventanas: menos intrusión y menos sol.</li><li><b>Lejos de</b> cocinas, vestuarios, almacenes inflamables y tuberías o desagües.</li><li>No junto a <b>ascensores o salas de máquinas</b>: vibraciones que dañan discos mecánicos e interferencias electromagnéticas.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="ud2-clima">
+    <h3><span class="sid">3.3 · 3.4</span>Condiciones ambientales y acondicionamiento de la sala</h3>
+    <div class="tw"><table>
+      <tr><th>Parámetro</th><th>Valor</th><th>Si te sales</th></tr>
+      <tr><td>Temperatura</td><td><b>20–25 °C</b> constante</td><td>Las CPU bajan su velocidad y el sistema puede apagarse</td></tr>
+      <tr><td>Humedad relativa</td><td><b>40–60 %</b></td><td>Menos del 40 %: <b>electricidad estática</b>. Más del 60 %: <b>condensación</b>, corrosión y cortocircuitos</td></tr>
+      <tr><td>Polvo</td><td>Aire filtrado y en circulación</td><td>El polvo es un <b>aislante térmico</b>: impide disipar el calor</td></tr>
+    </table></div>
+    <p class="muted">Ojo: en el apartado de climatización los apuntes dan un rango de humedad del 40 % al 50 %. Si te preguntan el rango idóneo general, la respuesta es 40–60 %.</p>
+    <div class="grid2">
+      <div class="prose">
+        <h4>Acondicionamiento</h4>
+        <ul><li><b>Altura elevada</b>, con <b>suelo técnico</b> (baldosas registrables: cableado eléctrico, de red y aire frío) y <b>falso techo</b> (extracción de aire caliente y detección de incendios).</li><li><b>Climatización redundante</b> (duplicada): si un aparato se estropea, el otro asume el trabajo.</li><li><b>Paredes y puertas ignífugas</b>, pintura plástica que no suelte polvo, <b>aislamiento acústico</b>.</li><li>Los controles de electricidad, incendios y clima, <b>fuera de la sala</b> de servidores (en una sala adyacente).</li></ul>
+      </div>
+      <div class="diagram">
+        <svg viewBox="0 0 420 230" role="img" aria-label="Pasillo frío y pasillo caliente entre dos filas de racks">
+          <defs><marker id="af" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--dns)"/></marker><marker id="ac" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--bad)"/></marker></defs>
+          <rect x="10" y="190" width="400" height="14" fill="var(--bg)" stroke="var(--line)"/>
+          <text x="210" y="221" text-anchor="middle" font-size="10" fill="var(--muted)">suelo técnico: entra el aire frío</text>
+          <rect x="70" y="60" width="60" height="128" rx="3" fill="var(--surface)" stroke="var(--ink)"/>
+          <text x="100" y="128" text-anchor="middle" font-size="11" fill="var(--ink)">rack</text>
+          <rect x="290" y="60" width="60" height="128" rx="3" fill="var(--surface)" stroke="var(--ink)"/>
+          <text x="320" y="128" text-anchor="middle" font-size="11" fill="var(--ink)">rack</text>
+          <text x="210" y="50" text-anchor="middle" font-size="11" fill="var(--dns)">pasillo frío (frontales)</text>
+          <line x1="210" y1="186" x2="210" y2="120" stroke="var(--dns)" stroke-width="2" marker-end="url(#af)"/>
+          <line x1="205" y1="110" x2="136" y2="110" stroke="var(--dns)" stroke-width="2" marker-end="url(#af)"/>
+          <line x1="215" y1="110" x2="284" y2="110" stroke="var(--dns)" stroke-width="2" marker-end="url(#af)"/>
+          <line x1="66" y1="110" x2="26" y2="110" stroke="var(--bad)" stroke-width="2" marker-end="url(#ac)"/>
+          <line x1="354" y1="110" x2="394" y2="110" stroke="var(--bad)" stroke-width="2" marker-end="url(#ac)"/>
+          <line x1="22" y1="100" x2="22" y2="28" stroke="var(--bad)" stroke-width="2" marker-end="url(#ac)"/>
+          <line x1="398" y1="100" x2="398" y2="28" stroke="var(--bad)" stroke-width="2" marker-end="url(#ac)"/>
+          <text x="40" y="20" font-size="10" fill="var(--bad)">pasillo caliente</text>
+          <text x="380" y="20" text-anchor="end" font-size="10" fill="var(--bad)">pasillo caliente</text>
+        </svg>
+        <p class="muted" style="font-size:.85rem">Los servidores toman aire frío por delante y lo expulsan caliente por detrás. Los extractores del techo recogen el aire caliente y lo devuelven al climatizador.</p>
+      </div>
+    </div>
+    <div class="note key"><b class="k">Ahorro</b><p>No hace falta tener la sala a 20 °C: si la documentación de los equipos lo permite, a 24–25 °C funcionan bien y se ahorra muchísimo. En un CPD pequeño no hay pasillos: basta con que el aire frío entre por el frontal y el caliente salga en dirección opuesta.</p></div>
+  </div>
+
+  <div class="block" id="ud2-acceso">
+    <h3><span class="sid">3.5</span>Control de acceso físico</h3>
+    <p class="prose"><b>Solo entra el personal indispensable y solo para el trabajo necesario.</b> Piensa lo que podría hacer un intruso con un simple pendrive.</p>
+    <div class="grid2">
+      <div class="prose">
+        <ul><li><b>Separación de espacios</b>: cuadros eléctricos, aire acondicionado y alarmas fuera del CPD, para que el mantenimiento no tenga que entrar. Los informáticos tienen un taller aparte.</li><li><b>Mínimo privilegio</b>: solo entra quien lo necesita para su trabajo diario; limpieza o mantenimiento, nunca sin supervisión.</li><li><b>Registro de accesos</b> (obligatorio por ley con ciertos datos personales): quién entra, motivo, fecha y horas de entrada y salida.</li><li>Medidas extra: alarmas, sensores de presencia, cámaras y vigilantes.</li></ul>
+      </div>
+      <div class="tw"><table>
+        <tr><th>Factor</th><th>Ejemplo</th><th>Problema</th></tr>
+        <tr><td>Lo que <b>sabes</b></td><td>PIN o contraseña</td><td>Se olvida o te ven teclearlo</td></tr>
+        <tr><td>Lo que <b>tienes</b></td><td>Tarjeta o llave</td><td>Se pierde, la roban o se presta</td></tr>
+        <tr><td>Lo que <b>eres</b></td><td>Huella, cara, iris</td><td>El más seguro: no se presta, pierde ni duplica</td></tr>
+      </table></div>
+    </div>
+    <div class="note trap"><b class="k">2FA</b><p>La autenticación en dos pasos combina <b>dos métodos diferentes</b> (tarjeta + código al móvil). Dos contraseñas seguidas no son 2FA: son el mismo factor.</p></div>
+  </div>
+
+  <div class="block" id="ud2-fuego">
+    <h3><span class="sid">3.6</span>Protección contra incendios</h3>
+    <div class="grid3">
+      <div class="note key"><b class="k">Detección</b><p>Sensores de humo y temperatura. Para evitar falsas alarmas se deben activar <b>al menos dos sensores distintos</b>.</p></div>
+      <div class="note key"><b class="k">Extinción</b><p><b>Nunca agua ni espuma</b>: rompen los equipos. Se usan <b>gases como el CO₂</b>, que quitan el oxígeno y «ahogan» el fuego.</p></div>
+      <div class="note key"><b class="k">Personas</b><p>El gas es peligroso de respirar: la centralita activa alarmas y da un <b>tiempo de retardo</b> para salir antes de soltarlo.</p></div>
+    </div>
+    <p class="muted">En un CPD pequeño: al menos sensores y <b>extintores manuales de CO₂</b> revisados. Paredes, puertas y armarios resistentes al fuego, y cables <b>LSZH</b> (poco humo y no tóxicos).</p>
+  </div>
+
+  <div class="block" id="ud2-monit">
+    <h3><span class="sid">3.7</span>Monitorización y videovigilancia</h3>
+    <div class="grid3">
+      <div class="prose"><h4>Cámaras y detectores</h4><p>Graban dentro y fuera. Son <b>disuasorias</b> y sirven para revisar qué pasó.</p></div>
+      <div class="prose"><h4>Alarmas e intrusos</h4><p>Alertan en tiempo real de accesos no autorizados y responden a actividad sospechosa.</p></div>
+      <div class="prose"><h4>Software de monitorización</h4><p>Vigila la «salud» de los servidores y avisa al móvil o al correo: CPU caliente, ventilador roto, disco averiado, cable suelto.</p></div>
+    </div>
+  </div>
+
+  <div class="block" id="ud2-elec">
+    <h3><span class="sid">3.8</span>Suministro eléctrico</h3>
+    <div class="grid2">
+      <div class="prose">
+        <h4>Mejorar la calidad</h4>
+        <ul><li><b>Acometida separada</b>: la línea del CPD independiente del edificio. Si salta un diferencial en una oficina, el CPD sigue.</li><li><b>Filtros</b> que «limpian» la corriente y evitan que las subidas de tensión quemen componentes.</li></ul>
+        <h4>Respaldo si se va la luz</h4>
+        <ul><li><b>SAI</b>: batería que entra al instante. Baterías <b>modulares</b> (se cambian en caliente), <b>avisos</b> al técnico y autonomía limitada: unos <b>15 minutos</b>.</li><li><b>Generador</b> de gasolina o diésel: arranca solo si el apagón dura más de <b>1–2 minutos</b> y aguanta horas. Entonces el SAI queda en reposo.</li><li><b>Sin generador</b>: cuando a la batería le queda poco, el SAI ordena a los servidores que <b>se apaguen de forma ordenada</b>.</li></ul>
+      </div>
+      <div class="prose">
+        <div class="diagram">
+          <svg viewBox="0 0 360 200" role="img" aria-label="Línea de tiempo de un apagón: SAI al instante, generador al minuto o dos">
+            <line x1="20" y1="150" x2="340" y2="150" stroke="var(--ink)" stroke-width="1.5"/>
+            <text x="20" y="170" font-size="10" fill="var(--muted)">apagón</text>
+            <text x="110" y="170" font-size="10" fill="var(--muted)">1–2 min</text>
+            <text x="290" y="170" font-size="10" fill="var(--muted)">horas</text>
+            <rect x="22" y="112" width="100" height="26" rx="4" fill="var(--seg-soft)" stroke="var(--seg)"/>
+            <text x="72" y="129" text-anchor="middle" font-size="11" fill="var(--seg)">SAI (batería)</text>
+            <rect x="122" y="80" width="214" height="26" rx="4" fill="var(--calc-soft)" stroke="var(--calc)"/>
+            <text x="229" y="97" text-anchor="middle" font-size="11" fill="var(--calc)">generador alimenta el CPD</text>
+            <text x="180" y="40" text-anchor="middle" font-size="10.5" fill="var(--ink)">Sin generador: el SAI aguanta ~15 min</text>
+            <text x="180" y="56" text-anchor="middle" font-size="10.5" fill="var(--ink)">y apaga los servidores ordenadamente</text>
+          </svg>
+        </div>
+        <div class="note key"><b class="k">Doble fuente</b><p>Los servidores profesionales llevan <b>dos fuentes de alimentación</b>, cada una conectada a un <b>SAI distinto</b>. Si una falla, la otra sigue y se cambia con el servidor encendido.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="ud2-redcpd">
+    <h3><span class="sid">3.9</span>Red y conexión de datos: todo duplicado</h3>
+    <ul class="prose" style="padding-left:1.2em">
+      <li><b>Dos proveedores de Internet</b> distintos, con cables que <b>no vayan por el mismo sitio</b>, y una conexión inalámbrica de reserva (4G o satélite).</li>
+      <li>Routers y switches unidos con <b>al menos dos cables</b>; servidores con <b>dos tarjetas de red</b> conectadas a dos dispositivos distintos.</li>
+      <li>Dispositivos de red en <b>racks cerrados con llave</b> y cableado bajo el <b>suelo técnico</b>, nunca suelto.</li>
+    </ul>
+  </div>
+
+  <div class="block" id="ud2-senal">
+    <h3><span class="sid">3.10</span>Señalización de seguridad</h3>
+    <p class="prose">Carteles y colores de aviso: salidas de evacuación, extintores de CO₂, pulsadores, zonas prohibidas, alta tensión y riesgo de descarga de gas. Usan <b>iconos y colores estandarizados</b> que se entienden en un segundo y se <b>actualizan</b> cuando cambia la instalación.</p>
+  </div>
+
+  <div class="block" id="ud2-respaldo">
+    <h3><span class="sid">4</span>Centro de respaldo</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p>Ante un gran desastre (terremoto, inundación de la ciudad) el CPD es un <b>punto único de fallo</b>. Solución: un segundo CPD, el <b>Centro de Respaldo (CR)</b>, en <b>otra zona geográfica</b> (cuanto más lejos, mejor). El original es el <b>Centro Principal (CP)</b>.</p>
+        <p>El CR puede ser igual que el CP o, si no hay presupuesto, dar solo los servicios importantes o todos con menor rendimiento.</p>
+      </div>
+      <div class="prose">
+        <ul><li><b>Mayor dificultad</b>: tenerlo <b>sincronizado</b> con el CP. Necesita buena conexión, duplicada con proveedores distintos.</li><li><b>Conmutación</b> CP → CR <b>transparente</b> para los usuarios, <b>documentada y ensayada</b>.</li><li>Recuperar el CP rápido: mientras solo funciona el CR, otro accidente bloquearía la empresa.</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="ud2-usuario">
+    <h3><span class="sid">5</span>Equipos de usuario y de red</h3>
+    <div class="grid2">
+      <div class="prose">
+        <h4>Ubicación y anclaje</h4>
+        <ul><li>Evitar golpes y caídas, con sentido común.</li><li>Contra robos: software de <b>geolocalización</b> y anclaje <b>Kensington</b> en portátiles.</li><li>Equipos de red: en un <b>rack</b> o, si no, <b>fijados a la pared</b>. Nunca en el suelo ni sobre la mesa.</li></ul>
+        <h4>Cableado fuera del CPD</h4>
+        <ul><li>Siempre por <b>canalizaciones</b>, nada suelto por suelo o paredes.</li><li><b>Roseta</b> cerca del puesto; <b>latiguillo</b> de la longitud adecuada y el sobrante <b>recogido</b>.</li></ul>
+        <h4>Apertura</h4>
+        <ul><li><b>Candado</b> en la tapa o <b>sensor</b> que avisa en el siguiente arranque si se abrió la caja.</li><li>Racks de distribución fuera del CPD, <b>cerrados con llave</b>.</li></ul>
+      </div>
+      <div class="prose">
+        <h4>Condiciones ambientales</h4>
+        <p>La sala está pensada para trabajar, no para el equipo: comprobar ventilación y temperaturas de micro, placa y discos, con el mínimo ruido. En sitios con mucho polvo, filtros y limpiezas frecuentes.</p>
+        <h4>Redundancia y repuestos</h4>
+        <p>En PCs de usuario <b>no compensa duplicar</b> (dos fuentes, dos conexiones). Mejor <b>uno o dos equipos de repuesto</b> y los <b>archivos en los servidores</b>, para cambiar de equipo en minutos. Si el PC tenía datos propios, se pasa su disco al de repuesto (si no está roto). A veces se contrata este servicio a una empresa externa.</p>
+        <h4>Renovación</h4>
+        <p>Plan de renovación periódico (los servidores pueden durar 15–20 años; los PCs, mucho menos), decidido con Contabilidad según la amortización.</p>
+        <div class="tw"><table><tr><th>Leasing</th><th>Renting</th></tr><tr><td>Alquiler <b>con opción de compra</b> al final del contrato</td><td>Alquiler <b>sin opción de compra</b>: se devuelven y se firma otro</td></tr></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SAI ============ -->
+<section class="view seg" id="v-sai" data-view="sai" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Seguridad · UD2 · apartado 6</span>
+    <h2>El Sistema de Alimentación Ininterrumpida (SAI)</h2>
+    <p class="lead">En inglés, UPS. Se pone entre el enchufe y los equipos para filtrar la corriente y dar energía con baterías cuando se va la luz. No es para trabajar horas: da el margen justo para que pase el corte, arranque el generador o se apague todo ordenadamente.</p>
+  </div>
+  <div class="toc"><a href="#sai-red">Problemas eléctricos</a><a href="#sai-func">Cómo funciona</a><a href="#sai-tipos">Tipos</a><a href="#sai-pot">Potencia</a><a href="#sai-tomas">Tomas</a><a href="#sai-carac">Características</a><a href="#sai-conf">Configuración</a><a href="#calculos">Ir a los cálculos</a></div>
+
+  <div class="block" id="sai-red">
+    <h3><span class="sid">6.1</span>Los problemas de la red eléctrica</h3>
+    <div class="tw"><table>
+      <tr><th>Problema</th><th>Causa</th><th>Consecuencia</th></tr>
+      <tr><td><b>Corte de luz</b></td><td>Avería de la compañía o salta el diferencial</td><td>Apagado de golpe: hardware roto o datos corruptos</td></tr>
+      <tr><td><b>Subidas y bajadas</b> (picos de tensión)</td><td>Rayos o máquinas pesadas que arrancan cerca</td><td>Fallos de programas y comportamiento errático</td></tr>
+      <tr><td><b>Ruido eléctrico</b></td><td>Motores, impresoras, fotocopiadoras</td><td>Pequeñas alteraciones continuas</td></tr>
+    </table></div>
+  </div>
+
+  <div class="block" id="sai-func">
+    <h3><span class="sid">6.2</span>Cómo funciona por dentro</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 640 190" role="img" aria-label="Red AC, cargador a DC, batería, inversor a AC y equipos; línea directa en un SAI offline">
+        <defs><marker id="sk" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ink)"/></marker></defs>
+        <rect x="10" y="80" width="90" height="40" rx="5" fill="var(--bg)" stroke="var(--line)"/><text x="55" y="105" text-anchor="middle" font-size="12" fill="var(--ink)">Red (AC)</text>
+        <rect x="140" y="80" width="110" height="40" rx="5" fill="var(--seg-soft)" stroke="var(--seg)"/><text x="195" y="98" text-anchor="middle" font-size="12" fill="var(--seg)">Cargador</text><text x="195" y="113" text-anchor="middle" font-size="10" fill="var(--muted)">AC → DC</text>
+        <rect x="290" y="80" width="90" height="40" rx="5" fill="var(--surface)" stroke="var(--ink)"/><text x="335" y="105" text-anchor="middle" font-size="12" fill="var(--ink)">Batería</text>
+        <rect x="420" y="80" width="110" height="40" rx="5" fill="var(--seg-soft)" stroke="var(--seg)"/><text x="475" y="98" text-anchor="middle" font-size="12" fill="var(--seg)">Inversor</text><text x="475" y="113" text-anchor="middle" font-size="10" fill="var(--muted)">DC → AC</text>
+        <rect x="560" y="80" width="70" height="40" rx="5" fill="var(--bg)" stroke="var(--line)"/><text x="595" y="105" text-anchor="middle" font-size="12" fill="var(--ink)">Equipos</text>
+        <line x1="100" y1="100" x2="136" y2="100" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#sk)"/>
+        <line x1="250" y1="100" x2="286" y2="100" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#sk)"/>
+        <line x1="380" y1="100" x2="416" y2="100" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#sk)"/>
+        <line x1="530" y1="100" x2="556" y2="100" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#sk)"/>
+        <path d="M55 80 V40 H595 V76" fill="none" stroke="var(--muted)" stroke-dasharray="5 4" stroke-width="1.5" marker-end="url(#sk)"/>
+        <text x="325" y="32" text-anchor="middle" font-size="10.5" fill="var(--muted)">Offline: con luz, los equipos toman la corriente directamente de la red</text>
+        <rect x="290" y="140" width="90" height="30" rx="5" fill="var(--surface)" stroke="var(--line)"/><text x="335" y="160" text-anchor="middle" font-size="10.5" fill="var(--ink)">Puerto datos</text>
+        <text x="460" y="160" font-size="10" fill="var(--muted)">USB o Ethernet: estado y orden de apagado</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="block" id="sai-tipos">
+    <h3><span class="sid">6.3</span>Tipos de SAI</h3>
+    <div class="tw"><table>
+      <tr><th>Tipo</th><th>Cómo trabaja</th><th>Dónde se usa</th></tr>
+      <tr><td><b>Offline</b> o Standby</td><td>Con luz, el equipo toma la corriente <b>directamente de la red</b>. Si falla, tarda unos <b>milisegundos en conmutar</b> a batería. El más sencillo y barato.</td><td>PCs personales y puestos sencillos</td></tr>
+      <tr><td><b>Inline</b> o Interactivo (line-interactive)</td><td>Como el offline, pero con un <b>regulador</b> que corrige pequeñas subidas y bajadas <b>sin gastar batería</b>.</td><td>El más usado hoy: oficinas, estaciones de trabajo, pequeños servidores</td></tr>
+      <tr><td><b>Online</b> o Doble conversión</td><td>Los equipos se alimentan <b>siempre a través de la batería y el inversor</b>: corriente siempre limpia, aislada de la red.</td><td><b>Obligatorio en los servidores del CPD</b></td></tr>
+    </table></div>
+  </div>
+
+  <div class="block" id="sai-pot">
+    <h3><span class="sid">6.4</span>Potencia: VA y W</h3>
+    <div class="grid2">
+      <div class="prose">
+        <p><b>Potencia aparente</b> (voltiamperios, <b>VA</b>): la energía total. <b>Potencia real</b> (vatios, <b>W</b>): la energía útil que llega al equipo. Parte se pierde en calor al transformarla.</p>
+        <div class="formula">Potencia real (W) = Potencia aparente (VA) × Factor</div>
+        <ul><li>SAI de <b>gama baja</b>: factor <b>0,5–0,6</b>.</li><li>SAI de <b>gama alta</b>: factor <b>~0,9</b> o más.</li></ul>
+        <p>Para elegir el SAI: <b>suma los W máximos</b> de todo lo que vas a conectar (PC, monitor, router) y busca un SAI cuya potencia real los <b>supere holgadamente</b>.</p>
+      </div>
+      <div class="prose">
+        <div class="note key"><b class="k">Ejemplo</b><p>SAI de 800 VA con factor 0,6 → 800 × 0,6 = <b>480 W</b> reales. Un PC de 350 W + monitor de 40 W = 390 W → <b>sí es suficiente</b> (sobran 90 W).</p></div>
+        <div class="note trap"><b class="k">Trampa</b><p>El número grande de la caja suele ser en <b>VA</b>. Un «SAI de 1000» de gama baja (factor 0,6) solo da <b>600 W</b>.</p></div>
+        <p class="muted">Los PCs y monitores también pierden algo en sus propias fuentes de alimentación.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="sai-tomas">
+    <h3><span class="sid">6.5 · 6.6</span>Tomas, software y mantenimiento</h3>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Tomas</th><th>Qué hacen</th><th>Qué se conecta</th></tr>
+        <tr><td><b>Respaldadas por batería</b></td><td>Dan corriente en un apagón y filtran</td><td>PC, monitor, router, switch</td></tr>
+        <tr><td><b>Solo filtro</b></td><td>Protegen de picos pero no dan corriente si se va la luz</td><td>Periféricos que pueden apagarse</td></tr>
+      </table></div>
+      <div class="note trap"><b class="k">Nunca una impresora láser en las tomas de batería</b><p>Al calentar el papel da tirones de energía enormes: sobrecarga el SAI, puede apagarlo o romper las baterías.</p></div>
+    </div>
+    <p class="prose">El <b>software</b> avisa en pantalla o por correo del corte y, si la batería se va a agotar, guarda y apaga el equipo solo. Las baterías se desgastan: hay que revisarlas y cambiarlas. En equipos normales hay que apagar; en un CPD se usan <b>SAI modulares</b> con baterías que se cambian <b>en caliente</b>.</p>
+  </div>
+
+  <div class="block" id="sai-carac">
+    <h3><span class="sid">6.7</span>Características a mirar al elegir un SAI</h3>
+    <div class="grid2">
+      <ul class="prose" style="padding-left:1.2em">
+        <li><b>Tipo</b> (offline, inline, online) y <b>potencia</b> en W reales y en VA.</li>
+        <li><b>Número de baterías</b> y su <b>tensión</b>, normalmente <b>12 V</b>.</li>
+        <li><b>Capacidad</b> de cada batería en <b>amperios hora (Ah)</b>: en <b>paralelo</b> se <b>suman</b>; en <b>serie</b>, la capacidad es la de <b>una</b>.</li>
+        <li><b>Tiempo de duración</b>: el del fabricante es <b>orientativo</b>; depende de lo que tengas conectado.</li>
+        <li><b>Formato de batería</b> y si la puede cambiar el usuario.</li>
+        <li><b>Filtrado</b> interno contra sobretensiones y ruido.</li>
+      </ul>
+      <ul class="prose" style="padding-left:1.2em">
+        <li><b>Tomas</b>: tipo de entrada y número de salidas (de batería y solo filtro). En la práctica: IEC o Schuko.</li>
+        <li><b>Protección de datos</b>: clavijas RJ11 (teléfono) y RJ45 (red) para que el pico no entre por el cable.</li>
+        <li><b>Puerto de comunicaciones</b>: <b>USB o serie</b> para un PC; <b>Ethernet</b> (con su IP, al switch) para que un SAI avise y apague a <b>varios servidores</b> por la red.</li>
+        <li>Testigos luminosos, pantalla y alarmas sonoras.</li>
+        <li><b>Formato</b>: torre (debajo de la mesa) o <b>rack de 19"</b> (ocupa unidades de altura).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block" id="sai-conf">
+    <h3><span class="sid">6.8</span>Configuración: qué pasa en un apagón</h3>
+    <ol class="steps" style="--c:var(--seg);--cs:var(--seg-soft)">
+      <li><div><b>Se detecta el corte</b><span class="muted">El software avisa en pantalla, por correo o SMS de que se pasa a <b>modo batería</b>.</span></div></li>
+      <li><div><b>Tiempo de espera</b><span class="muted">Programado, normalmente <b>5–10 minutos</b>, siempre <b>por debajo de la autonomía real</b> para no descargar del todo la batería.</span></div></li>
+      <li><div><b>Si vuelve la luz</b><span class="muted">Notifica la vuelta a la normalidad, para el contador y las baterías se recargan.</span></div></li>
+      <li><div><b>Si no vuelve</b><span class="muted">Se ejecuta un <b>script previo</b> (cerrar bases de datos, guardar registros), aviso final y orden de <b>apagado ACPI</b> a todos los equipos. Los clientes deben tener instalado el <b>agente</b> del SAI y estar visibles en la red.</span></div></li>
+      <li><div><b>Cuando vuelve la corriente</b><span class="muted">En los servidores se configura en la BIOS/UEFI <b>Restore AC Power State</b> en encendido automático: arrancan solos sin intervención.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ CÁLCULOS ============ -->
+<section class="view calc" id="v-calculos" data-view="calculos" hidden>
+  <div class="head topic-head">
+    <span class="eyebrow">Seguridad · Práctica</span>
+    <h2>Cálculos: SAI, baterías, potencia y costes</h2>
+    <p class="lead">Las dos prácticas de clase convertidas en calculadoras, con los pasos a la vista, y un entrenador con problemas aleatorios para practicar a mano.</p>
+  </div>
+  <div class="toc"><a href="#calc-sai">¿Me vale este SAI?</a><a href="#calc-bat">Baterías</a><a href="#calc-pot">Potencia y costes</a><a href="#calc-sol">Práctica resuelta</a><a href="#calc-train">Entrenador</a></div>
+
+  <div class="block" id="calc-sai">
+    <h3><span class="sid">Práctica SAI I</span>¿Es suficiente este SAI para el puesto?</h3>
+    <p class="muted">Ejercicio 2B de la práctica: potencia nominal de la fuente + monitor, comparada con la potencia real del SAI. Si tienes la medición real (ejercicio 2A), ponla también.</p>
+    <div class="calc-grid">
+      <label>Fuente de alimentación (W nominal)<input type="text" id="cs-psu" value="500" inputmode="decimal"></label>
+      <label>Monitor (W máx.)<input type="text" id="cs-mon" value="40" inputmode="decimal"></label>
+      <label>Otros equipos (W)<input type="text" id="cs-otros" value="0" inputmode="decimal"></label>
+      <label>Medición real pico (W, opcional)<input type="text" id="cs-med" value="" inputmode="decimal" placeholder="p. ej. 210"></label>
+      <label>SAI: potencia aparente (VA)<input type="text" id="cs-va" value="800" inputmode="decimal"></label>
+      <label>Factor de conversión<input type="text" id="cs-fc" value="0,6" inputmode="decimal"></label>
+    </div>
+    <div class="calc-out" id="cs-out" aria-live="polite"></div>
+    <div class="note pro"><b class="k">Criterio de «holgado»</b><p>Los apuntes dicen que el SAI debe superar la carga «holgadamente», sin dar un número. Aquí se marca como justo si sobra menos del 20 %, el mismo margen que usa la práctica de potencia. Si el profe da otro criterio, usa el suyo.</p></div>
+  </div>
+
+  <div class="block" id="calc-bat">
+    <h3><span class="sid">6.7</span>Baterías en serie y en paralelo</h3>
+    <div class="calc-grid">
+      <label>Número de baterías<input type="text" id="cb-n" value="2" inputmode="numeric"></label>
+      <label>Tensión de cada una (V)<input type="text" id="cb-v" value="12" inputmode="decimal"></label>
+      <label>Capacidad de cada una (Ah)<input type="text" id="cb-ah" value="9" inputmode="decimal"></label>
+      <label>Conexión<select id="cb-mode"><option value="p">Paralelo</option><option value="s">Serie</option></select></label>
+    </div>
+    <div class="calc-out" id="cb-out" aria-live="polite"></div>
+  </div>
+
+  <div class="block" id="calc-pot">
+    <h3><span class="sid">Práctica potencia</span>Potencia a contratar y coste anual</h3>
+    <p class="muted">Cargada con el inventario de la práctica. Puedes cambiar cualquier número, añadir filas o cambiar el margen y el precio.</p>
+    <div class="tw"><table class="inv" id="cp-table">
+      <thead><tr><th>Zona</th><th>Dispositivo</th><th>Cantidad</th><th>W unitario</th><th>Total W</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="row"><button type="button" class="btn" id="cp-add">Añadir fila</button><button type="button" class="btn" id="cp-reset">Volver a los datos de la práctica</button></div>
+    <div class="calc-grid">
+      <label>Margen de seguridad (%)<input type="text" id="cp-margin" value="20" inputmode="decimal"></label>
+      <label>Término de potencia (€ por kW y año)<input type="text" id="cp-price" value="40" inputmode="decimal"></label>
+    </div>
+    <div class="grid2" id="cp-out" aria-live="polite"></div>
+  </div>
+
+  <div class="block" id="calc-sol">
+    <h3><span class="sid">resuelta</span>Práctica «Auditoría de potencia y costes», paso a paso</h3>
+    <div class="grid2">
+      <div class="prose">
+        <h4>1. Sumar cada zona</h4>
+        <div class="tw"><table>
+          <tr><th>Oficina</th><th>W</th></tr>
+          <tr><td>30 PCs × 200 W</td><td>6000</td></tr>
+          <tr><td>30 monitores × 40 W</td><td>1200</td></tr>
+          <tr><td>2 impresoras × 500 W</td><td>1000</td></tr>
+          <tr><td>Climatización e iluminación</td><td>4400</td></tr>
+          <tr><td><b>Total oficina</b></td><td><b>12600</b></td></tr>
+        </table></div>
+        <div class="tw"><table>
+          <tr><th>CPD</th><th>W</th></tr>
+          <tr><td>3 servidores × 600 W</td><td>1800</td></tr>
+          <tr><td>Red y almacenamiento</td><td>800</td></tr>
+          <tr><td>Climatización 24/7</td><td>3000</td></tr>
+          <tr><td><b>Total CPD</b></td><td><b>5600</b></td></tr>
+        </table></div>
+        <div class="note trap"><b class="k">Ojo con los PCs</b><p>Se usa el <b>consumo real</b> (200 W), no la fuente de 500 W que pone entre paréntesis: la tabla da el consumo unitario real.</p></div>
+      </div>
+      <div class="prose">
+        <h4>2. Acometida única</h4>
+        <p>12600 + 5600 = 18200 W → × 1,20 = 21840 W = <b>21,84 kW</b></p>
+        <h4>3. Dos acometidas</h4>
+        <p>Oficina: 12600 × 1,20 = 15120 W = <b>15,12 kW</b><br>CPD: 5600 × 1,20 = 6720 W = <b>6,72 kW</b><br>Suma: 21,84 kW (la misma potencia total).</p>
+        <h4>4. Coste fijo anual (40 €/kW)</h4>
+        <p>Única: 21,84 × 40 = <b>873,60 €/año</b><br>Dos acometidas: 15,12 × 40 = 604,80 € + 6,72 × 40 = 268,80 € = <b>873,60 €/año</b></p>
+        <h4>5. Conclusión</h4>
+        <p><b>Ventajas de separar</b>: si salta un diferencial o hay una sobrecarga en la oficina, el CPD <b>sigue funcionando</b>; es la «acometida separada» de la UD2. Mejora la <b>disponibilidad</b> y aísla el CPD de los fallos del resto del edificio.</p>
+        <p><b>¿Por qué cuesta más administrativamente?</b> Cada acometida es un suministro con su <b>propio contrato y su propio contador</b>, y el alquiler del equipo de medida se paga por cada uno: dos contadores, dos alquileres.</p>
+        <p><b>¿Vale la pena?</b> En una empresa, sí: un CPD parado cuesta mucho más que un segundo alquiler. Protege los servicios críticos.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block" id="calc-train">
+    <h3><span class="sid">práctica</span>Entrenador de cálculos</h3>
+    <p class="muted">Problemas aleatorios. Hazlos a mano, escribe el resultado (con coma o punto) y comprueba.</p>
+    <div class="row"><b>Tipo</b><div class="segc" id="tr-type" role="group" aria-label="Tipo de problema"><button type="button" data-v="all" aria-pressed="true">Mezcla</button><button type="button" data-v="sai" aria-pressed="false">SAI</button><button type="button" data-v="bat" aria-pressed="false">Baterías</button><button type="button" data-v="pot" aria-pressed="false">Potencia y coste</button></div></div>
+    <div class="train-q" id="tr-q"></div>
+    <div class="row"><input type="text" id="tr-ans" inputmode="decimal" autocomplete="off" aria-label="Tu resultado" style="width:12em"><span id="tr-unit" class="muted"></span><button type="button" class="btn primary" id="tr-check">Comprobar</button><button type="button" class="btn" id="tr-show">Ver solución</button><button type="button" class="btn" id="tr-next">Otro</button></div>
+    <div class="expl" id="tr-expl" hidden></div>
+    <p class="muted" id="tr-score"></p>
+  </div>
+</section>
+
+<!-- ============ TEST SEGURIDAD ============ -->
+<section class="view seg" id="v-seg-test" data-view="seg-test" hidden>
+  <div class="head">
+    <span class="eyebrow">Seguridad · Autoevaluación</span>
+    <h2>Test de Seguridad</h2>
+    <p class="lead">Preguntas teóricas de la UD1, la UD2 y el SAI, y preguntas de cálculo. Cada respuesta trae su explicación. Los fallos se guardan en este navegador para repasarlos.</p>
+  </div>
+  <div id="test-seg"></div>
 </section>
 
 </main>
-<footer><div class="wrap">Basado en el curso «Servicios en Red» (phergar23.github.io/Servicios-De-Red), Temas 0, 1 y 2. Solo lo dado en clase. Lo marcado como «extra pro» no está en los apuntes.</div></footer>
+<footer><div class="wrap">Servicios en Red: basado en el curso phergar23.github.io/Servicios-De-Red (Temas 0, 1 y 2, solo lo dado en clase). Seguridad: basado en los apuntes UD01 y UD02 del IES Almunia y las prácticas SAI I y Potencia y costes. Lo marcado como «extra pro» no está en los apuntes.</div></footer>
 
 <script>
 'use strict';
@@ -1035,15 +1701,20 @@ document.querySelectorAll('pre.code[data-file]').forEach(pre=>{
 });
 
 /* ---------- navegación ---------- */
-const VIEWS=['inicio','t0','dhcp','dns','errores','escribir','comandos','test'];
+const VIEWS=['inicio','sri','t0','dhcp','dns','errores','escribir','comandos','test','seg','ud1','ud2','sai','calculos','seg-test'];
+const SUBJ=v=>v==='inicio'?null:(['seg','ud1','ud2','sai','calculos','seg-test'].includes(v)?'seg':'sri');
 function route(){
   const h=(location.hash||'#inicio').slice(1);
   let view=VIEWS.includes(h)?h:null, anchor=null;
   if(!view){ const el=document.getElementById(h); const sec=el&&el.closest('[data-view]'); if(sec){view=sec.dataset.view;anchor=el;} else view='inicio'; }
   document.querySelectorAll('[data-view]').forEach(s=>s.hidden=s.dataset.view!==view);
-  document.querySelectorAll('nav.tabs a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+view?'page':'false'));
+  const subj=SUBJ(view);
+  document.querySelector('nav.tabs').hidden=!subj;
+  document.querySelectorAll('nav.tabs a').forEach(a=>{a.hidden=a.dataset.subj!==subj; a.setAttribute('aria-current',a.getAttribute('href')==='#'+view?'page':'false');});
+  document.querySelectorAll('nav.subj a').forEach(a=>a.setAttribute('aria-current',a.dataset.subj===subj?'page':'false'));
+  document.title=subj==='seg'?'Seguridad · Repaso 2.º SMR':subj==='sri'?'Servicios en Red · Repaso 2.º SMR':'Repaso 2.º SMR';
   const cur=document.querySelector('nav.tabs a[aria-current="page"]'); if(cur) cur.scrollIntoView({block:'nearest',inline:'nearest'});
-  if(anchor){ requestAnimationFrame(()=>{const y=anchor.getBoundingClientRect().top+scrollY-70; scrollTo(0,y);}); } else scrollTo(0,0);
+  if(anchor){ requestAnimationFrame(()=>{const y=anchor.getBoundingClientRect().top+scrollY-document.querySelector('header.top').offsetHeight-12; scrollTo(0,y);}); } else scrollTo(0,0);
 }
 addEventListener('hashchange',route);
 
@@ -1271,57 +1942,347 @@ const EXTRA=[
 [0,'¿Qué significa chmod 640?',['Propietario lectura y escritura, grupo lectura, otros nada','Todos lectura y escritura','Propietario todo, grupo lectura y escritura','Solo lectura para todos'],0,'6 = rw-, 4 = r--, 0 = ---.'],
 [0,'¿En qué capa trabaja un switch y qué dirección mira?',['Capa 2, la MAC de destino','Capa 3, la IP de destino','Capa 1, nada','Capa 4, el puerto'],0,'El switch conmuta tramas según la MAC y su tabla MAC.']
 ];
-const ALLQ=BANK.map(b=>({t:b.t,s:b.s,q:b.q,o:b.o,a:b.a,e:b.e})).concat(EXTRA.map(x=>({t:x[0],s:'Práctica tipo examen',q:x[1],o:x[2],a:x[3],e:x[4]})));
-ALLQ.forEach((q,i)=>q.id=i);
-const FK='sri-fallos';
-const getF=()=>{try{return new Set(JSON.parse(store.get(FK)||'[]'))}catch(e){return new Set()}};
-const setF=s=>store.set(FK,JSON.stringify([...s]));
-let tTopic='all',tN=20,RUN=null;
-function pool(){ if(tTopic==='fallos'){const f=getF();return ALLQ.filter(q=>f.has(q.id));} return ALLQ.filter(q=>tTopic==='all'||String(q.t)===tTopic); }
-function updAvail(){document.getElementById('t-avail').textContent=pool().length+' disponibles';}
 const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-function segBind(id,cb){document.querySelectorAll('#'+id+' button').forEach(bt=>bt.addEventListener('click',()=>{document.querySelectorAll('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===bt));cb(bt.dataset.v);}));}
-segBind('t-topic',v=>{tTopic=v;updAvail();}); segBind('t-n',v=>{tN=+v;});
-function start(qs){
-  if(!qs.length){document.getElementById('t-avail').textContent=tTopic==='fallos'?'No tienes fallos guardados todavía.':'No hay preguntas.';return;}
-  RUN={qs,i:0,hits:0,wrong:[]};
-  document.getElementById('test-setup').hidden=true; document.getElementById('test-end').hidden=true; document.getElementById('test-run').hidden=false; showQ();
-}
-document.getElementById('t-start').addEventListener('click',()=>start(shuf(pool()).slice(0,tN)));
-document.getElementById('t-sim').addEventListener('click',()=>{const by=t=>shuf(ALLQ.filter(q=>q.t===t)); start(shuf([...by(0).slice(0,4),...by(1).slice(0,6),...by(2).slice(0,10)]));});
-const NAMES={0:'T0',1:'DHCP',2:'DNS'};
-function showQ(){
-  const q=RUN.qs[RUN.i]; const order=shuf(q.o.map((_,k)=>k));
-  document.getElementById('t-count').textContent=(RUN.i+1)+' / '+RUN.qs.length;
-  document.getElementById('t-hits').textContent=RUN.hits+' aciertos';
-  document.getElementById('t-bar').style.width=(RUN.i/RUN.qs.length*100)+'%';
-  const box=document.getElementById('t-q'); const cls=['t0','dhcp','dns'][q.t]; box.className='q '+cls;
-  box.innerHTML='<div class="meta"><span class="pts">'+NAMES[q.t]+'</span><span class="muted" style="font-size:.85rem">'+esc(q.s)+'</span></div><h3>'+fmt(q.q)+'</h3><div class="opts">'+order.map((k,n)=>'<button type="button" data-k="'+k+'"><b>'+'ABCD'[n]+'</b><span>'+fmt(q.o[k])+'</span></button>').join('')+'</div><div class="expl" hidden></div>';
-  const nx=document.getElementById('t-next'); nx.disabled=true;
-  box.querySelectorAll('.opts button').forEach(bt=>bt.addEventListener('click',()=>{
-    const k=+bt.dataset.k; const ok=k===q.a; const f=getF();
-    box.querySelectorAll('.opts button').forEach(x=>{x.disabled=true; if(+x.dataset.k===q.a)x.classList.add('right');});
-    if(ok){RUN.hits++; f.delete(q.id);} else {bt.classList.add('wrong'); RUN.wrong.push(q); f.add(q.id);}
-    setF(f);
-    const ex=box.querySelector('.expl'); ex.hidden=false; ex.innerHTML='<b>'+(ok?'Correcto. ':'No. ')+'</b>'+fmt(q.e);
-    document.getElementById('t-hits').textContent=RUN.hits+' aciertos';
-    nx.disabled=false; nx.textContent=RUN.i===RUN.qs.length-1?'Ver resultado':'Siguiente'; nx.focus();
-  }));
-}
 function fmt(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>');}
-document.getElementById('t-next').addEventListener('click',()=>{RUN.i++; if(RUN.i>=RUN.qs.length) end(); else showQ();});
-document.getElementById('t-stop').addEventListener('click',()=>{RUN.qs=RUN.qs.slice(0,Math.max(RUN.i+ (document.querySelector('#t-q .expl:not([hidden])')?1:0),1)); end();});
-function end(){
-  const n=RUN.qs.length, pct=Math.round(RUN.hits/n*100);
-  const per={}; RUN.qs.forEach(q=>{per[q.t]=per[q.t]||[0,0];per[q.t][1]++;}); RUN.qs.forEach(q=>{if(!RUN.wrong.includes(q))per[q.t][0]++;});
-  const el=document.getElementById('test-end');
-  el.innerHTML='<h3>Resultado: '+RUN.hits+' de '+n+' ('+pct+' %)</h3><div class="row">'+Object.entries(per).map(([t,[h,tot]])=>'<span class="pts '+['t0','dhcp','dns'][t]+'">'+NAMES[t]+': '+h+'/'+tot+'</span>').join('')+'</div>'+
-   (RUN.wrong.length?'<h4>Repasa estas</h4><ul class="prose" style="padding-left:1.1em">'+RUN.wrong.map(q=>'<li><b>'+fmt(q.q)+'</b><br><span class="muted">Correcta: '+fmt(q.o[q.a])+'</span></li>').join('')+'</ul>':'<p>Sin fallos. Prueba con más preguntas o con el simulacro.</p>')+
-   '<div class="row"><button type="button" class="btn primary" id="t-again">Otro test</button></div>';
-  document.getElementById('test-run').hidden=true; el.hidden=false;
-  document.getElementById('t-again').addEventListener('click',()=>{el.hidden=true;document.getElementById('test-setup').hidden=false;updAvail();});
+/* ---------- utilidades numéricas ---------- */
+const num = s => { const v = parseFloat(String(s).trim().replace(/\s/g,'').replace(',', '.')); return isFinite(v) ? v : NaN; };
+const nf = (x, d=2) => (Math.round(x*100)/100).toLocaleString('es-ES', {minimumFractionDigits:0, maximumFractionDigits:d});
+const r2 = x => Math.round(x*100)/100;
+const eur = x => (Math.round(x*100)/100).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+/* ---------- motor de test reutilizable ---------- */
+function makeTest(root, cfg){
+  const fk = cfg.key;
+  const getF=()=>{try{return new Set(JSON.parse(store.get(fk)||'[]'))}catch(e){return new Set()}};
+  const setF=s=>store.set(fk,JSON.stringify([...s]));
+  const Q = cfg.questions; Q.forEach((q,i)=>q.id=i);
+  const lab = t => (cfg.topics.find(x=>x.v===t)||{}).label||t;
+  const cls = t => (cfg.topics.find(x=>x.v===t)||{}).cls||'';
+  root.innerHTML =
+   '<div class="block" data-r="setup">'+
+    '<div class="row"><b>Tema</b><div class="segc" data-r="topic" role="group" aria-label="Tema"><button type="button" data-v="all" aria-pressed="true">Todo</button>'+cfg.topics.map(t=>'<button type="button" data-v="'+t.v+'" aria-pressed="false">'+esc(t.label)+'</button>').join('')+'<button type="button" data-v="fallos" aria-pressed="false">Mis fallos</button></div></div>'+
+    '<div class="row"><b>Preguntas</b><div class="segc" data-r="n" role="group" aria-label="Número de preguntas"><button type="button" data-v="10" aria-pressed="false">10</button><button type="button" data-v="20" aria-pressed="true">20</button><button type="button" data-v="40" aria-pressed="false">40</button><button type="button" data-v="999" aria-pressed="false">Todas</button></div><span class="muted" data-r="avail"></span></div>'+
+    '<div class="row"><button class="btn primary" type="button" data-r="start">Empezar</button>'+(cfg.sim?'<button class="btn" type="button" data-r="sim">'+esc(cfg.sim.label)+'</button>':'')+'</div>'+
+   '</div>'+
+   '<div class="block" data-r="run" hidden>'+
+    '<div class="row" style="justify-content:space-between"><span class="score" data-r="count"></span><span class="muted" data-r="hits"></span></div>'+
+    '<div class="progress"><i data-r="bar"></i></div><div class="q" data-r="q"></div>'+
+    '<div class="row"><button class="btn primary" type="button" data-r="next" disabled>Siguiente</button><button class="btn" type="button" data-r="stop">Terminar</button></div>'+
+   '</div><div class="block" data-r="end" hidden></div>';
+  const $ = r => root.querySelector('[data-r="'+r+'"]');
+  let topic='all', n=20, RUN=null;
+  const pool = () => topic==='fallos' ? (f=>Q.filter(q=>f.has(q.id)))(getF()) : Q.filter(q=>topic==='all'||q.t===topic);
+  const upd = () => { $('avail').textContent = pool().length+' disponibles'; };
+  const bindSeg = (r,cb) => $(r).querySelectorAll('button').forEach(bt=>bt.addEventListener('click',()=>{ $(r).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===bt)); cb(bt.dataset.v); }));
+  bindSeg('topic', v=>{topic=v;upd();}); bindSeg('n', v=>{n=+v;});
+  function start(qs){
+    if(!qs.length){ $('avail').textContent = topic==='fallos'?'No tienes fallos guardados todavía.':'No hay preguntas.'; return; }
+    RUN={qs,i:0,hits:0,wrong:[]}; $('setup').hidden=true; $('end').hidden=true; $('run').hidden=false; show();
+  }
+  $('start').addEventListener('click',()=>start(shuf(pool()).slice(0,n)));
+  if(cfg.sim) $('sim').addEventListener('click',()=>start(cfg.sim.fn(Q)));
+  function show(){
+    const q=RUN.qs[RUN.i], order=shuf(q.o.map((_,k)=>k));
+    $('count').textContent=(RUN.i+1)+' / '+RUN.qs.length; $('hits').textContent=RUN.hits+' aciertos';
+    $('bar').style.width=(RUN.i/RUN.qs.length*100)+'%';
+    const box=$('q'); box.className='q '+cls(q.t);
+    box.innerHTML='<div class="meta"><span class="pts">'+esc(lab(q.t))+'</span><span class="muted" style="font-size:.85rem">'+esc(q.s)+'</span></div><h3>'+fmt(q.q)+'</h3><div class="opts">'+order.map((k,i)=>'<button type="button" data-k="'+k+'"><b>'+'ABCDE'[i]+'</b><span>'+fmt(q.o[k])+'</span></button>').join('')+'</div><div class="expl" hidden></div>';
+    const nx=$('next'); nx.disabled=true;
+    box.querySelectorAll('.opts button').forEach(bt=>bt.addEventListener('click',()=>{
+      const ok=+bt.dataset.k===q.a, f=getF();
+      box.querySelectorAll('.opts button').forEach(x=>{x.disabled=true; if(+x.dataset.k===q.a)x.classList.add('right');});
+      if(ok){RUN.hits++; f.delete(q.id);} else {bt.classList.add('wrong'); RUN.wrong.push(q); f.add(q.id);}
+      setF(f);
+      const ex=box.querySelector('.expl'); ex.hidden=false; ex.innerHTML='<b>'+(ok?'Correcto. ':'No. ')+'</b>'+fmt(q.e);
+      $('hits').textContent=RUN.hits+' aciertos';
+      nx.disabled=false; nx.textContent=RUN.i===RUN.qs.length-1?'Ver resultado':'Siguiente'; nx.focus();
+    }));
+  }
+  $('next').addEventListener('click',()=>{RUN.i++; if(RUN.i>=RUN.qs.length) end(); else show();});
+  $('stop').addEventListener('click',()=>{
+    const done=RUN.i+($('q').querySelector('.expl:not([hidden])')?1:0);
+    if(!done){ $('run').hidden=true; $('setup').hidden=false; return; }
+    RUN.qs=RUN.qs.slice(0,done); end();
+  });
+  function end(){
+    const tot=RUN.qs.length, pct=Math.round(RUN.hits/tot*100), per={};
+    RUN.qs.forEach(q=>{per[q.t]=per[q.t]||[0,0]; per[q.t][1]++; if(!RUN.wrong.includes(q)) per[q.t][0]++;});
+    const el=$('end');
+    el.innerHTML='<h3>Resultado: '+RUN.hits+' de '+tot+' ('+pct+' %)</h3><div class="row">'+Object.entries(per).map(([t,[h,c]])=>'<span class="pts '+cls(t)+'">'+esc(lab(t))+': '+h+'/'+c+'</span>').join('')+'</div>'+
+     (RUN.wrong.length?'<h4>Repasa estas</h4><ul class="prose" style="padding-left:1.1em">'+RUN.wrong.map(q=>'<li><b>'+fmt(q.q)+'</b><br><span class="muted">Correcta: '+fmt(q.o[q.a])+'</span></li>').join('')+'</ul>':'<p>Sin fallos. Prueba con más preguntas.</p>')+
+     '<div class="row"><button type="button" class="btn primary" data-r="again">Otro test</button></div>';
+    $('run').hidden=true; el.hidden=false;
+    $('again').addEventListener('click',()=>{el.hidden=true; $('setup').hidden=false; upd();});
+  }
+  upd();
 }
-updAvail();
+
+/* ---------- test de Servicios en Red ---------- */
+const SRI_Q = BANK.map(b=>({t:['t0','dhcp','dns'][b.t],s:b.s,q:b.q,o:b.o,a:b.a,e:b.e}))
+  .concat(EXTRA.map(x=>({t:['t0','dhcp','dns'][x[0]],s:'Práctica tipo examen',q:x[1],o:x[2],a:x[3],e:x[4]})));
+makeTest(document.getElementById('test-sri'), {
+  key:'sri-fallos', questions:SRI_Q,
+  topics:[{v:'t0',label:'T0',cls:'t0'},{v:'dhcp',label:'DHCP',cls:'dhcp'},{v:'dns',label:'DNS',cls:'dns'}],
+  sim:{label:'Simulacro con el peso del examen', fn:Q=>{const by=t=>shuf(Q.filter(q=>q.t===t)); return shuf([...by('t0').slice(0,4),...by('dhcp').slice(0,6),...by('dns').slice(0,10)]);}}
+});
+
+/* ---------- test de Seguridad ---------- */
+const SEGQ = [
+['ud1','1','¿Qué es un activo en seguridad informática?',['Cualquier recurso con valor para la organización que requiere protección','Solo el hardware de la empresa','Un programa antivirus','Una copia de seguridad'],0,'Activo = recurso con valor: personas, información, software y hardware.'],
+['ud1','1','Según los apuntes, ¿cuál es el activo más valioso e indefenso?',['Las personas','Los servidores','Las bases de datos','El software de gestión'],0,'Las personas: su seguridad, su privacidad, y además son la diana de la ingeniería social.'],
+['ud1','1','¿Por qué perder los datos puede ser peor que perder un servidor?',['Un servidor se puede comprar; los datos perdidos o filtrados pueden llevar a la quiebra','Porque los datos son más caros de almacenar','Porque los servidores tienen garantía','No es peor, es igual'],0,'El hardware se reemplaza; la información irrecuperable o filtrada no.'],
+['ud1','2','¿Qué afirma la idea de «riesgo residual»?',['La seguridad total no existe: siempre queda algo de riesgo','Que el riesgo se elimina con un buen antivirus','Que solo hay riesgo en redes públicas','Que el riesgo solo es físico'],0,'El objetivo es reducir riesgos, no eliminarlos: el riesgo cero no existe.'],
+['ud1','2','Cifrar un archivo con una contraseña que solo conocen unos pocos garantiza sobre todo…',['Confidencialidad','Integridad','Disponibilidad','Trazabilidad'],0,'Que solo accedan los autorizados = confidencialidad.'],
+['ud1','2','Generar un código hash de un archivo sirve para comprobar…',['La integridad','La confidencialidad','La disponibilidad','La autenticidad'],0,'El hash permite saber si el archivo se ha modificado o corrompido: integridad.'],
+['ud1','2','Instalar un SAI en un servidor web protege sobre todo la…',['Disponibilidad','Confidencialidad','Integridad','No repudio'],0,'Que el servicio siga accesible durante un apagón = disponibilidad.'],
+['ud1','2','¿Qué otro nombre recibe la integridad en los apuntes?',['Confiabilidad','Privacidad','Accesibilidad','Irrenunciabilidad'],0,'Confidencialidad = privacidad; integridad = confiabilidad; disponibilidad = accesibilidad.'],
+['ud1','2.1','La autenticidad asegura…',['La identidad del usuario o equipo que generó la información','Que la información no se ha modificado','Que el servicio esté siempre disponible','Que nadie pueda leer la información'],0,'Autenticidad = saber quién la generó. Ejemplo: firma digital.'],
+['ud1','2.1','¿Qué es una TTP?',['Una tercera parte confiable que se usa para autentificar','Un tipo de troyano','Un protocolo de transferencia','Un tipo de SAI'],0,'Trusted Third Party: una entidad de confianza que certifica identidades.'],
+['ud1','2.1','Un acuse de recibo de un correo electrónico es un ejemplo de…',['No repudio en destino','No repudio en origen','Confidencialidad','Disponibilidad'],0,'El receptor no puede negar que lo recibió.'],
+['ud1','2.1','Un mensaje firmado digitalmente por el emisor, que luego no puede negar haberlo enviado, es…',['No repudio en origen','No repudio en destino','Trazabilidad','Integridad'],0,'El emisor no puede negar el envío: no repudio en origen.'],
+['ud1','2.1','Consultar los logs para saber qué cuenta borró un archivo a las 3:00 AM es…',['Trazabilidad','Confidencialidad','No repudio en destino','Seguridad pasiva'],0,'Trazabilidad o auditoría: asociar cada acción a un usuario concreto.'],
+['ud1','3','¿Qué criterio separa la seguridad activa de la pasiva?',['El momento en que actúa: en tiempo real o para minimizar el daño','Lo que protege: hardware o software','Su precio','Si la instala un técnico o el usuario'],0,'Activa/pasiva = según el momento. Física/lógica = según lo que protege.'],
+['ud1','3.1','Un antivirus que escanea archivos en tiempo real es seguridad…',['Activa','Pasiva','Física','Ambiental'],0,'Detecta y responde por sí mismo en tiempo real.'],
+['ud1','3.1','Según los apuntes, el cifrado de datos es seguridad…',['Pasiva','Activa','Física','Ninguna de las anteriores'],0,'No responde al ataque: hace que los datos robados sean inútiles. Es pasiva (y lógica).'],
+['ud1','3.1','Las copias de seguridad son seguridad…',['Pasiva','Activa','Ambiental','Electromagnética'],0,'Son un mecanismo de recuperación: pasiva.'],
+['ud1','3.1','¿Qué hace un IDS/IPS?',['Analiza paquetes y comportamiento de la red para detectar intrusos','Guarda copias de seguridad','Mantiene la corriente en un apagón','Cifra el disco duro'],0,'Sistemas de detección/prevención de intrusiones: seguridad activa.'],
+['ud1','3.2','Configurar permisos de lectura y escritura en los archivos es seguridad…',['Lógica','Física','Ambiental','Pasiva física'],0,'Protege los datos «por dentro» del sistema: lógica.'],
+['ud1','3.2','Una alarma de incendios por gas en el CPD es seguridad…',['Física','Lógica','Activa lógica','De red'],0,'Protege el hardware y las instalaciones: física.'],
+['ud1','3','¿Una misma medida puede ser a la vez pasiva y física?',['Sí, los criterios no son excluyentes (por ejemplo, un SAI)','No, cada medida tiene un solo tipo','Solo si es software','Solo en un CPD'],0,'Activa/pasiva y física/lógica son dos criterios distintos que se combinan.'],
+['ud1','4','Un sistema operativo sin actualizar es…',['Una vulnerabilidad','Una amenaza','Un exploit','Un activo lógico de respaldo'],0,'Vulnerabilidad = debilidad o agujero. La amenaza es quien la aprovecha.'],
+['ud1','4','Una inundación que puede dañar el CPD es…',['Una amenaza','Una vulnerabilidad','Un activo','Una medida pasiva'],0,'Amenaza física: el evento que puede aprovechar una debilidad.'],
+['ud1','4.1.1','Según los apuntes, un hacker es…',['Alguien que busca vulnerabilidades para reportarlas y solucionarlas, de forma legal','Un ciberdelincuente que rompe sistemas para lucrarse','Un empleado descontento','Un tipo de malware'],0,'El que delinque es el cracker.'],
+['ud1','4.1.1','Un ex-empleado que usa sus credenciales para robar la base de datos es…',['Un insider (amenaza humana activa)','Una amenaza humana pasiva','Un hacker ético','Una amenaza física'],0,'Personal interno descontento que usa accesos legítimos.'],
+['ud1','4.1.1','Un administrativo pierde un pendrive con datos de clientes. Es una amenaza…',['Humana pasiva','Humana activa','Lógica','Electromagnética'],0,'Error sin mala intención: amenaza humana pasiva.'],
+['ud1','4.1.2','¿Cómo se llama el software que aprovecha un bug para atacar?',['Exploit','Adware','Backup','Firewall'],0,'Bug = fallo; exploit = el programa que lo aprovecha.'],
+['ud1','4.1.2','Un keylogger que envía lo tecleado a un atacante usa…',['Un canal oculto','Un hijacker de página de inicio','Un dialer','Una VLAN'],0,'Canal oculto: comunicación hacia un destino no autorizado.'],
+['ud1','4.1.2','¿Qué malware necesita un programa huésped infectado para ejecutarse?',['Virus','Gusano','Adware','Hijacker web'],0,'El virus se lanza al ejecutar el programa huésped.'],
+['ud1','4.1.2','¿Qué diferencia al gusano del virus?',['Se propaga por redes privadas y públicas','Solo muestra publicidad','Se esconde del antivirus','Cifra los archivos'],0,'El gusano tiene capacidad de propagarse por la red.'],
+['ud1','4.1.2','Un programa que parece un juego pero permite al atacante controlar el equipo es un…',['Troyano','Gusano','Adware','Rootkit'],0,'Aparenta ser otra cosa y oculta funciones, como la administración remota.'],
+['ud1','4.1.2','¿Qué hace un rootkit?',['Mantiene oculto un malware, incluso frente al antivirus','Muestra publicidad','Hace copias de seguridad','Se propaga por correo'],0,'Rootkit = técnicas para esconder procesos maliciosos.'],
+['ud1','4.1.2','¿Dónde se instala un bootkit?',['En el sector de arranque o cargador de arranque','En el navegador','En la BIOS del SAI','En el router'],0,'Es un rootkit especializado que controla el sistema desde el inicio.'],
+['ud1','4.1.2','Una puerta olvidada por el programador que permite saltarse la autenticación es una…',['Backdoor','VLAN','Spyware','TTP'],0,'Backdoor o puerta trasera.'],
+['ud1','4.1.2','El software que recopila tus hábitos de navegación y los envía es…',['Spyware','Adware','Ransomware','Bootkit'],0,'Spyware: compromete la privacidad.'],
+['ud1','4.1.2','El hijacker «de sistema», que no te deja trabajar hasta que pagas, se llama…',['Ransomware','Adware','Dialer','Keylogger'],0,'Secuestra el sistema a cambio de un pago.'],
+['ud1','4.1.2','Hoy en día, la versión actual de los antiguos dialers de módem es…',['Las apps de suscripción premium o SMS fraudulentos','Los rootkits','Los gusanos de red','El adware de instalación'],0,'Los 902/807 están casi extintos; ahora te suscriben a servicios de pago desde el móvil.'],
+['ud1','4.1.3','Un fallo de la climatización del CPD que apaga las CPU por calor es una amenaza…',['Física (avería de hardware)','Lógica','Humana activa','De red'],0,'Las averías de hardware están dentro de las amenazas físicas.'],
+['ud1','5','¿Qué protege la seguridad en red?',['Los datos en tránsito por cables y redes inalámbricas','Solo el disco duro del servidor','Solo las contraseñas','La temperatura del CPD'],0,'La seguridad en red blinda los canales por los que viaja la información.'],
+['ud1','5','Un atacante en una toma de red libre con Wireshark puede leer los datos si…',['Viajan en texto plano, sin cifrar','El servidor tiene antivirus','Hay copias de seguridad','El rack está cerrado con llave'],0,'Por eso se usan protocolos cifrados como HTTPS, SSH o VPN.'],
+['ud1','5','¿Para qué sirve segmentar la red en VLAN?',['Para que un atacante que comprometa un PC de oficina no salte a la red de servidores','Para que la red vaya más rápido','Para ahorrar electricidad','Para no necesitar contraseñas'],0,'Separa la red en subredes lógicas.'],
+
+['ud2','1','¿Cuáles son las tres amenazas principales de la seguridad física según los apuntes?',['Ambientales, humanas y electromagnéticas','Virus, gusanos y troyanos','Activas, pasivas y lógicas','Robos, cortes y ruido'],0,'Ambientales (fuego, agua, clima, electricidad), humanas y electromagnéticas (interferencias).'],
+['ud2','2','¿Qué es un plan de contingencia?',['Un manual por escrito de qué hacer ante una catástrofe','Un antivirus de empresa','Un contrato con la compañía eléctrica','Un tipo de SAI'],0,'Instrucciones paso a paso para proteger al personal, mitigar daños y recuperar los sistemas.'],
+['ud2','2.1','¿Para qué sirven los simulacros?',['Para que el personal sepa reaccionar y detectar fallos en los protocolos','Para gastar el presupuesto','Para probar el antivirus','Solo para cumplir la ley'],0,'Un plan en un cajón no sirve; se ensaya, por ejemplo, con un apagón controlado.'],
+['ud2','3.2','¿Cuál es la planta ideal para el CPD?',['Una planta intermedia (1.ª o 2.ª)','El sótano','La última planta','Da igual'],0,'Sótano: inundación. Última planta: calor, goteras e incendios.'],
+['ud2','3.2','¿Por qué no se debe poner el CPD en el sótano?',['Por el riesgo de inundación','Por el calor del sol','Porque no llega la fibra','Por el ruido'],0,'Rotura de tuberías o lluvias intensas.'],
+['ud2','3.2','¿Por qué no colocar el CPD junto a ascensores o salas de máquinas?',['Por las vibraciones y las interferencias electromagnéticas de los motores','Por el ruido de las personas','Porque ocupan mucho','Porque consumen mucha luz'],0,'Las vibraciones dañan los discos mecánicos.'],
+['ud2','3.2','¿Cómo debe ser la sala del CPD respecto al exterior?',['Interior, sin paredes exteriores ni ventanas','Con grandes ventanales para ventilar','En la fachada para acceder rápido','Junto a la cocina'],0,'Menos intrusión y menos radiación solar.'],
+['ud2','3.3','¿Qué temperatura debe tener la sala del CPD?',['Entre 20 y 25 °C','Entre 10 y 15 °C','Entre 25 y 30 °C','Por debajo de 18 °C'],0,'Constante entre 20 y 25 °C.'],
+['ud2','3.3','¿Qué humedad relativa es la idónea en el CPD?',['Entre el 40 % y el 60 %','Entre el 10 % y el 20 %','Más del 70 %','Exactamente el 100 %'],0,'Por debajo del 40 %: estática. Por encima del 60 %: condensación.'],
+['ud2','3.3','Si la humedad baja del 40 %, ¿qué riesgo aparece?',['Electricidad estática que puede destruir un circuito','Condensación y corrosión','Inundación','Sobrecalentamiento del SAI'],0,'El aire seco acumula electricidad estática.'],
+['ud2','3.3','¿Por qué es malo el polvo en el CPD?',['Es un aislante térmico que impide disipar el calor','Conduce la electricidad','Atrae a los virus','Bloquea la wifi'],0,'Se deposita en ventiladores y placas y provoca averías prematuras.'],
+['ud2','3.4','¿Qué va por el falso techo del CPD?',['La extracción de aire caliente y la detección de incendios','El cableado de corriente','El aire frío','Los servidores'],0,'El falso suelo lleva cableado y aire frío.'],
+['ud2','3.4','En el diseño de pasillos, ¿qué es el pasillo frío?',['El pasillo de los frontales de los racks, donde se inyecta el aire frío','El pasillo de las partes traseras','Un pasillo sin climatización','La sala de los técnicos'],0,'Los servidores toman aire frío por delante y lo expulsan caliente por detrás.'],
+['ud2','3.4','¿Qué significa que la climatización del CPD sea redundante?',['Que está duplicada: si un aparato falla, otro asume el trabajo','Que enfría el doble de lo necesario','Que consume poco','Que se apaga de noche'],0,'Redundante = duplicado.'],
+['ud2','3.4','¿Es obligatorio mantener la sala a 20 °C?',['No; si los equipos lo admiten, a 24–25 °C funcionan bien y se ahorra mucho','Sí, siempre a 20 °C exactos','Sí, por ley','No, debe estar a 30 °C'],0,'Conviene revisar el rango óptimo de los equipos.'],
+['ud2','3.5','¿Por qué se sacan los cuadros eléctricos y el aire acondicionado fuera de la sala de servidores?',['Para que el personal de mantenimiento no tenga que entrar al CPD','Para que hagan menos ruido','Porque no caben','Para que se enfríen mejor'],0,'Separación física de espacios: menos visitas al CPD.'],
+['ud2','3.5','El principio de mínimo privilegio aplicado al CPD significa…',['Que solo entra quien lo necesita para su trabajo','Que todos pueden entrar con supervisión','Que solo entra el director','Que se entra sin registrar'],0,'Limpieza o mantenimiento general, nunca sin supervisión.'],
+['ud2','3.5','¿Qué se anota en el registro de accesos al CPD?',['Quién entra, motivo, fecha y horas de entrada y salida','Solo el nombre','La temperatura','El número de servidores'],0,'Es obligatorio por ley con ciertos datos personales.'],
+['ud2','3.5','La huella dactilar es un factor de tipo…',['Lo que eres','Lo que sabes','Lo que tienes','Lo que haces'],0,'Biometría: lo que eres. El más seguro porque no se presta ni se pierde.'],
+['ud2','3.5','¿Cuál de estas combinaciones es autenticación en dos pasos (2FA)?',['Pasar la tarjeta y poner un código que llega al móvil','Escribir dos contraseñas seguidas','Usar dos tarjetas','Repetir el PIN dos veces'],0,'2FA combina dos métodos diferentes. Dos contraseñas son el mismo factor.'],
+['ud2','3.5','¿Qué problema tiene la tarjeta magnética como control de acceso?',['Se puede perder, robar o prestar','Se olvida','No se puede duplicar','Es demasiado segura'],0,'Lo que tienes: pérdida, robo o préstamo a un compañero.'],
+['ud2','3.6','¿Cuántos sensores deben activarse para confirmar un incendio?',['Al menos dos sensores distintos','Uno solo','Cinco','Ninguno, se confirma a mano'],0,'Así se evitan falsas alarmas.'],
+['ud2','3.6','¿Con qué se apaga un incendio en el CPD?',['Con gases como el CO₂','Con agua','Con espuma','Con arena'],0,'Agua y espuma rompen los equipos; el gas quita el oxígeno.'],
+['ud2','3.6','¿Para qué sirve el tiempo de retardo antes de soltar el gas?',['Para que las personas salgan de la sala','Para que el fuego crezca','Para ahorrar gas','Para que se enfríen los servidores'],0,'El gas es peligroso de respirar en una sala cerrada.'],
+['ud2','3.6','¿Qué tienen de especial los cables LSZH?',['Echan poco humo y no son tóxicos','Son más rápidos','No necesitan conector','Son inalámbricos'],0,'Low Smoke Zero Halogen.'],
+['ud2','3.8','¿Para qué sirve que la acometida eléctrica del CPD esté separada del resto del edificio?',['Para que si salta un diferencial en una oficina, el CPD siga funcionando','Para pagar menos','Para que haya más enchufes','Para no necesitar SAI'],0,'Independiza el CPD de los fallos del resto del edificio.'],
+['ud2','3.8','¿Cuánto aguantan aproximadamente las baterías del SAI de un CPD según los apuntes?',['Unos 15 minutos','Unas 24 horas','Una semana','Unos segundos'],0,'Las baterías son carísimas; el respaldo largo lo da el generador.'],
+['ud2','3.8','¿Cuándo arranca el generador eléctrico?',['Si el apagón dura más de 1 o 2 minutos','Nada más irse la luz, antes que el SAI','Solo de noche','Cuando se agota el SAI del todo'],0,'Arranca solo y alimenta el CPD durante horas; el SAI queda en reposo.'],
+['ud2','3.8','Si hay SAI pero no generador y el apagón se alarga…',['El SAI ordena a los servidores un apagado ordenado','Los servidores se apagan de golpe','El SAI aguanta indefinidamente','Se enciende la luz de emergencia'],0,'Antes de quedarse sin batería, manda la orden de apagado.'],
+['ud2','3.8','Un servidor con dos fuentes de alimentación debe conectar cada una…',['A un SAI diferente','Al mismo SAI','Una al SAI y otra a la pared directamente','A una regleta'],0,'Si una falla, la otra sigue, y se cambia en caliente.'],
+['ud2','3.9','Para que no falle la conexión a Internet del CPD se recomienda…',['Dos proveedores distintos con cables por rutas diferentes y respaldo inalámbrico','Un solo proveedor con mucha velocidad','Wifi en todos los servidores','Un cable más grueso'],0,'Todo duplicado, incluso por dónde van los cables.'],
+['ud2','3.10','¿Qué caracteriza a la señalización de seguridad?',['Usa iconos y colores estandarizados y se mantiene actualizada','Textos largos y detallados','Solo carteles en inglés','Se pone una vez y no se cambia'],0,'Se entiende en un segundo sin leer.'],
+['ud2','4','¿Qué es el centro de respaldo (CR)?',['Un segundo CPD en otra zona geográfica','Una copia de seguridad en un pendrive','El SAI principal','La sala de los técnicos'],0,'Elimina el punto único de fallo ante un gran desastre.'],
+['ud2','4','¿Cuál es la mayor dificultad del centro de respaldo, aparte del dinero?',['Mantenerlo sincronizado con el centro principal','Encontrar un local','Conseguir personal','Instalar el aire acondicionado'],0,'Los cambios del CP deben replicarse al instante en el CR.'],
+['ud2','4','¿Cómo debe ser la conmutación del CP al CR?',['Transparente para los usuarios, documentada y ensayada','Improvisada en el momento','Avisando a todos los clientes','Manual y lenta'],0,'En una emergencia no hay lugar a la improvisación.'],
+['ud2','5.1','¿Qué es el anclaje Kensington?',['Un estándar de anclaje antirrobo en portátiles','Un tipo de SAI','Un conector de red','Un software de geolocalización'],0,'Ranura estándar para un cable con candado.'],
+['ud2','5.1','Si no hay rack, ¿dónde se colocan los equipos de red?',['Fijados a una pared','En el suelo','Sobre la mesa de trabajo','Dentro de un cajón'],0,'Nunca en el suelo ni sobre el espacio de trabajo.'],
+['ud2','5.1','¿Cómo debe ir el cableado de red fuera del CPD?',['Por canalizaciones, sin cables sueltos','Por el suelo, pegado con cinta','Al aire para ventilar','Da igual mientras funcione'],0,'Además, roseta cerca del puesto y sobrante del latiguillo recogido.'],
+['ud2','5.2','¿Qué hace un sensor de apertura de la caja del PC?',['Avisa en el siguiente arranque de que se abrió la caja','Impide abrir la caja','Apaga el PC','Bloquea el teclado'],0,'La otra protección es un candado físico.'],
+['ud2','5.4','¿Qué se recomienda para los PCs de usuario en lugar de duplicar componentes?',['Tener uno o dos equipos de repuesto y los archivos en los servidores','Ponerles dos fuentes de alimentación','Darles dos conexiones a Internet','Comprar PCs más caros'],0,'Se cambia el equipo en minutos y el usuario sigue trabajando.'],
+['ud2','5.5','¿Qué diferencia hay entre leasing y renting?',['El leasing tiene opción de compra al final; el renting no','El renting tiene opción de compra; el leasing no','Son lo mismo','El leasing es solo para servidores'],0,'Renting: se devuelven los equipos y se firma un contrato nuevo.'],
+['ud2','5.5','¿Cuánto pueden durar los servidores principales según los apuntes?',['Hasta 15 o 20 años','Unos 2 años','Unos 6 meses','Siempre 5 años exactos'],0,'Los PCs de usuario duran mucho menos.'],
+
+['sai','6.2','¿Qué dos funciones cumple un SAI?',['Filtrar la corriente y dar energía con baterías si falla la luz','Enfriar el equipo y filtrar el polvo','Cifrar los datos y hacer copias','Aumentar la potencia del PC'],0,'Protege de picos y da un margen de tiempo en los cortes.'],
+['sai','6.2','¿Qué otro nombre recibe el SAI?',['UPS','NAS','IDS','TTP'],0,'Uninterruptible Power Supply.'],
+['sai','6.2','Dentro del SAI, ¿qué hace el inversor?',['Transforma la continua de la batería en alterna para los equipos','Transforma la alterna en continua para cargar la batería','Mide la temperatura','Envía correos'],0,'Cargador: AC → DC. Inversor: DC → AC.'],
+['sai','6.2','La batería del SAI está pensada para…',['Dar un margen: que pase el corte, que arranque el generador o apagar ordenadamente','Trabajar durante horas sin luz','Sustituir a la compañía eléctrica','Cargar los móviles'],0,'No es para trabajar horas.'],
+['sai','6.3','En un SAI offline (standby), mientras hay luz…',['El equipo recibe la corriente directamente de la red','El equipo funciona siempre con la batería','La batería se desconecta para siempre','Se apaga el inversor y el equipo'],0,'Si falla la red, tarda unos milisegundos en conmutar a batería.'],
+['sai','6.3','¿Qué añade el SAI inline (interactivo) respecto al offline?',['Un regulador que corrige pequeñas subidas y bajadas sin usar la batería','Doble conversión permanente','Un generador','Más tomas'],0,'Es el más usado hoy en oficinas y pequeños servidores.'],
+['sai','6.3','¿Qué tipo de SAI es obligatorio para los servidores de un CPD?',['Online o de doble conversión','Offline o standby','Inline o interactivo','Cualquiera sirve'],0,'Los equipos se alimentan siempre a través de batería e inversor: corriente siempre limpia.'],
+['sai','6.3','¿Qué tipo de SAI es el más sencillo y barato?',['Offline o standby','Online','Inline','Modular de CPD'],0,'Se usa para PCs personales y puestos sencillos.'],
+['sai','6.4','La potencia aparente del SAI se mide en…',['Voltiamperios (VA)','Vatios (W)','Amperios hora (Ah)','Voltios (V)'],0,'VA = aparente. W = real.'],
+['sai','6.4','¿Qué fórmula da la potencia real del SAI?',['Potencia real = Potencia aparente × Factor de conversión','Potencia real = Potencia aparente ÷ Factor','Potencia real = VA + W','Potencia real = Ah × V'],0,'W = VA × factor.'],
+['sai','6.4','¿Qué factor de conversión tiene un SAI de gama baja?',['Entre 0,5 y 0,6','Alrededor de 0,9','Exactamente 1','Más de 1,5'],0,'Gama alta: alrededor de 0,9 o más.'],
+['sai','6.4','Para elegir un SAI hay que…',['Sumar los W máximos de lo que se conecta y buscar uno cuya potencia real los supere holgadamente','Mirar solo los VA','Elegir el más barato','Sumar los VA del PC'],0,'Se compara en vatios reales.'],
+['sai','6.5','¿Qué no se debe conectar nunca a las tomas de batería de un SAI?',['Una impresora láser','El monitor','El router','El switch'],0,'Al calentar da tirones de energía que sobrecargan el SAI.'],
+['sai','6.5','¿Para qué sirven las tomas «solo filtro» del SAI?',['Protegen de picos a periféricos que pueden apagarse si se va la luz','Dan batería al servidor','Cargan el SAI','Conectan el SAI a la red'],0,'No dan corriente en un apagón.'],
+['sai','6.6','¿Qué ventaja tienen los SAI modulares de los CPD?',['Sus baterías se cambian en caliente sin apagar los servidores','Son más baratos','No necesitan baterías','No hacen ruido'],0,'En equipos normales hay que apagar para cambiar la batería.'],
+['sai','6.7','¿Qué tensión suelen tener las baterías de un SAI?',['12 voltios','230 voltios','5 voltios','1,5 voltios'],0,'Habitualmente 12 V.'],
+['sai','6.7','Si las baterías de un SAI están en paralelo, la capacidad del conjunto…',['Es la suma de las capacidades','Es la de una sola batería','Se divide entre el número de baterías','Es cero'],0,'En serie, la capacidad es la de una batería individual.'],
+['sai','6.7','El tiempo de duración que da el fabricante…',['Es orientativo: depende de lo que tengas conectado','Es exacto siempre','Es el mismo para cualquier carga','Se mide en Ah'],0,'La duración real depende de la carga en cada momento.'],
+['sai','6.7','¿Qué ventaja tiene un SAI con puerto Ethernet frente a uno USB?',['Tiene su IP y puede avisar y apagar a varios servidores por la red','Carga más rápido','Tiene más tomas','No necesita software'],0,'USB o serie: un solo PC conectado por cable.'],
+['sai','6.7','¿Para qué sirven las clavijas RJ11 y RJ45 de algunos SAI?',['Evitan que un pico de tensión entre por la línea de teléfono o de red','Dan Internet al SAI','Conectan dos SAI','Son tomas de batería'],0,'Protección adicional de las líneas de datos.'],
+['sai','6.8','¿Cuánto suele durar el tiempo de espera programado antes del apagado?',['Entre 5 y 10 minutos, por debajo de la autonomía real','Hasta agotar la batería','Exactamente 1 hora','Ninguno, se apaga al instante'],0,'Así se evitan descargas profundas y apagados bruscos.'],
+['sai','6.8','¿Qué orden manda el SAI a los equipos cuando vence el tiempo de espera?',['Un apagado por software (ACPI)','Un reinicio','Que desconecten la red','Que bajen el brillo'],0,'Los clientes deben tener instalado el agente del SAI.'],
+['sai','6.8','¿Qué opción de la BIOS hace que el servidor arranque solo cuando vuelve la luz?',['Restore AC Power State','Secure Boot','Wake on LAN','Fast Boot'],0,'En modo de encendido automático.'],
+['sai','6.8','¿Para qué sirve el script previo al apagado?',['Para tareas críticas de última hora como cerrar bases de datos o guardar registros','Para encender el generador','Para cargar la batería','Para enviar la factura'],0,'Se ejecuta antes del aviso final de apagado.'],
+
+['calc','6.4','Un SAI de 1000 VA con factor 0,6 da una potencia real de…',['600 W','1000 W','1666 W','400 W'],0,'1000 × 0,6 = 600 W.'],
+['calc','6.4','Un SAI de 1500 VA de gama alta (factor 0,9) da…',['1350 W','1500 W','1667 W','900 W'],0,'1500 × 0,9 = 1350 W.'],
+['calc','6.4','Un PC de 350 W y un monitor de 40 W con un SAI de 800 VA y factor 0,6. ¿Es suficiente?',['Sí: 800 × 0,6 = 480 W y la carga es de 390 W','No: la carga es de 390 W y el SAI da 800 W','No: el SAI da 480 VA','Sí, porque 800 > 390'],0,'Se comparan vatios con vatios: 480 W ≥ 390 W.'],
+['calc','6.4','Necesitas alimentar 540 W con un SAI de factor 0,6. ¿Qué potencia aparente mínima necesitas?',['900 VA','324 VA','540 VA','600 VA'],0,'VA = W ÷ factor = 540 ÷ 0,6 = 900 VA.'],
+['calc','6.7','Dos baterías de 12 V y 9 Ah en paralelo tienen una capacidad de…',['18 Ah','9 Ah','4,5 Ah','24 Ah'],0,'En paralelo se suman: 9 + 9 = 18 Ah.'],
+['calc','6.7','Dos baterías de 12 V y 9 Ah en serie tienen una capacidad de…',['9 Ah','18 Ah','4,5 Ah','108 Ah'],0,'En serie, la capacidad es la de una batería.'],
+['calc','práctica','¿Cuántos kW son 5600 W?',['5,6 kW','56 kW','0,56 kW','560 kW'],0,'1 kW = 1000 W.'],
+['calc','práctica','Una zona consume 12 600 W. Con un margen del 20 %, ¿qué potencia hay que contratar?',['15,12 kW','12,6 kW','14,6 kW','10,08 kW'],0,'12 600 × 1,20 = 15 120 W = 15,12 kW.'],
+['calc','práctica','Si el término de potencia cuesta 40 € por kW al año, ¿cuánto cuesta contratar 21,84 kW?',['873,60 € al año','546 € al año','87,36 € al año','2 184 € al año'],0,'21,84 × 40 = 873,60 €.'],
+['calc','práctica','En la práctica de potencia, ¿por qué el coste de potencia sale igual con una o dos acometidas?',['Porque se aplica el mismo margen y la suma de potencias es la misma','Porque la compañía regala una','Porque el CPD no consume','Porque se redondea'],0,'15,12 + 6,72 = 21,84 kW en ambos casos.'],
+['calc','práctica','¿Por qué hay más costes administrativos con dos acometidas?',['Cada una tiene su contrato y su contador, y se paga el alquiler de cada equipo de medida','Porque consumen más','Porque el CPD necesita más margen','Porque hay que pagar dos SAI'],0,'Dos suministros = dos alquileres. Aun así compensa por disponibilidad.'],
+['calc','práctica','¿Qué ventaja de seguridad da separar la acometida del CPD?',['Si falla la oficina (salta un diferencial, sobrecarga), el CPD sigue funcionando','Que la factura baja','Que no hace falta SAI','Que los servidores consumen menos'],0,'Mejora la disponibilidad del CPD.']
+];
+makeTest(document.getElementById('test-seg'), {
+  key:'seg-fallos',
+  questions: SEGQ.map(x=>({t:x[0], s:(x[1].match(/^\d/)?'Apartado '+x[1]:'Práctica de cálculo'), q:x[2], o:x[3], a:x[4], e:x[5]})),
+  topics:[{v:'ud1',label:'UD1',cls:'seg'},{v:'ud2',label:'UD2',cls:'seg'},{v:'sai',label:'SAI',cls:'seg'},{v:'calc',label:'Cálculos',cls:'calc'}],
+  sim:{label:'Repaso mezclado de los cuatro bloques', fn:Q=>{const by=t=>shuf(Q.filter(q=>q.t===t)); return shuf([...by('ud1').slice(0,8),...by('ud2').slice(0,7),...by('sai').slice(0,5),...by('calc').slice(0,4)]);}}
+});
+
+/* ---------- clasificador UD1 ---------- */
+const CLS = [
+ {m:'Antivirus / antimalware que escanea en tiempo real', ap:'Activa', fl:'Lógica', e:'Detecta y responde solo, en tiempo real, y protege el software y los datos.'},
+ {m:'Cortafuegos (firewall)', ap:'Activa', e:'Filtra y bloquea el tráfico según reglas, en tiempo real.'},
+ {m:'Sistema IDS/IPS', ap:'Activa', e:'Analiza paquetes y comportamiento para cazar intrusos.'},
+ {m:'Copias de seguridad', ap:'Pasiva', fl:'Lógica', e:'Mecanismo de recuperación de datos: no reacciona al ataque.'},
+ {m:'Cifrado del disco duro', ap:'Pasiva', fl:'Lógica', e:'Hace inútiles los datos robados. Los apuntes lo ponen en pasiva y en lógica.'},
+ {m:'SAI en el servidor', ap:'Pasiva', fl:'Física', e:'Barrera que está antes y después del problema, y protege el hardware.'},
+ {m:'Blindaje del equipo', ap:'Pasiva', fl:'Física', e:'Barrera defensiva permanente sobre el hardware.'},
+ {m:'Contraseñas robustas', fl:'Lógica', e:'Protegen el acceso al software y a los datos.'},
+ {m:'Permisos de lectura y escritura', fl:'Lógica', e:'Controlan quién puede tocar los datos dentro del sistema.'},
+ {m:'Usar HTTPS', fl:'Lógica', e:'Protocolo seguro: protege los datos.'},
+ {m:'Refrigeración de los servidores', fl:'Física', e:'Evita el sobrecalentamiento del hardware.'},
+ {m:'Alarma de incendios por gas', fl:'Física', e:'Protege las instalaciones sin dañar la electrónica.'},
+ {m:'Cámaras de videovigilancia (CCTV)', fl:'Física', e:'Vigilan las instalaciones.'},
+ {m:'Control de acceso con tarjeta o huella', fl:'Física', e:'Impide entrar a la sala de servidores.'}
+];
+(function(){
+  const root=document.getElementById('clasif'); let order=shuf(CLS.map((_,i)=>i)), i=0, hits=0, done=0;
+  function render(){
+    const it=CLS[order[i]];
+    const grp=(k,opts)=>it[k]?'<div class="row"><span class="muted" style="min-width:9em">'+(k==='ap'?'Según el momento':'Según lo que protege')+'</span><div class="segc" data-k="'+k+'" role="group">'+opts.map(o=>'<button type="button" data-v="'+o+'" aria-pressed="false">'+o+'</button>').join('')+'</div></div>':'';
+    root.innerHTML='<div class="clasif-card"><div class="eyebrow">Medida '+(i+1)+' de '+CLS.length+'</div><h3>'+esc(it.m)+'</h3>'+grp('ap',['Activa','Pasiva'])+grp('fl',['Física','Lógica'])+
+      '<div class="row"><button type="button" class="btn primary" data-a="chk">Comprobar</button><button type="button" class="btn" data-a="nx">Siguiente</button><span class="muted" data-a="sc">'+hits+' de '+done+' bien</span></div><div class="expl" hidden></div></div>';
+    root.querySelectorAll('.segc').forEach(s=>s.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{s.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));})));
+    root.querySelector('[data-a="chk"]').addEventListener('click',e=>{
+      const sel=k=>{const b=root.querySelector('.segc[data-k="'+k+'"] [aria-pressed="true"]');return b&&b.dataset.v;};
+      let ok=true, msg=[];
+      ['ap','fl'].forEach(k=>{ if(!it[k])return; const v=sel(k); const good=v===it[k]; ok=ok&&good;
+        root.querySelectorAll('.segc[data-k="'+k+'"] button').forEach(b=>{b.classList.toggle('right',b.dataset.v===it[k]); b.classList.toggle('wrong',b.dataset.v===v&&!good);});
+        msg.push((k==='ap'?'Momento':'Protege')+': <b>'+it[k]+'</b>'); });
+      done++; if(ok)hits++;
+      const ex=root.querySelector('.expl'); ex.hidden=false; ex.innerHTML='<b>'+(ok?'Correcto. ':'No. ')+'</b>'+msg.join(' · ')+'. '+esc(it.e);
+      e.currentTarget.disabled=true; root.querySelector('[data-a="sc"]').textContent=hits+' de '+done+' bien';
+    });
+    root.querySelector('[data-a="nx"]').addEventListener('click',()=>{i++; if(i>=CLS.length){i=0;order=shuf(order);} render();});
+  }
+  render();
+})();
+
+/* ---------- calculadora SAI ---------- */
+function calcSai(){
+  const psu=num(v('cs-psu')), mon=num(v('cs-mon')), ot=num(v('cs-otros'))||0, med=num(v('cs-med')), va=num(v('cs-va')), fc=num(v('cs-fc'));
+  const out=document.getElementById('cs-out');
+  if([psu,mon,va,fc].some(isNaN)){out.innerHTML='<p class="muted">Rellena fuente, monitor, VA y factor con números.</p>';return;}
+  if(fc<=0||fc>1){out.innerHTML='<p class="bad-t">El factor de conversión debe estar entre 0 y 1 (por ejemplo, 0,6).</p>';return;}
+  const carga=psu+mon+ot, real=va*fc, sobra=real-carga, pct=carga?sobra/carga*100:0;
+  const verd = real<carga ? ['bad','No es suficiente','Faltan '+nf(-sobra)+' W.'] : (pct<20 ? ['warn','Suficiente, pero justo','Sobran '+nf(sobra)+' W ('+nf(pct,0)+' % sobre la carga).'] : ['ok','Suficiente con margen','Sobran '+nf(sobra)+' W ('+nf(pct,0)+' % sobre la carga).']);
+  let h='<ol class="calc-steps">'+
+   '<li>Carga teórica = '+nf(psu)+' + '+nf(mon)+(ot?' + '+nf(ot):'')+' = <b>'+nf(carga)+' W</b></li>'+
+   '<li>Potencia real del SAI = '+nf(va)+' VA × '+nf(fc)+' = <b>'+nf(real)+' W</b></li>'+
+   '<li>Comparación: '+nf(real)+' W '+(real>=carga?'≥':'<')+' '+nf(carga)+' W</li></ol>'+
+   '<div class="verdict-pill '+verd[0]+'"><b>'+verd[1]+'</b> '+verd[2]+'</div>';
+  if(!isNaN(med)) h+='<p>Con la <b>medición real</b> ('+nf(med)+' W): '+(real>=med?'el SAI <b>sí</b> la soporta, sobran '+nf(real-med)+' W.':'el SAI <b>no</b> la soporta, faltan '+nf(med-real)+' W.')+' La medición suele salir mucho más baja que la nominal de la fuente, porque la fuente casi nunca trabaja al máximo.</p>';
+  h+='<p class="muted">Potencia aparente mínima para esta carga: '+nf(carga)+' ÷ '+nf(fc)+' = <b>'+nf(carga/fc)+' VA</b> (con un 20 % de margen: '+nf(carga*1.2/fc)+' VA).</p>';
+  out.innerHTML=h;
+}
+const v=id=>document.getElementById(id).value;
+['cs-psu','cs-mon','cs-otros','cs-med','cs-va','cs-fc'].forEach(id=>document.getElementById(id).addEventListener('input',calcSai));
+calcSai();
+
+/* ---------- calculadora baterías ---------- */
+function calcBat(){
+  const n=num(v('cb-n')), V=num(v('cb-v')), ah=num(v('cb-ah')), m=v('cb-mode'), out=document.getElementById('cb-out');
+  if([n,V,ah].some(isNaN)||n<1){out.innerHTML='<p class="muted">Rellena los tres valores con números.</p>';return;}
+  const cap=m==='p'?n*ah:ah, ten=m==='p'?V:n*V;
+  out.innerHTML='<ol class="calc-steps"><li>'+(m==='p'?'En <b>paralelo</b> las capacidades se suman: '+n+' × '+nf(ah)+' Ah = <b>'+nf(cap)+' Ah</b>':'En <b>serie</b> la capacidad es la de una batería: <b>'+nf(cap)+' Ah</b>')+'</li></ol>'+
+   '<div class="note pro"><b class="k">Extra pro</b><p>La <b>tensión</b> va al revés: en paralelo se queda en '+nf(V)+' V y en serie se suma ('+n+' × '+nf(V)+' = '+nf(n*V)+' V). Por eso la <b>energía</b> total es la misma en los dos casos: tensión × capacidad = '+nf(ten)+' V × '+nf(cap)+' Ah = <b>'+nf(ten*cap)+' Wh</b>.</p></div>';
+}
+['cb-n','cb-v','cb-ah','cb-mode'].forEach(id=>document.getElementById(id).addEventListener('input',calcBat));
+calcBat();
+
+/* ---------- potencia y costes ---------- */
+const INV0=[['Oficina','Ordenadores de usuarios (fuentes 500 W)',30,200],['Oficina','Monitores LED',30,40],['Oficina','Impresoras multifunción',2,500],['Oficina','Climatización e iluminación de oficina',1,4400],['CPD','Servidores rack de producción',3,600],['CPD','Electrónica de red y almacenamiento (NAS/switches)',1,800],['CPD','Climatización dedicada 24/7 para CPD',1,3000]];
+let INV=INV0.map(r=>r.slice());
+function drawInv(){
+  const tb=document.querySelector('#cp-table tbody');
+  tb.innerHTML=INV.map((r,i)=>'<tr data-i="'+i+'"><td><select data-c="0" aria-label="Zona"><option'+(r[0]==='Oficina'?' selected':'')+'>Oficina</option><option'+(r[0]==='CPD'?' selected':'')+'>CPD</option></select></td><td><input type="text" data-c="1" value="'+esc(r[1])+'" aria-label="Dispositivo"></td><td><input type="text" data-c="2" value="'+r[2]+'" inputmode="numeric" class="n" aria-label="Cantidad"></td><td><input type="text" data-c="3" value="'+r[3]+'" inputmode="decimal" class="n" aria-label="W unitario"></td><td class="tot"></td><td><button type="button" class="copy" data-del="'+i+'" aria-label="Quitar fila">Quitar</button></td></tr>').join('');
+  tb.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',()=>{const i=+el.closest('tr').dataset.i, c=+el.dataset.c; INV[i][c]=c>=2?el.value:el.value; calcPot();}));
+  tb.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{INV.splice(+b.dataset.del,1); drawInv();}));
+  calcPot();
+}
+function calcPot(){
+  const m=num(v('cp-margin')), pr=num(v('cp-price')); const z={Oficina:0,CPD:0}; let bad=false;
+  document.querySelectorAll('#cp-table tbody tr').forEach((tr,i)=>{const q=num(INV[i][2]), w=num(INV[i][3]); const t=q*w; tr.querySelector('.tot').textContent=isNaN(t)?'—':nf(t)+' W'; if(isNaN(t))bad=true; else z[INV[i][0]]+=t;});
+  const out=document.getElementById('cp-out');
+  if(bad||isNaN(m)||isNaN(pr)){out.innerHTML='<p class="muted">Hay alguna casilla sin número.</p>';return;}
+  const f=1+m/100, tot=z.Oficina+z.CPD, k1=tot*f/1000, ko=z.Oficina*f/1000, kc=z.CPD*f/1000;
+  out.innerHTML='<div class="calc-card"><h4>Acometida única</h4><ol class="calc-steps"><li>Suma: '+nf(z.Oficina)+' + '+nf(z.CPD)+' = <b>'+nf(tot)+' W</b></li><li>Margen: '+nf(tot)+' × '+nf(f)+' = '+nf(tot*f)+' W = <b>'+nf(k1)+' kW</b></li><li>Coste: '+nf(k1)+' kW × '+nf(pr)+' € = <b>'+eur(k1*pr)+' €/año</b></li></ol></div>'+
+   '<div class="calc-card"><h4>Dos acometidas</h4><ol class="calc-steps"><li>Oficina: '+nf(z.Oficina)+' × '+nf(f)+' = <b>'+nf(ko)+' kW</b> → '+eur(ko*pr)+' €</li><li>CPD: '+nf(z.CPD)+' × '+nf(f)+' = <b>'+nf(kc)+' kW</b> → '+eur(kc*pr)+' €</li><li>Total: '+nf(ko+kc)+' kW → <b>'+eur((ko+kc)*pr)+' €/año</b></li></ol></div>';
+}
+document.getElementById('cp-add').addEventListener('click',()=>{INV.push(['Oficina','Nuevo equipo',1,100]); drawInv();});
+document.getElementById('cp-reset').addEventListener('click',()=>{INV=INV0.map(r=>r.slice()); document.getElementById('cp-margin').value='20'; document.getElementById('cp-price').value='40'; drawInv();});
+['cp-margin','cp-price'].forEach(id=>document.getElementById(id).addEventListener('input',calcPot));
+drawInv();
+
+/* ---------- entrenador de cálculos ---------- */
+const GEN = {
+ sai:[
+  ()=>{const va=pick([600,650,800,1000,1200,1500,2000,3000]), f=pick([0.5,0.6,0.7,0.8,0.9]); return {t:'Un SAI tiene una potencia aparente de '+nf(va)+' VA y un factor de conversión de '+nf(f)+'. ¿Cuál es su potencia real?', a:va*f, u:'W', x:'Potencia real = VA × factor = '+nf(va)+' × '+nf(f)+' = <b>'+nf(va*f)+' W</b>.'};},
+  ()=>{const f=pick([0.5,0.6,0.8,0.9]), w=pick([300,360,420,450,480,540,600,720,900]); return {t:'Tienes que alimentar '+nf(w)+' W con un SAI de factor '+nf(f)+'. ¿Qué potencia aparente mínima necesitas?', a:w/f, u:'VA', x:'VA = W ÷ factor = '+nf(w)+' ÷ '+nf(f)+' = <b>'+nf(w/f)+' VA</b>.'};},
+  ()=>{const psu=pick([300,350,400,450,500,550,650]), mon=pick([25,30,40,50,60]), va=pick([600,800,1000,1200,1500]), f=pick([0.5,0.6,0.9]); const s=va*f-(psu+mon); return {t:'Un PC con fuente de '+psu+' W y un monitor de '+mon+' W. El SAI es de '+nf(va)+' VA con factor '+nf(f)+'. ¿Cuántos vatios sobran? (negativo si faltan)', a:s, u:'W', x:'Carga = '+psu+' + '+mon+' = '+(psu+mon)+' W. Potencia real = '+nf(va)+' × '+nf(f)+' = '+nf(va*f)+' W. Sobran '+nf(va*f)+' − '+(psu+mon)+' = <b>'+nf(s)+' W</b>'+(s<0?': el SAI <b>no</b> es suficiente.':'.')};}
+ ],
+ bat:[
+  ()=>{const n=pick([2,3,4]), ah=pick([7,9,12,18]), p=Math.random()<.5; return {t:n+' baterías de 12 V y '+ah+' Ah conectadas en '+(p?'paralelo':'serie')+'. ¿Qué capacidad tiene el conjunto?', a:p?n*ah:ah, u:'Ah', x:p?'En paralelo se suman: '+n+' × '+ah+' = <b>'+(n*ah)+' Ah</b>.':'En serie la capacidad es la de una sola batería: <b>'+ah+' Ah</b>.'};}
+ ],
+ pot:[
+  ()=>{const a=pick([10,15,20,25,30]), wa=pick([150,180,200,250]), b=pick([10,20,30]), wb=pick([25,30,40]), c=pick([800,1500,2200,3000]); const tot=a*wa+b*wb+c; return {t:'Una oficina tiene '+a+' PCs de '+wa+' W, '+b+' monitores de '+wb+' W y climatización de '+c+' W. Con un margen del 20 %, ¿cuántos kW hay que contratar?', a:tot*1.2/1000, u:'kW', x:'Suma: '+a+'×'+wa+' + '+b+'×'+wb+' + '+c+' = '+nf(tot)+' W. Con margen: '+nf(tot)+' × 1,2 = '+nf(tot*1.2)+' W = <b>'+nf(tot*1.2/1000)+' kW</b>.'};},
+  ()=>{const s=pick([2,3,4]), ws=pick([400,500,600,750]), red=pick([500,800,1000]), cl=pick([2000,2500,3000]); const tot=s*ws+red+cl; return {t:'Un CPD tiene '+s+' servidores de '+ws+' W, electrónica de red de '+red+' W y climatización de '+cl+' W. ¿Qué potencia hay que contratar con un 20 % de margen?', a:tot*1.2/1000, u:'kW', x:'Suma: '+s+'×'+ws+' + '+red+' + '+cl+' = '+nf(tot)+' W → × 1,2 = '+nf(tot*1.2)+' W = <b>'+nf(tot*1.2/1000)+' kW</b>.'};},
+  ()=>{const kw=pick([4.6,6.72,9.9,13.2,15.12,21.84]), p=pick([30,35,40,45]); return {t:'Se contratan '+nf(kw)+' kW y el término de potencia cuesta '+p+' € por kW al año. ¿Cuál es el coste fijo anual?', a:kw*p, u:'€', x:nf(kw)+' × '+p+' = <b>'+eur(kw*p)+' €/año</b>.'};}
+ ]
+};
+(function(){
+  let type='all', cur=null, ok=0, tot=0, answered=false;
+  const q=document.getElementById('tr-q'), ans=document.getElementById('tr-ans'), unit=document.getElementById('tr-unit'), ex=document.getElementById('tr-expl'), sc=document.getElementById('tr-score');
+  function next(){const pool=type==='all'?[].concat(GEN.sai,GEN.bat,GEN.pot):GEN[type]; cur=pick(pool)(); answered=false; q.innerHTML='<p>'+esc(cur.t)+'</p>'; unit.textContent=cur.u; ans.value=''; ans.className=''; ex.hidden=true;}
+  document.querySelectorAll('#tr-type button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#tr-type button').forEach(x=>x.setAttribute('aria-pressed',x===b)); type=b.dataset.v; next();}));
+  document.getElementById('tr-check').addEventListener('click',()=>{const x=num(ans.value); if(isNaN(x)){ex.hidden=false;ex.innerHTML='Escribe un número.';return;} const good=Math.abs(x-cur.a)<=Math.max(0.011,Math.abs(cur.a)*0.001); if(!answered){tot++; if(good)ok++; answered=true;} ans.className=good?'ok':'ko'; ex.hidden=false; ex.innerHTML='<b>'+(good?'Correcto. ':'No. ')+'</b>'+cur.x; sc.textContent='Aciertos: '+ok+' de '+tot;});
+  document.getElementById('tr-show').addEventListener('click',()=>{ex.hidden=false; ex.innerHTML=cur.x; if(!answered){tot++;answered=true;sc.textContent='Aciertos: '+ok+' de '+tot;}});
+  document.getElementById('tr-next').addEventListener('click',next);
+  ans.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('tr-check').click();});
+  next();
+})();
+
 route();
 </script>
 
