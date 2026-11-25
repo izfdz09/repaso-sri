@@ -1027,7 +1027,7 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
     <a href="#ud1" class="seg"><b>UD1 · Introducción</b>Activos, tríada CID, autenticidad, no repudio y trazabilidad, activa/pasiva, física/lógica, amenazas y malware.</a>
     <a href="#ud2" class="seg"><b>UD2 · Seguridad física</b>Plan de contingencia, CPD (ubicación, clima, acceso, incendios, electricidad, red), centro de respaldo y equipos de usuario.</a>
     <a href="#sai" class="seg"><b>UD2 · SAI</b>Qué es, tipos (offline, inline, online), VA y W, tomas, baterías, puerto de datos y configuración del apagado.</a>
-    <a href="#formulas" class="calc"><b>Fórmulas</b>Todas las fórmulas de los problemas del SAI con despejes, ejemplos, trampas y un problema resuelto.</a>
+    <a href="#formulas" class="calc"><b>Fórmulas</b>Las 5 fórmulas de los problemas del SAI (Pr = Pa × Fc, P = I × V, energía útil, autonomía y potencia de entrada) con ejemplos.</a>
     <a href="#calculos" class="calc"><b>Cálculos</b>Potencia real del SAI, ¿es suficiente?, baterías en serie y paralelo, potencia a contratar con margen del 20 % y coste anual.</a>
   </div>
   <div class="grid2">
@@ -1521,193 +1521,159 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
   <div class="head topic-head">
     <span class="eyebrow">Seguridad · UD2 · Problemas</span>
     <h2>Fórmulas para los problemas del SAI</h2>
-    <p class="lead">Todas las fórmulas de los problemas del SAI y de potencia en un solo sitio: qué significa cada letra, cómo despejar, un ejemplo resuelto y la trampa de cada una. Al final, un método paso a paso y un problema completo.</p>
+    <p class="lead">Las cinco fórmulas que hacen falta, con lo que significa cada letra, cómo despejarlas y ejemplos resueltos. Al final, un problema completo que las usa todas.</p>
   </div>
-  <div class="toc"><a href="#f-chuleta">Chuleta</a><a href="#f-real">Potencia real</a><a href="#f-carga">Carga</a><a href="#f-suf">¿Es suficiente?</a><a href="#f-margen">Margen y kW</a><a href="#f-coste">Coste</a><a href="#f-bat">Baterías</a><a href="#f-extra">Energía y autonomía</a><a href="#f-unid">Unidades</a><a href="#f-metodo">Método</a><a href="#f-ejemplo">Problema completo</a><a href="#calculos">Ir a las calculadoras</a></div>
+  <div class="toc"><a href="#f-chuleta">Las 5 fórmulas</a><a href="#f-pr">Potencia real</a><a href="#f-piv">P = I × V</a><a href="#f-eu">Energía útil</a><a href="#f-aut">Autonomía</a><a href="#f-pe">Potencia de entrada</a><a href="#f-ejemplo">Problema completo</a><a href="#calc-train">Practicar</a></div>
 
   <div class="block" id="f-chuleta">
-    <h3><span class="sid">chuleta</span>Todas de un vistazo</h3>
+    <h3><span class="sid">chuleta</span>Las 5 fórmulas</h3>
     <div class="tw"><table class="ftab">
-      <tr><th>Para calcular…</th><th>Fórmula</th><th>Unidad</th></tr>
-      <tr><td>Potencia real del SAI</td><td><code>W = VA × factor</code></td><td>W</td></tr>
-      <tr><td>Potencia aparente necesaria</td><td><code>VA = W ÷ factor</code></td><td>VA</td></tr>
-      <tr><td>Factor de conversión</td><td><code>factor = W ÷ VA</code></td><td>sin unidad (0–1)</td></tr>
-      <tr><td>Carga total</td><td><code>Carga = W₁ + W₂ + … (máximos)</code></td><td>W</td></tr>
-      <tr><td>Cuántos W sobran o faltan</td><td><code>Sobra = W del SAI − Carga</code></td><td>W</td></tr>
-      <tr><td>Potencia con margen</td><td><code>P = Carga × (1 + margen ÷ 100)</code> → con 20 %: <code>× 1,20</code></td><td>W</td></tr>
-      <tr><td>Pasar a kilovatios</td><td><code>kW = W ÷ 1000</code></td><td>kW</td></tr>
-      <tr><td>Coste fijo anual</td><td><code>Coste = kW × precio (€/kW·año)</code></td><td>€/año</td></tr>
-      <tr><td>Baterías en paralelo</td><td><code>Ah total = n × Ah</code></td><td>Ah</td></tr>
-      <tr><td>Baterías en serie</td><td><code>Ah total = Ah de una</code></td><td>Ah</td></tr>
-      <tr><td>Tensión en serie <span class="tag-extra">extra pro</span></td><td><code>V total = n × V</code> (en paralelo, la misma <code>V</code>)</td><td>V</td></tr>
-      <tr><td>Energía de las baterías <span class="tag-extra">extra pro</span></td><td><code>Wh = V × Ah</code></td><td>Wh</td></tr>
-      <tr><td>Autonomía aproximada <span class="tag-extra">extra pro</span></td><td><code>horas ≈ Wh ÷ Carga</code> → <code>× 60</code> para minutos</td><td>h / min</td></tr>
+      <tr><th>#</th><th>Fórmula</th><th>Para qué</th><th>Unidad del resultado</th></tr>
+      <tr><td>1</td><td><code>Pr = Pa × Fc</code></td><td>Potencia real que da el SAI</td><td>W</td></tr>
+      <tr><td>2</td><td><code>P = I × V</code></td><td>Potencia a partir de corriente y tensión (y la energía de las baterías)</td><td>W</td></tr>
+      <tr><td>3</td><td><code>Energía útil = Energía total × Profundidad de descarga × Eficiencia del inversor</code></td><td>La energía que de verdad llega a los equipos</td><td>Wh</td></tr>
+      <tr><td>4</td><td><code>Autonomía (h) = Energía útil ÷ Potencia de la carga</code></td><td>Cuánto aguanta el SAI</td><td>horas (× 60 = minutos)</td></tr>
+      <tr><td>5</td><td><code>Pentrada = Psalida ÷ Eficiencia</code></td><td>Lo que un aparato pide de la red para entregar lo que entrega</td><td>W</td></tr>
     </table></div>
   </div>
 
-  <div class="block" id="f-real">
-    <h3><span class="sid">6.4</span>1. Potencia real del SAI</h3>
-    <div class="formula">Potencia real (W) = Potencia aparente (VA) × Factor de conversión</div>
+  <div class="block" id="f-pr">
+    <h3><span class="sid">1</span>Potencia real: Pr = Pa × Fc</h3>
+    <div class="formula">Pr = Pa × Fc</div>
     <div class="grid2">
       <div class="tw"><table>
-        <tr><th>Letra</th><th>Qué es</th><th>Dónde la encuentras</th></tr>
-        <tr><td><b>VA</b></td><td>Potencia aparente: la energía total del SAI</td><td>El número grande de la caja o la etiqueta</td></tr>
-        <tr><td><b>Factor</b></td><td>Lo que se aprovecha (el resto se pierde en calor)</td><td>Gama baja 0,5–0,6 · gama alta ~0,9</td></tr>
-        <tr><td><b>W</b></td><td>Potencia real: la que llega de verdad a los equipos</td><td>A veces en la etiqueta junto a los VA</td></tr>
+        <tr><th>Letra</th><th>Qué es</th><th>Unidad</th></tr>
+        <tr><td><b>Pr</b></td><td>Potencia real: la que llega de verdad a los equipos</td><td>W (vatios)</td></tr>
+        <tr><td><b>Pa</b></td><td>Potencia aparente: el número grande de la caja del SAI</td><td>VA (voltiamperios)</td></tr>
+        <tr><td><b>Fc</b></td><td>Factor de conversión. Gama baja 0,5–0,6; gama alta ~0,9</td><td>sin unidad</td></tr>
       </table></div>
       <div class="prose">
         <h4>Despejes</h4>
-        <p><code>VA = W ÷ factor</code>: qué SAI comprar para una carga.<br><code>factor = W ÷ VA</code>: si la etiqueta da VA y W (ej.: 650 VA / 390 W → 390 ÷ 650 = 0,6).</p>
-        <div class="note key"><b class="k">Ejemplo</b><p>SAI de 1200 VA, gama baja (0,6) → 1200 × 0,6 = <b>720 W</b>.<br>Necesito 540 W con factor 0,6 → 540 ÷ 0,6 = <b>900 VA</b>.</p></div>
+        <p><code>Pa = Pr ÷ Fc</code> → qué SAI necesito para una carga.<br><code>Fc = Pr ÷ Pa</code> → si la etiqueta da VA y W.</p>
       </div>
     </div>
-    <div class="note trap"><b class="k">Trampa</b><p>Nunca compares VA con W. Un «SAI de 1000» de gama baja no da 1000 W, da 600 W. Primero pasa siempre el SAI a vatios.</p></div>
-  </div>
-
-  <div class="block" id="f-carga">
-    <h3><span class="sid">6.4</span>2. Carga total a proteger</h3>
-    <div class="formula">Carga (W) = suma de los consumos máximos de todo lo que se conecta</div>
-    <div class="grid2">
-      <div class="prose">
-        <p>Se suma lo que va a las <b>tomas de batería</b>: PC, monitor, router, switch. Si hay varios iguales: <code>cantidad × consumo</code>.</p>
-        <p>En la <b>práctica SAI I</b> se hace de dos maneras:</p>
-        <ul><li><b>Teórica (2B)</b>: potencia nominal de la fuente + consumo máximo del monitor (de las etiquetas). Es el peor caso.</li><li><b>Medida (2A)</b>: el pico que marca el medidor con la prueba de estrés. Suele salir bastante más bajo.</li></ul>
-      </div>
-      <div class="prose">
-        <div class="note key"><b class="k">Ejemplo</b><p>Fuente de 500 W + monitor de 40 W + router de 15 W → 500 + 40 + 15 = <b>555 W</b>.</p></div>
-        <div class="note trap"><b class="k">Trampa</b><p>La <b>impresora láser no se suma</b>: nunca va a las tomas de batería. Y en la práctica de potencia los PCs cuentan con su <b>consumo real</b> (200 W), no con la fuente de 500 W.</p></div>
-      </div>
+    <div class="grid3">
+      <div class="note key"><b class="k">Ejemplo 1</b><p>SAI de 800 VA con Fc = 0,6.<br>Pr = 800 × 0,6 = <b>480 W</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 2</b><p>Necesito alimentar 540 W con un SAI de Fc = 0,6.<br>Pa = 540 ÷ 0,6 = <b>900 VA</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 3</b><p>La etiqueta dice 650 VA / 390 W.<br>Fc = 390 ÷ 650 = <b>0,6</b> (gama baja).</p></div>
     </div>
-    <div class="note pro"><b class="k">Extra pro · si te dan la eficiencia de la fuente</b><p>La fuente pierde energía al convertirla, así que pide a la red más de lo que entrega: <code>W que pide = W que entrega ÷ eficiencia</code>. Una fuente que entrega 400 W con eficiencia 0,8 pide 400 ÷ 0,8 = 500 W. La práctica habla de «aplicar la eficiencia estimada» sin dar el número: si el profe lo usa en este sentido, esta es la cuenta; si se refiere al factor del SAI, es la fórmula 1.</p></div>
+    <div class="note trap"><b class="k">Trampa</b><p>Nunca compares VA con W. Un «SAI de 1000 VA» con Fc 0,6 solo da 600 W. Pasa siempre el SAI a vatios antes de compararlo con la carga.</p></div>
   </div>
 
-  <div class="block" id="f-suf">
-    <h3><span class="sid">6.4</span>3. ¿Es suficiente el SAI?</h3>
-    <div class="formula">Sobra (W) = Potencia real del SAI − Carga</div>
-    <div class="tw"><table>
-      <tr><th>Resultado</th><th>Conclusión</th></tr>
-      <tr><td>Sobra &lt; 0</td><td><b>No es suficiente</b>: faltan vatios</td></tr>
-      <tr><td>Sobra ≥ 0 pero pequeña</td><td>Suficiente, pero <b>justo</b>. Los apuntes piden que supere la carga «holgadamente»</td></tr>
-      <tr><td>Sobra grande</td><td><b>Suficiente con margen</b></td></tr>
-    </table></div>
-    <div class="grid2">
-      <div class="note key"><b class="k">Ejemplo</b><p>SAI 800 VA, factor 0,6 → 480 W. Carga: fuente 350 W + monitor 40 W = 390 W.<br>Sobra = 480 − 390 = <b>90 W</b> → sí es suficiente.</p></div>
-      <div class="note key"><b class="k">Porcentaje de margen (para justificar)</b><p><code>% = Sobra ÷ Carga × 100</code> → 90 ÷ 390 × 100 ≈ <b>23 %</b>. La calculadora marca «justo» por debajo del 20 %.</p></div>
-    </div>
-  </div>
-
-  <div class="block" id="f-margen">
-    <h3><span class="sid">práctica</span>4. Margen de seguridad y paso a kW</h3>
-    <div class="formula">P con margen = P total × (1 + margen ÷ 100) &nbsp;·&nbsp; kW = W ÷ 1000</div>
+  <div class="block" id="f-piv">
+    <h3><span class="sid">2</span>Potencia, corriente y tensión: P = I × V</h3>
+    <div class="formula">P = I × V</div>
     <div class="grid2">
       <div class="tw"><table>
-        <tr><th>Margen</th><th>Multiplica por</th></tr>
-        <tr><td>10 %</td><td>1,10</td></tr>
-        <tr><td>15 %</td><td>1,15</td></tr>
-        <tr><td><b>20 %</b> (el de la práctica)</td><td><b>1,20</b></td></tr>
-        <tr><td>25 %</td><td>1,25</td></tr>
+        <tr><th>Letra</th><th>Qué es</th><th>Unidad</th></tr>
+        <tr><td><b>P</b></td><td>Potencia</td><td>W (vatios)</td></tr>
+        <tr><td><b>I</b></td><td>Intensidad de corriente</td><td>A (amperios)</td></tr>
+        <tr><td><b>V</b></td><td>Tensión. Red: 230 V; batería del SAI: 12 V</td><td>V (voltios)</td></tr>
       </table></div>
       <div class="prose">
-        <div class="note key"><b class="k">Ejemplo de la práctica</b><p>CPD: 3 × 600 + 800 + 3000 = 5600 W → 5600 × 1,20 = 6720 W → 6720 ÷ 1000 = <b>6,72 kW</b>.</p></div>
-        <div class="note trap"><b class="k">Trampas</b><p>Sumar el 20 % es multiplicar por <b>1,20</b>, no por 0,20 (eso sería quedarte solo con el margen). Y el margen se aplica al <b>total</b>, no se suma «20 W».</p></div>
+        <h4>Despejes</h4>
+        <p><code>I = P ÷ V</code> → qué corriente circula.<br><code>V = P ÷ I</code> → qué tensión hace falta.</p>
+        <h4>Energía de las baterías</h4>
+        <p>Si en vez de amperios usas <b>amperios hora</b> (la capacidad de la batería), sale energía en <b>vatios hora</b>:</p>
+        <p><code>Energía total (Wh) = V × Ah</code></p>
+        <p>Con varias baterías iguales: <code>Energía total = n × V × Ah</code>, estén en serie o en paralelo.</p>
       </div>
     </div>
-  </div>
-
-  <div class="block" id="f-coste">
-    <h3><span class="sid">práctica</span>5. Coste fijo anual de la potencia</h3>
-    <div class="formula">Coste (€/año) = kW contratados × precio del término de potencia (€ por kW y año)</div>
-    <div class="grid2">
-      <div class="note key"><b class="k">Ejemplo de la práctica</b><p>Acometida única: 21,84 kW × 40 € = <b>873,60 €/año</b>.<br>Dos acometidas: 15,12 × 40 + 6,72 × 40 = 604,80 + 268,80 = <b>873,60 €/año</b>.</p></div>
-      <div class="note trap"><b class="k">Trampa</b><p>Multiplica por los <b>kW</b>, no por los vatios: 21 840 × 40 daría 873 600 €. Y si el precio fuera mensual, multiplica por 12 para el año.</p></div>
+    <div class="grid3">
+      <div class="note key"><b class="k">Ejemplo 1 · Corriente de la red</b><p>Un PC consume 460 W de la red de 230 V.<br>I = 460 ÷ 230 = <b>2 A</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 2 · Corriente de la batería</b><p>El inversor saca 300 W de una batería de 12 V.<br>I = 300 ÷ 12 = <b>25 A</b>. Por eso la batería dura tan poco.</p></div>
+      <div class="note key"><b class="k">Ejemplo 3 · Energía total</b><p>2 baterías de 12 V y 9 Ah.<br>Energía total = 2 × 12 × 9 = <b>216 Wh</b>.</p></div>
     </div>
+    <div class="note trap"><b class="k">Trampa</b><p>Usa la tensión correcta: <b>230 V</b> si hablas de la red, <b>12 V</b> si hablas de la batería. Y para la energía, la capacidad va en <b>Ah</b>, no en A.</p></div>
   </div>
 
-  <div class="block" id="f-bat">
-    <h3><span class="sid">6.7</span>6. Baterías en serie y en paralelo</h3>
-    <div class="grid2">
-      <div class="prose">
-        <div class="formula">Paralelo: Ah total = n × Ah</div>
-        <div class="formula">Serie: Ah total = Ah de una batería</div>
-        <p>Así viene en los apuntes. <b>n</b> = número de baterías (todas iguales), <b>Ah</b> = amperios hora de cada una.</p>
-      </div>
-      <div class="prose">
-        <div class="tw"><table>
-          <tr><th>3 baterías de 12 V y 9 Ah</th><th>Capacidad</th><th>Tensión <span class="tag-extra">extra</span></th></tr>
-          <tr><td>En paralelo</td><td><b>27 Ah</b></td><td>12 V</td></tr>
-          <tr><td>En serie</td><td><b>9 Ah</b></td><td>36 V</td></tr>
-        </table></div>
-        <div class="note trap"><b class="k">Truco para no liarte</b><p>En <b>paralelo se suma la capacidad</b> (Ah); en <b>serie se suma la tensión</b> (V). Nunca se suman las dos a la vez.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="block" id="f-extra">
-    <h3><span class="sid">extra pro</span>7. Energía y autonomía aproximada</h3>
-    <p class="muted">No vienen en los apuntes, pero ayudan a entender por qué un SAI aguanta unos minutos y no horas. Úsalas solo si el profe las pide.</p>
-    <div class="grid2">
-      <div class="prose">
-        <div class="formula">Energía (Wh) = Tensión total (V) × Capacidad total (Ah)</div>
-        <div class="formula">Autonomía (h) ≈ Energía (Wh) ÷ Carga (W)</div>
-        <p>Para pasar a minutos: × 60. Da igual serie o paralelo: la energía total es la misma (2 × 12 V × 9 Ah = 216 Wh en los dos casos).</p>
-      </div>
-      <div class="prose">
-        <div class="note key"><b class="k">Ejemplo</b><p>2 baterías de 12 V y 9 Ah → 216 Wh. Carga de 300 W → 216 ÷ 300 = 0,72 h × 60 ≈ <b>43 min</b> en teoría.</p></div>
-        <div class="note trap"><b class="k">Es una estimación ideal</b><p>La autonomía real es bastante menor: hay pérdidas en el inversor, la batería no se descarga entera y envejece. Los apuntes lo dicen: la duración del fabricante es orientativa y depende de lo que conectes.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="block" id="f-unid">
-    <h3><span class="sid">unidades</span>Unidades y conversiones</h3>
+  <div class="block" id="f-eu">
+    <h3><span class="sid">3</span>Energía útil</h3>
+    <div class="formula">Energía útil = Energía total × Profundidad de descarga × Eficiencia del inversor</div>
     <div class="grid2">
       <div class="tw"><table>
-        <tr><th>Símbolo</th><th>Nombre</th><th>Qué mide</th></tr>
-        <tr><td>W</td><td>vatio</td><td>Potencia real</td></tr>
-        <tr><td>kW</td><td>kilovatio = 1000 W</td><td>Potencia contratada</td></tr>
-        <tr><td>VA</td><td>voltiamperio</td><td>Potencia aparente del SAI</td></tr>
-        <tr><td>V</td><td>voltio</td><td>Tensión (baterías de 12 V)</td></tr>
-        <tr><td>Ah</td><td>amperio hora</td><td>Capacidad de una batería</td></tr>
-        <tr><td>Wh</td><td>vatio hora <span class="tag-extra">extra</span></td><td>Energía almacenada</td></tr>
+        <tr><th>Término</th><th>Qué es</th><th>Valor típico</th></tr>
+        <tr><td><b>Energía total</b></td><td>Lo que almacenan las baterías: <code>n × V × Ah</code> (fórmula 2)</td><td>Wh</td></tr>
+        <tr><td><b>Profundidad de descarga</b></td><td>Qué parte de la batería se puede gastar sin dañarla</td><td>En tanto por uno: 50 % = 0,5; 80 % = 0,8</td></tr>
+        <tr><td><b>Eficiencia del inversor</b></td><td>Qué parte se aprovecha al pasar de continua a alterna; el resto se pierde en calor</td><td>En tanto por uno: 90 % = 0,9</td></tr>
       </table></div>
-      <div class="tw"><table>
-        <tr><th>Conversión</th><th>Operación</th><th>Ejemplo</th></tr>
-        <tr><td>W → kW</td><td>÷ 1000</td><td>18 200 W = 18,2 kW</td></tr>
-        <tr><td>kW → W</td><td>× 1000</td><td>6,72 kW = 6720 W</td></tr>
-        <tr><td>horas → minutos</td><td>× 60</td><td>0,25 h = 15 min</td></tr>
-        <tr><td>minutos → horas</td><td>÷ 60</td><td>45 min = 0,75 h</td></tr>
-        <tr><td>% → multiplicador</td><td>1 + % ÷ 100</td><td>20 % → 1,20</td></tr>
-      </table></div>
+      <div class="prose">
+        <p>No se puede usar toda la energía de la batería: ni se descarga entera ni el inversor convierte sin pérdidas. Esta fórmula da la energía que <b>de verdad</b> llega a los equipos.</p>
+        <div class="note trap"><b class="k">Trampa</b><p>Los porcentajes se ponen en <b>tanto por uno</b>: 80 % es 0,8, no 80. Si multiplicas por 80, te salen miles de Wh.</p></div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="note key"><b class="k">Ejemplo 1</b><p>2 baterías de 12 V y 9 Ah, profundidad de descarga 80 %, inversor al 90 %.<br>Energía total = 2 × 12 × 9 = 216 Wh.<br>Energía útil = 216 × 0,8 × 0,9 = <b>155,52 Wh</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 2</b><p>Una batería de 12 V y 7 Ah, profundidad de descarga 50 %, inversor al 85 %.<br>Energía total = 12 × 7 = 84 Wh.<br>Energía útil = 84 × 0,5 × 0,85 = <b>35,7 Wh</b>.</p></div>
     </div>
   </div>
 
-  <div class="block" id="f-metodo">
-    <h3><span class="sid">método</span>Cómo resolver cualquier problema de SAI</h3>
-    <ol class="steps" style="--c:var(--calc);--cs:var(--calc-soft)">
-      <li><div><b>Apunta los datos con su unidad</b><span class="muted">VA, factor, W de cada equipo, número de baterías, Ah, margen, precio. Marca qué te piden.</span></div></li>
-      <li><div><b>Pasa el SAI a vatios</b><span class="muted"><code>W = VA × factor</code>. Si te dan los W directamente, úsalos.</span></div></li>
-      <li><div><b>Suma la carga</b><span class="muted">Solo lo que va a tomas de batería, con los consumos máximos. Sin impresora láser.</span></div></li>
-      <li><div><b>Compara vatios con vatios</b><span class="muted"><code>Sobra = W del SAI − Carga</code>. Si es negativa, no vale; calcula los VA que harían falta con <code>VA = Carga ÷ factor</code>.</span></div></li>
-      <li><div><b>Escribe la conclusión con números</b><span class="muted">«El SAI da 480 W y el equipo necesita 390 W: es suficiente, sobran 90 W (23 %)». Sin esa frase el ejercicio queda a medias.</span></div></li>
-    </ol>
+  <div class="block" id="f-aut">
+    <h3><span class="sid">4</span>Autonomía</h3>
+    <div class="formula">Autonomía (h) = Energía útil ÷ Potencia de la carga</div>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Término</th><th>Qué es</th><th>Unidad</th></tr>
+        <tr><td><b>Autonomía</b></td><td>Cuánto tiempo aguanta el SAI con batería</td><td>horas</td></tr>
+        <tr><td><b>Energía útil</b></td><td>La de la fórmula 3</td><td>Wh</td></tr>
+        <tr><td><b>Potencia de la carga</b></td><td>Lo que consumen los equipos conectados a las tomas de batería</td><td>W</td></tr>
+      </table></div>
+      <div class="prose">
+        <h4>Despeje</h4>
+        <p><code>Energía útil necesaria = Autonomía × Potencia de la carga</code> → para elegir baterías que aguanten un tiempo concreto.</p>
+        <h4>Pasar a minutos</h4>
+        <p><code>minutos = horas × 60</code>. Si te dan minutos para despejar, pásalos antes a horas: <code>horas = minutos ÷ 60</code>.</p>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="note key"><b class="k">Ejemplo 1</b><p>Energía útil 155,52 Wh y carga de 300 W.<br>Autonomía = 155,52 ÷ 300 = 0,5184 h → × 60 = <b>31,1 min</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 2</b><p>Energía útil 35,7 Wh y carga de 120 W.<br>Autonomía = 35,7 ÷ 120 = 0,2975 h → × 60 ≈ <b>17,9 min</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 3 · Despeje</b><p>Quiero 15 min con una carga de 400 W.<br>15 min = 0,25 h. Energía útil necesaria = 0,25 × 400 = <b>100 Wh</b>.</p></div>
+    </div>
+    <div class="note trap"><b class="k">Trampa</b><p>El resultado sale en <b>horas</b>: 0,52 no son 52 minutos, son 0,52 × 60 = 31 minutos. Y la carga va en <b>W</b>: si te la dan en VA, pásala antes con la fórmula 1.</p></div>
+  </div>
+
+  <div class="block" id="f-pe">
+    <h3><span class="sid">5</span>Potencia de entrada: Pentrada = Psalida ÷ Eficiencia</h3>
+    <div class="formula">Pentrada = Psalida ÷ Eficiencia</div>
+    <div class="grid2">
+      <div class="tw"><table>
+        <tr><th>Término</th><th>Qué es</th><th>Unidad</th></tr>
+        <tr><td><b>Psalida</b></td><td>Lo que el aparato entrega (la fuente al PC, el SAI a los equipos)</td><td>W</td></tr>
+        <tr><td><b>Eficiencia</b></td><td>Qué parte se aprovecha, en tanto por uno (85 % = 0,85)</td><td>sin unidad</td></tr>
+        <tr><td><b>Pentrada</b></td><td>Lo que el aparato pide a la red para poder entregar eso</td><td>W</td></tr>
+      </table></div>
+      <div class="prose">
+        <h4>Despejes</h4>
+        <p><code>Psalida = Pentrada × Eficiencia</code><br><code>Eficiencia = Psalida ÷ Pentrada</code></p>
+        <div class="note trap"><b class="k">Comprobación rápida</b><p>La entrada <b>siempre es mayor</b> que la salida, porque hay pérdidas. Si te sale menor, has multiplicado en lugar de dividir.</p></div>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="note key"><b class="k">Ejemplo 1 · Fuente del PC</b><p>La fuente entrega 400 W al PC con eficiencia 80 %.<br>Pentrada = 400 ÷ 0,8 = <b>500 W</b>.</p></div>
+      <div class="note key"><b class="k">Ejemplo 2 · El SAI</b><p>El SAI entrega 300 W a los equipos con eficiencia 90 %.<br>Pentrada = 300 ÷ 0,9 = <b>333,3 W</b> de la red.</p></div>
+      <div class="note key"><b class="k">Ejemplo 3 · Despeje</b><p>Una fuente pide 250 W de la red y entrega 200 W.<br>Eficiencia = 200 ÷ 250 = <b>0,8</b> (80 %).</p></div>
+    </div>
   </div>
 
   <div class="block" id="f-ejemplo">
-    <h3><span class="sid">resuelto</span>Problema completo</h3>
+    <h3><span class="sid">resuelto</span>Problema completo con las 5 fórmulas</h3>
     <div class="grid2">
       <div class="prose">
-        <p><b>Enunciado.</b> Un puesto de trabajo tiene un PC con fuente de 450 W, un monitor de 35 W y un router de 12 W. En el aula hay un SAI de 850 VA de gama baja (factor 0,6) con 2 baterías de 12 V y 7 Ah en paralelo.</p>
-        <ol style="padding-left:1.2em"><li>¿Qué potencia real da el SAI?</li><li>¿Es suficiente para el puesto?</li><li>Si no lo es, ¿qué potencia aparente mínima necesitas? ¿Y con un 20 % de margen?</li><li>¿Qué capacidad tienen las baterías juntas?</li></ol>
+        <p><b>Enunciado.</b> Un puesto tiene un PC cuya fuente entrega 360 W con una eficiencia del 90 %, y un monitor de 40 W. Se quiere proteger con un SAI de 1000 VA y factor de conversión 0,6, que lleva 2 baterías de 12 V y 9 Ah. La profundidad de descarga es del 80 % y la eficiencia del inversor del 90 %.</p>
+        <ol style="padding-left:1.2em"><li>¿Cuánto consume el PC de la red?</li><li>¿Cuál es la potencia de la carga y es suficiente el SAI?</li><li>¿Qué corriente pide el puesto a la red de 230 V?</li><li>¿Cuánta energía útil tienen las baterías?</li><li>¿Cuánto tiempo aguanta el SAI?</li></ol>
       </div>
       <details class="sol-d calc"><summary>Ver la solución</summary>
         <div class="prose">
-          <p><b>1.</b> W = 850 × 0,6 = <b>510 W</b>.</p>
-          <p><b>2.</b> Carga = 450 + 35 + 12 = 497 W. Sobra = 510 − 497 = <b>13 W</b>. Es suficiente por muy poco (13 ÷ 497 ≈ 3 %): <b>demasiado justo</b>, no lo supera «holgadamente».</p>
-          <p><b>3.</b> VA mínima = 497 ÷ 0,6 ≈ <b>828 VA</b>. Con 20 % de margen: 497 × 1,20 = 596,4 W → 596,4 ÷ 0,6 = <b>994 VA</b>. Conviene un SAI de <b>1000 VA</b> o más.</p>
-          <p><b>4.</b> En paralelo se suman: 2 × 7 = <b>14 Ah</b> (a 12 V).</p>
+          <p><b>1. Fórmula 5.</b> Pentrada = 360 ÷ 0,9 = <b>400 W</b>.</p>
+          <p><b>2. Fórmula 1.</b> Carga = 400 + 40 = 440 W. Pr = 1000 × 0,6 = 600 W. Como 600 W ≥ 440 W, <b>sí es suficiente</b> (sobran 160 W).</p>
+          <p><b>3. Fórmula 2.</b> I = 440 ÷ 230 ≈ <b>1,91 A</b>.</p>
+          <p><b>4. Fórmulas 2 y 3.</b> Energía total = 2 × 12 × 9 = 216 Wh. Energía útil = 216 × 0,8 × 0,9 = <b>155,52 Wh</b>.</p>
+          <p><b>5. Fórmula 4.</b> Autonomía = 155,52 ÷ 440 ≈ 0,353 h → × 60 ≈ <b>21,2 minutos</b>.</p>
         </div>
       </details>
     </div>
+    <p class="muted">Para practicar con números distintos, usa el entrenador de la pestaña Cálculos y elige «Fórmulas».</p>
   </div>
 </section>
 
@@ -1801,7 +1767,7 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
   <div class="block" id="calc-train">
     <h3><span class="sid">práctica</span>Entrenador de cálculos</h3>
     <p class="muted">Problemas aleatorios. Hazlos a mano, escribe el resultado (con coma o punto) y comprueba.</p>
-    <div class="row"><b>Tipo</b><div class="segc" id="tr-type" role="group" aria-label="Tipo de problema"><button type="button" data-v="all" aria-pressed="true">Mezcla</button><button type="button" data-v="sai" aria-pressed="false">SAI</button><button type="button" data-v="bat" aria-pressed="false">Baterías</button><button type="button" data-v="pot" aria-pressed="false">Potencia y coste</button></div></div>
+    <div class="row"><b>Tipo</b><div class="segc" id="tr-type" role="group" aria-label="Tipo de problema"><button type="button" data-v="all" aria-pressed="true">Mezcla</button><button type="button" data-v="sai" aria-pressed="false">SAI</button><button type="button" data-v="bat" aria-pressed="false">Baterías</button><button type="button" data-v="pot" aria-pressed="false">Potencia y coste</button><button type="button" data-v="for" aria-pressed="false">Fórmulas</button></div></div>
     <div class="train-q" id="tr-q"></div>
     <div class="row"><input type="text" id="tr-ans" inputmode="decimal" autocomplete="off" aria-label="Tu resultado" style="width:12em"><span id="tr-unit" class="muted"></span><button type="button" class="btn primary" id="tr-check">Comprobar</button><button type="button" class="btn" id="tr-show">Ver solución</button><button type="button" class="btn" id="tr-next">Otro</button></div>
     <div class="expl" id="tr-expl" hidden></div>
@@ -2915,6 +2881,15 @@ const GEN = {
  bat:[
   ()=>{const n=pick([2,3,4]), ah=pick([7,9,12,18]), p=Math.random()<.5; return {t:n+' baterías de 12 V y '+ah+' Ah conectadas en '+(p?'paralelo':'serie')+'. ¿Qué capacidad tiene el conjunto?', a:p?n*ah:ah, u:'Ah', x:p?'En paralelo se suman: '+n+' × '+ah+' = <b>'+(n*ah)+' Ah</b>.':'En serie la capacidad es la de una sola batería: <b>'+ah+' Ah</b>.'};}
  ],
+ for:[
+  ()=>{const pa=pick([600,800,1000,1200,1500,2000]), fc=pick([0.5,0.6,0.8,0.9]); return {t:'Fórmula 1. Un SAI tiene Pa = '+nf(pa)+' VA y Fc = '+nf(fc)+'. ¿Cuál es su potencia real?', a:pa*fc, u:'W', x:'Pr = Pa × Fc = '+nf(pa)+' × '+nf(fc)+' = <b>'+nf(pa*fc)+' W</b>.'};},
+  ()=>{const p=pick([115,230,345,460,690]); return {t:'Fórmula 2. Un equipo consume '+p+' W de la red de 230 V. ¿Qué corriente pide?', a:p/230, u:'A', x:'I = P ÷ V = '+p+' ÷ 230 = <b>'+nf(p/230)+' A</b>.'};},
+  ()=>{const p=pick([120,180,240,300,360,480]); return {t:'Fórmula 2. El inversor saca '+p+' W de una batería de 12 V. ¿Qué corriente da la batería?', a:p/12, u:'A', x:'I = P ÷ V = '+p+' ÷ 12 = <b>'+nf(p/12)+' A</b>.'};},
+  ()=>{const n=pick([1,2,3,4]), ah=pick([7,9,12]), d=pick([0.5,0.6,0.8]), e=pick([0.85,0.9,0.95]); const et=n*12*ah, eu=et*d*e; return {t:'Fórmula 3. '+n+' batería'+(n>1?'s':'')+' de 12 V y '+ah+' Ah, profundidad de descarga '+nf(d*100)+' % y eficiencia del inversor '+nf(e*100)+' %. ¿Cuánta energía útil hay?', a:eu, u:'Wh', x:'Energía total = '+n+' × 12 × '+ah+' = '+nf(et)+' Wh. Energía útil = '+nf(et)+' × '+nf(d)+' × '+nf(e)+' = <b>'+nf(eu)+' Wh</b>.'};},
+  ()=>{const eu=pick([60,90,120,150,180,240]), p=pick([100,120,150,200,240,300,400]); const h=eu/p; return {t:'Fórmula 4. Las baterías tienen '+eu+' Wh de energía útil y la carga es de '+p+' W. ¿Cuántos minutos aguanta?', a:h*60, u:'min', x:'Autonomía = '+eu+' ÷ '+p+' ≈ '+nf(h)+' h → ('+eu+' ÷ '+p+') × 60 = <b>'+nf(h*60)+' min</b>.'};},
+  ()=>{const m=pick([10,15,20,30]), p=pick([200,300,400,500,600]); return {t:'Fórmula 4 (despeje). Quiero '+m+' minutos de autonomía con una carga de '+p+' W. ¿Cuánta energía útil necesito?', a:m/60*p, u:'Wh', x:'Pasa a horas: '+m+' min = '+m+' ÷ 60 h. Energía útil = Autonomía × Potencia = ('+m+' ÷ 60) × '+p+' = <b>'+nf(m/60*p)+' Wh</b>.'};},
+  ()=>{const s=pick([200,240,300,360,400,450]), e=pick([0.75,0.8,0.85,0.9]); return {t:'Fórmula 5. Una fuente entrega '+s+' W con una eficiencia del '+nf(e*100)+' %. ¿Cuánta potencia pide de la red?', a:s/e, u:'W', x:'Pentrada = Psalida ÷ Eficiencia = '+s+' ÷ '+nf(e)+' = <b>'+nf(s/e)+' W</b>.'};}
+ ],
  pot:[
   ()=>{const a=pick([10,15,20,25,30]), wa=pick([150,180,200,250]), b=pick([10,20,30]), wb=pick([25,30,40]), c=pick([800,1500,2200,3000]); const tot=a*wa+b*wb+c; return {t:'Una oficina tiene '+a+' PCs de '+wa+' W, '+b+' monitores de '+wb+' W y climatización de '+c+' W. Con un margen del 20 %, ¿cuántos kW hay que contratar?', a:tot*1.2/1000, u:'kW', x:'Suma: '+a+'×'+wa+' + '+b+'×'+wb+' + '+c+' = '+nf(tot)+' W. Con margen: '+nf(tot)+' × 1,2 = '+nf(tot*1.2)+' W = <b>'+nf(tot*1.2/1000)+' kW</b>.'};},
   ()=>{const s=pick([2,3,4]), ws=pick([400,500,600,750]), red=pick([500,800,1000]), cl=pick([2000,2500,3000]); const tot=s*ws+red+cl; return {t:'Un CPD tiene '+s+' servidores de '+ws+' W, electrónica de red de '+red+' W y climatización de '+cl+' W. ¿Qué potencia hay que contratar con un 20 % de margen?', a:tot*1.2/1000, u:'kW', x:'Suma: '+s+'×'+ws+' + '+red+' + '+cl+' = '+nf(tot)+' W → × 1,2 = '+nf(tot*1.2)+' W = <b>'+nf(tot*1.2/1000)+' kW</b>.'};},
@@ -2924,7 +2899,7 @@ const GEN = {
 (function(){
   let type='all', cur=null, ok=0, tot=0, answered=false;
   const q=document.getElementById('tr-q'), ans=document.getElementById('tr-ans'), unit=document.getElementById('tr-unit'), ex=document.getElementById('tr-expl'), sc=document.getElementById('tr-score');
-  function next(){const pool=type==='all'?[].concat(GEN.sai,GEN.bat,GEN.pot):GEN[type]; cur=pick(pool)(); answered=false; q.innerHTML='<p>'+esc(cur.t)+'</p>'; unit.textContent=cur.u; ans.value=''; ans.className=''; ex.hidden=true;}
+  function next(){const pool=type==='all'?[].concat(GEN.sai,GEN.bat,GEN.pot,GEN.for):GEN[type]; cur=pick(pool)(); answered=false; q.innerHTML='<p>'+esc(cur.t)+'</p>'; unit.textContent=cur.u; ans.value=''; ans.className=''; ex.hidden=true;}
   document.querySelectorAll('#tr-type button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#tr-type button').forEach(x=>x.setAttribute('aria-pressed',x===b)); type=b.dataset.v; next();}));
   document.getElementById('tr-check').addEventListener('click',()=>{const x=num(ans.value); if(isNaN(x)){ex.hidden=false;ex.innerHTML='Escribe un número.';return;} const good=Math.abs(x-cur.a)<=Math.max(0.011,Math.abs(cur.a)*0.001); if(!answered){tot++; if(good)ok++; answered=true;} ans.className=good?'ok':'ko'; ex.hidden=false; ex.innerHTML='<b>'+(good?'Correcto. ':'No. ')+'</b>'+cur.x; sc.textContent='Aciertos: '+ok+' de '+tot;});
   document.getElementById('tr-show').addEventListener('click',()=>{ex.hidden=false; ex.innerHTML=cur.x; if(!answered){tot++;answered=true;sc.textContent='Aciertos: '+ok+' de '+tot;}});
