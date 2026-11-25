@@ -236,6 +236,7 @@ table.sim input[type=checkbox]{width:18px;height:18px;accent-color:var(--sor)}
 details.sol-d summary{cursor:pointer;font-weight:600;color:var(--c)}
 details.sol-d[open] summary{margin-bottom:8px}
 details.sol-d .prose ul,details.sol-d .prose ol{padding-left:1.2em}
+.tag-lvl{font:600 .68rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--bad);background:var(--bad-soft);padding:2px 6px;border-radius:4px}
 svg text{font-family:var(--f-mono)}
 .diagram{overflow-x:auto}
 .diagram svg{display:block;max-width:100%;height:auto;min-width:480px}
@@ -1011,7 +1012,7 @@ dig servidor.practicas.local</pre><p><code>ignore-auto-dns yes</code> evita mezc
   <div class="head">
     <span class="eyebrow">Autoevaluación</span>
     <h2>Test</h2>
-    <p class="lead">Preguntas del propio curso más preguntas prácticas tipo examen. Cada respuesta trae su explicación. Los fallos se guardan en este navegador para repasarlos.</p>
+    <p class="lead">Por defecto, nivel <b>Examen</b>: casos prácticos y opciones que se parecen mucho entre sí. El nivel <b>Básico</b> tiene las preguntas del curso. Cada respuesta trae su explicación. Los fallos se guardan en este navegador para repasarlos.</p>
   </div>
   <div id="test-sri"></div>
 </section>
@@ -2567,6 +2568,137 @@ const r2 = x => Math.round(x*100)/100;
 const eur = x => (Math.round(x*100)/100).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
 const pick = a => a[Math.floor(Math.random()*a.length)];
 
+/* ---------- preguntas de nivel examen ---------- */
+const HARD_SRI=[
+[0,'Un PC tiene la IP 192.168.10.37/27. ¿Cuál es su dirección de broadcast?',['192.168.10.63','192.168.10.31','192.168.10.255','192.168.10.64'],0,'/27 → saltos de 32: la red es .32 y el broadcast .63. La .31 es el broadcast de la subred anterior.'],
+[0,'¿Cuál de estas IP puede asignarse a un equipo de la red 172.16.4.0/22?',['172.16.7.254','172.16.8.1','172.16.7.255','172.16.4.0'],0,'/22 va de 172.16.4.0 a 172.16.7.255. La .4.0 es la red, la .7.255 el broadcast y la .8.1 es de otra red.'],
+[0,'A partir de 192.168.1.0/24 necesitas subredes de al menos 50 equipos desperdiciando lo mínimo. ¿Qué máscara usas?',['/26','/25','/27','/28'],0,'/26 da 62 equipos. /27 solo 30 (no llega); /25 da 126 (desperdicia).'],
+[0,'Tres switches encadenados, sin ningún router, con 60 PCs en total. ¿Cuántos dominios de difusión hay?',['1','3','60','0'],0,'Los switches no cortan la difusión; solo un router lo hace.'],
+[0,'Haces ping a 8.8.8.8 desde tu PC y no tienes nada en la caché ARP. ¿De qué IP pregunta la MAC tu equipo?',['De su puerta de enlace','De 8.8.8.8','De su servidor DNS','De ninguna: ARP no se usa para salir a Internet'],0,'ARP no cruza routers: se pide la MAC del router y se le entrega el paquete.'],
+[0,'Un paquete cruza 3 routers hasta su destino, sin NAT por el camino. ¿Qué se mantiene igual de extremo a extremo?',['Las IP de origen y destino','Las MAC de origen y destino','Las IP y las MAC','Nada: cada router cambia todo'],0,'Cada router construye una trama nueva con otras MAC; las IP no cambian.'],
+[0,'¿Cuál de estas afirmaciones sobre UDP es FALSA?',['Garantiza que los datos lleguen en orden','No establece conexión previa','Lo usan DNS y DHCP','Si se pierde un paquete, no lo retransmite'],0,'Garantizar el orden es propio de TCP.'],
+[0,'Un servicio sale en LISTENING en netstat del servidor y el ping entre cliente y servidor funciona, pero el cliente no conecta. Causa más probable:',['Un cortafuegos bloquea ese puerto','El servicio no ha arrancado','El cable del servidor está suelto','El cliente tiene una IP APIPA'],0,'LISTENING descarta el servicio caído y el ping descarta cable e IP. Queda el firewall.'],
+[0,'En VirtualBox, el servidor está en modo NAT y el cliente en solo-anfitrión, con IP puestas a mano en la misma subred. ¿Se comunican?',['No, están en redes virtuales distintas','Sí, porque están en la misma subred','Sí, pero solo por ping','Solo si desactivas el firewall'],0,'Modos de red distintos = mundos separados, da igual la IP.'],
+[0,'Un script tiene permisos 750. ¿Qué puede hacer un usuario de su grupo?',['Leerlo y ejecutarlo, pero no modificarlo','Leerlo, modificarlo y ejecutarlo','Solo leerlo','Nada'],0,'7 = rwx (propietario), 5 = r-x (grupo), 0 = --- (otros).'],
+[0,'¿Cuál de estas IP es privada y válida?',['172.31.200.1','172.32.0.5','192.169.1.1','10.256.0.1'],0,'172.32 y 192.169 son públicas; 10.256 no existe (máximo 255).'],
+[0,'tracert muestra * * * en el salto 3, pero los saltos 4 y 5 responden y se llega al destino. ¿Qué pasa?',['La conexión funciona: ese router no responde al diagnóstico','El tráfico se pierde en el salto 3','El destino está caído','Hay un bucle de enrutamiento'],0,'Si los saltos siguientes responden, el tráfico pasa.'],
+[0,'Sin Auto-MDI/MDI-X, ¿qué cable usas para unir dos switches?',['Cruzado','Directo','Da igual','Un cable de consola'],0,'Mismo tipo de dispositivo → cruzado.'],
+[0,'Quieres que desde Internet entren a tu web interna 192.168.1.50:80 usando el puerto 8080 de tu router. ¿Qué configuras?',['Port Forwarding: 8080 exterior → 192.168.1.50:80','NAT de salida','Poner 192.168.1.50 como puerta de enlace','Abrir el puerto 80 en los clientes'],0,'La conexión empieza desde fuera: hace falta una regla de Port Forwarding (DNAT).'],
+[1,'Tu ámbito es subnet 192.168.77.0/27 con range .10 a .30. Quieres reservar la .5 para un servidor. ¿Dónde puede estar esa fixed-address?',['Fuera del range, en el hueco .1–.9 (lo habitual)','Obligatoriamente dentro del range','Solo en otro bloque subnet','En /etc/default/isc-dhcp-server'],0,'La IP reservada no tiene por qué estar dentro del range; lo normal es dejarla fuera.'],
+[1,'Cambias option routers en el servidor y lo reinicias. En un Windows que ya tenía IP, ipconfig /all sigue enseñando la puerta antigua. ¿Por qué?',['Sigue con su concesión anterior: hay que hacer /release y /renew','El servicio no se ha reiniciado bien','La reserva por MAC tiene prioridad sobre routers','El cambio solo afecta a los clientes Linux'],0,'Hasta que no renueva, el cliente usa lo que recibió en la concesión anterior.'],
+[1,'systemctl dice active (running), pero ningún cliente recibe IP y journalctl no muestra ningún DISCOVER. ¿Qué revisas primero?',['INTERFACESv4 en /etc/default/isc-dhcp-server','La sintaxis de dhcpd.conf','El range del ámbito','La MAC de las reservas'],0,'Con un error de sintaxis no arrancaría. Si no ve ningún DISCOVER, escucha en la interfaz equivocada.'],
+[1,'Tras editar dhcpd.conf, isc-dhcp-server no arranca. Causa más probable:',['Falta un ; o una llave en dhcpd.conf','Un cliente tiene IP APIPA','El range es más pequeño que la red','No hay ninguna reserva'],0,'Un error de sintaxis impide arrancar; journalctl dice la línea.'],
+[1,'Añades un bloque subnet 192.168.78.0, pero el servidor solo tiene una interfaz en la red 77. ¿Qué ocurre?',['Ese ámbito no reparte nada: el servidor no tiene alcance a esa red','Reparte IP de la 78 a los clientes de la 77','El servicio deja de arrancar siempre','Funciona gracias a un relay automático'],0,'Escribir el bloque no basta: hace falta una interfaz en esa red (o un relay).'],
+[1,'Un cliente recibe IP del ámbito, pero no la que tenía reservada. Lo más probable:',['La MAC de la reserva está mal o ha cambiado (VM recreada)','El servidor DHCP está caído','La red no admite broadcast','El range es demasiado grande'],0,'Si recibe IP, el servicio y el ámbito funcionan. El fallo está en la reserva.'],
+[1,'Un cliente no recibe IP. ¿Cuál es el orden correcto de diagnóstico?',['Servicio activo → ámbito de esa red → reserva concreta','Reserva concreta → ámbito → servicio','Ámbito → reserva → servicio','Reinstalar el servidor → ámbito → reserva'],0,'De lo general a lo concreto.'],
+[1,'¿Qué dos mensajes de DORA envía el cliente?',['Discover y Request','Discover y Offer','Offer y Acknowledge','Request y Acknowledge'],0,'Offer y Acknowledge los envía el servidor.'],
+[1,'¿Por qué el Request de DORA también suele ir en broadcast?',['Para que los demás servidores que ofrecieron IP sepan cuál ha aceptado','Porque el cliente ya tiene IP y puede hacerlo','Porque lo exige el router','Para ahorrar ancho de banda'],0,'Así los otros servidores retiran su oferta.'],
+[1,'En una práctica en bridge, un cliente recibe 192.168.1.20 cuando tu ámbito es la red 77. Causa más probable:',['Respondió antes el servidor DHCP de un compañero','Tu reserva está mal escrita','Tu range está agotado','El cliente tiene APIPA'],0,'Con dos servidores activos, gana el que responde primero.'],
+[1,'¿Cuál de estas líneas de dhcpd.conf es correcta?',['option routers 192.168.77.1;','option router 192.168.77.1;','option routers = 192.168.77.1;','routers 192.168.77.1;'],0,'La opción es routers, sin igual, y termina en ;'],
+[1,'¿Cuál de estas líneas de una reserva es correcta?',['hardware ethernet 08:00:27:AA:BB:CC;','hardware-ethernet 08:00:27:AA:BB:CC;','hardware ethernet 08-00-27-AA-BB-CC;','fixed-mac 08:00:27:AA:BB:CC;'],0,'hardware ethernet, separado, con la MAC en dos puntos.'],
+[1,'En Ubuntu, nmcli connection down "Wired connection 1" da error y no hace nada. Lo más probable:',['La conexión tiene otro nombre, p. ej. «Conexión cableada 1»','Falta reiniciar el servidor DHCP','DHCP no funciona en Linux','Hay que usar ipconfig /renew'],0,'Compruébalo antes con nmcli connection show.'],
+[1,'Red 10.0.0.0/24 con range 10.0.0.50 10.0.0.150. ¿Cuántas IP reparte?',['101','100','150','254'],0,'Ambos extremos incluidos: 150 − 50 + 1 = 101.'],
+[2,'En la zona escribes www IN CNAME servidor.practicas.local (sin punto final). ¿Qué pasa al consultar www?',['Apunta a servidor.practicas.local.practicas.local., que no existe','Funciona igual que con punto','La zona no carga nunca','Devuelve la IP del servidor DNS'],0,'Sin punto, el nombre es relativo y bind9 le añade la zona.'],
+[2,'Editas la zona, haces reload y el secundario no recibe el cambio. allow-transfer y masters están bien. Causa más probable:',['No subiste el serial','Falta forward only','El TTL es demasiado alto','El secundario necesita reiniciarse cada vez'],0,'El secundario solo copia si el serial del primario es mayor que el suyo.'],
+[2,'El secundario tiene la zona, pero el primario no le avisa de los cambios y, si cae el primario, nadie le pregunta. ¿Qué falta?',['Un NS para ns2 (con su A) en la zona del primario','allow-transfer en el secundario','type master en el secundario','Un forwarder hacia el primario'],0,'NOTIFY va a los NS de la zona y los demás solo preguntan a los NS publicados.'],
+[2,'Primario 192.168.77.5 y secundario 192.168.77.6. ¿Qué configuración es correcta?',['Primario: allow-transfer { 192.168.77.6; } · Secundario: masters { 192.168.77.5; }','Primario: allow-transfer { 192.168.77.5; } · Secundario: masters { 192.168.77.6; }','Los dos: allow-transfer { 192.168.77.6; }','Secundario: allow-transfer { 192.168.77.5; }'],0,'El primario autoriza al secundario; el secundario apunta al primario.'],
+[2,'Delegas alumnos.practicas.local a ns.alumnos.practicas.local (192.168.77.30). ¿Qué va en la zona padre?',['alumnos IN NS ns.alumnos.practicas.local. y ns.alumnos IN A 192.168.77.30','Solo alumnos IN NS ns.alumnos.practicas.local.','alumnos IN CNAME ns.alumnos.practicas.local.','ns IN A 192.168.77.30'],0,'El NS de delegación y el glue, porque el servidor está dentro del subdominio.'],
+[2,'¿En qué caso NO hace falta glue record al delegar un subdominio?',['Cuando el NS delegado es ns1.otroproveedor.net, fuera del subdominio','Cuando el NS es ns.alumnos.practicas.local','Siempre hace falta','Cuando el subdominio tiene secundario'],0,'El glue solo hace falta si el NS está dentro del propio subdominio.'],
+[2,'dig @192.168.77.5 www.practicas.local devuelve dos líneas en ANSWER y la marca aa. ¿Qué significa?',['www es un alias (CNAME) y el servidor es dueño de la zona','Hay dos servidores DNS respondiendo','La respuesta viene de la caché','Hay dos registros A duplicados'],0,'Primero sale el CNAME y luego el A al que lleva; aa = autoritativa.'],
+[2,'¿Cuál de estas líneas es INCORRECTA en un archivo de zona?',['@ IN CNAME servidor.practicas.local.','www IN CNAME servidor.practicas.local.','ns IN A 192.168.77.5','@ IN NS ns.practicas.local.'],0,'No se puede poner CNAME en @: ahí están el SOA y el NS.'],
+[2,'En el SOA aparece admin.practicas.local. ¿Qué representa?',['El correo admin@practicas.local','El servidor primario de la zona','Un host llamado admin','El servidor secundario'],0,'La @ está reservada en la zona, así que el correo se escribe con punto.'],
+[2,'Tu PC pregunta a su servidor DNS por es.wikipedia.org, que no está en caché. ¿Qué hace cada uno?',['El PC hace una consulta recursiva; el servidor resuelve de forma iterativa','El PC hace una consulta iterativa; el servidor, recursiva','Los dos hacen consultas recursivas','Los dos hacen consultas iterativas'],0,'El cliente pide la respuesta final; el servidor va preguntando raíz → .org → wikipedia.org.'],
+[2,'En esa resolución, ¿qué responde un servidor raíz?',['Una referencia a los servidores de .org','La IP final de es.wikipedia.org','Una referencia a los servidores de wikipedia.org','NXDOMAIN, porque no es suyo'],0,'La raíz solo conoce los TLD; quien remite a wikipedia.org es el servidor de .org.'],
+[2,'¿Cuál de estas afirmaciones es FALSA?',['Cada zona tiene exactamente un servidor DNS','Un servidor puede ser primario de una zona y secundario de otra','El nombre del NS no tiene por qué estar dentro de la zona que sirve','Dominio y zona no son lo mismo'],0,'Una zona puede estar en varios servidores (primario y secundarios). En Internet se exigen al menos dos.'],
+[2,'bodegasalmunia.es delega sanlucar y lab, y mantiene oficina sin delegar. ¿Cuántas zonas hay y qué contiene la zona bodegasalmunia.es?',['3 zonas; la principal no contiene los nombres de sanlucar ni de lab','1 zona con todos los nombres','3 zonas; la principal contiene todos los nombres','4 zonas, una por subdominio más la principal'],0,'oficina sigue en la zona principal; sanlucar y lab son zonas aparte.'],
+[2,'El subdominio ventas lo va a administrar el mismo informático que el dominio principal. ¿Lo delegas?',['No hace falta: se queda en la zona principal','Sí, todo subdominio se delega','Sí, si está en otra ciudad','Solo si tiene más de 10 equipos'],0,'La pregunta clave es quién administra esos nombres.'],
+[2,'Al dar de alta bodegasalmunia.es con el servidor ns1.bodegasalmunia.es, ¿qué escribe el registro de .es en su zona?',['Las líneas NS del dominio y un glue con la IP de ns1','Todos los registros A de la empresa','La IP de la web','Nada: solo cobra el registrador'],0,'Solo la delegación; lo de dentro lo decides tú.'],
+[2,'practicas.local resuelve bien desde los clientes, pero google.com falla. ¿Qué revisas?',['Los forwarders y la salida a Internet del servidor','El serial de la zona','El registro NS de practicas.local','allow-transfer'],0,'Zona propia y resolución externa son mecanismos independientes.'],
+[2,'En Ubuntu, dig www.practicas.local responde bien, pero ping www.practicas.local dice que no encuentra el nombre. Causa:',['mdns4_minimal en /etc/nsswitch.conf se queda con los nombres .local','El servidor DNS está caído','Falta el CNAME www','Un firewall bloquea el puerto 53'],0,'dig va directo al DNS; ping pasa por nsswitch, que manda .local a mDNS.'],
+[2,'named-checkzone da OK, pero dig devuelve SERVFAIL para todo practicas.local. ¿Qué miras?',['journalctl -u named, para ver por qué no se cargó la zona','El serial de la zona','La caché del cliente','Los forwarders'],0,'SERVFAIL en toda la zona = la zona no se cargó (ruta en file, no recargaste…).'],
+[2,'Con forward only; en las opciones y los forwarders caídos, ¿qué pasa al consultar google.com?',['No se resuelve: no intenta ir por su cuenta a la raíz','Se resuelve desde la raíz','Se resuelve con la zona local','Lo resuelve el secundario'],0,'Sin forward only intentaría resolver solo; con forward only depende de los forwarders.'],
+[2,'¿Dónde guarda un servidor secundario la copia de la zona en los apuntes?',['/var/cache/bind/','/etc/bind/','/etc/default/bind9','/var/log/bind/'],0,'La escribe bind9 al recibir la transferencia.']
+];
+const HARD_SEG=[
+['ud1','2','Un atacante modifica el importe de una transferencia mientras viaja, sin poder leer el resto del mensaje. ¿Qué objetivo se ha roto?',['Integridad','Confidencialidad','Disponibilidad','No repudio en destino'],0,'No lo ha leído (confidencialidad intacta) pero lo ha alterado.'],
+['ud1','2','Un ransomware cifra el servidor de ficheros y nadie puede trabajar. ¿Qué objetivo se pierde principalmente?',['Disponibilidad','Confidencialidad','Autenticidad','Trazabilidad'],0,'Los usuarios autorizados no pueden acceder a la información.'],
+['ud1','2.1','Un empleado niega haber enviado un correo, pero iba firmado digitalmente con su certificado. ¿Qué lo impide?',['No repudio en origen','No repudio en destino','Confidencialidad','Trazabilidad'],0,'El emisor no puede negar el envío.'],
+['ud1','3','¿Cuál de estas medidas es a la vez pasiva y lógica?',['Cifrado del disco','Cortafuegos','SAI','Antivirus en tiempo real'],0,'Cortafuegos y antivirus son activos; el SAI es físico.'],
+['ud1','3','¿Cuál de estas medidas es seguridad activa?',['Un IDS que detecta un escaneo y bloquea la IP','Una copia de seguridad nocturna','El cifrado de un pendrive','El blindaje de un rack'],0,'Detecta y responde por sí mismo en tiempo real.'],
+['ud1','3','¿Cuál de estas afirmaciones es FALSA?',['Una medida es activa o pasiva, pero nunca física o lógica a la vez','Un SAI es pasivo y físico','El cifrado es pasivo y lógico','El riesgo cero no existe'],0,'Los dos criterios no son excluyentes: se combinan.'],
+['ud1','4','Un puerto abierto por error en el router de la empresa es…',['Una vulnerabilidad','Una amenaza lógica','Un exploit','Un ataque activo'],0,'Es la debilidad; la amenaza es quien la aprovecha.'],
+['ud1','4.1.2','Un programa que aprovecha un fallo concreto de un servicio sin parchear para entrar es…',['Un exploit','Una backdoor','Un rootkit','Un gusano'],0,'Bug = el fallo; exploit = el programa que lo aprovecha.'],
+['ud1','4.1.2','Un malware se esconde en el sector de arranque y toma el control antes de que cargue el sistema. Es un…',['Bootkit','Troyano','Gusano','Hijacker de sistema'],0,'Es un tipo especializado de rootkit.'],
+['ud1','4.1.2','Una aplicación de «limpieza» aparentemente útil instala en secreto acceso remoto para el atacante. Es un…',['Troyano','Virus','Gusano','Adware'],0,'Aparenta ser otra cosa y oculta funciones.'],
+['ud1','4.1.2','Un malware infecta 200 equipos de la red en una hora sin que nadie ejecute nada. Lo más probable es un…',['Gusano','Virus','Troyano','Spyware'],0,'Se propaga solo por la red; el virus necesita un programa huésped.'],
+['ud1','4.1.2','Tu navegador abre siempre un buscador desconocido como página de inicio y redirige las búsquedas. Es un…',['Hijacker de página de inicio','Ransomware','Rootkit','Canal oculto'],0,'Secuestra la página de inicio para desviar búsquedas.'],
+['ud1','4.1.1','Un ex-administrador cuya cuenta sigue activa entra y borra las copias de seguridad. Es…',['Un insider: amenaza humana activa','Un cracker externo','Una amenaza humana pasiva','Una amenaza lógica'],0,'Usa credenciales legítimas con mala intención.'],
+['ud1','5','El servidor tiene antivirus, parches, copias y rack con llave, pero los datos viajan en texto plano por la LAN. ¿Qué medida falta?',['Usar protocolos cifrados como HTTPS, SSH o VPN','Instalar un segundo antivirus','Poner otro SAI','Cambiar el rack por uno más grande'],0,'El problema son los datos en tránsito.'],
+['ud1','2.1','¿Qué une la trazabilidad?',['La autenticidad (quién es) con el registro de sus actos (logs)','La confidencialidad con la integridad','El cifrado con las copias de seguridad','El no repudio en origen con el de destino'],0,'Permite asociar cada acción a un usuario concreto.'],
+['ud2','3.2','El CPD está en planta baja, en una sala interior sin ventanas, pared con pared con el cuarto de máquinas de los ascensores. ¿Cuál es el problema?',['Vibraciones e interferencias de los motores','Exceso de luz solar','Riesgo de goteras del tejado','Ninguno: es la ubicación ideal'],0,'Los motores dañan los discos mecánicos y generan interferencias.'],
+['ud2','3.3','La humedad del CPD baja al 30 %. ¿Qué riesgo aparece?',['Electricidad estática','Condensación y corrosión','Sobrecalentamiento por polvo','Ninguno: cuanto más seco, mejor'],0,'Por debajo del 40 % se acumula estática.'],
+['ud2','3.3','La humedad del CPD sube al 70 %. ¿Qué riesgo aparece?',['Condensación, corrosión y cortocircuitos','Electricidad estática','Ninguno: es lo ideal','Solo afecta a las baterías del SAI'],0,'Por encima del 60 % el agua se condensa.'],
+['ud2','3.6','¿Cuál de estas afirmaciones sobre los incendios en el CPD es INCORRECTA?',['Se usa agua nebulizada porque no daña los equipos','Se apaga con gases como el CO₂','Hay un retardo antes de soltar el gas','Deben activarse al menos dos sensores'],0,'Nunca agua ni espuma.'],
+['ud2','3.5','La puerta del CPD pide pasar la tarjeta y teclear un PIN. ¿Qué es?',['2FA: algo que tienes y algo que sabes','2FA: algo que eres y algo que sabes','No es 2FA: son dos factores del mismo tipo','Biometría'],0,'Tarjeta = lo que tienes; PIN = lo que sabes.'],
+['ud2','3.8','Hay un apagón de 40 segundos en un CPD con SAI y generador. ¿Qué ocurre?',['El SAI lo cubre y el generador no llega a arrancar','El generador arranca al instante y el SAI no actúa','Los servidores se apagan de forma ordenada','El SAI se desconecta para proteger las baterías'],0,'El generador arranca si el apagón dura más de 1–2 minutos.'],
+['ud2','3.8','Apagón de 3 horas en un CPD con SAI pero sin generador. ¿Qué pasa?',['El SAI aguanta un rato y manda apagar los servidores de forma ordenada','El SAI aguanta las 3 horas','Los servidores se apagan de golpe al irse la luz','El SAI arranca un generador portátil'],0,'Las baterías dan unos minutos; antes de agotarse, ordenan el apagado.'],
+['ud2','3.8','Un servidor tiene dos fuentes de alimentación, pero las dos van al mismo SAI. ¿Qué fallo NO está cubierto?',['Que falle ese SAI','Que se rompa una de las fuentes','Un apagón corto','Un pico de tensión'],0,'Por eso cada fuente debe ir a un SAI distinto.'],
+['ud2','4','Además del coste, ¿cuál es la mayor dificultad de un centro de respaldo?',['Mantenerlo sincronizado con el centro principal','Encontrar personal técnico','Climatizarlo','Comprar las licencias'],0,'Los cambios del CP deben replicarse al instante en el CR.'],
+['ud2','3.5','¿Por qué los cuadros eléctricos y el control del aire acondicionado se ponen fuera de la sala de servidores?',['Para que el mantenimiento no tenga que entrar en la sala','Porque hacen ruido','Porque se calientan demasiado','Por la normativa de incendios'],0,'Separación de espacios: menos accesos al CPD.'],
+['ud2','5.5','Una empresa quiere PCs nuevos cada 3 años, devolviendo los viejos, sin opción a quedárselos. ¿Qué contrata?',['Renting','Leasing','Compra con amortización','Un centro de respaldo'],0,'El leasing incluye opción de compra al final.'],
+['ud2','3.4','En el diseño de pasillos, ¿de dónde recogen el aire los extractores del techo?',['De las partes traseras de los racks (pasillo caliente)','De los frontales de los racks (pasillo frío)','Del falso suelo','De la puerta de la sala'],0,'Los servidores expulsan el aire caliente por detrás.'],
+['sai','6.3','Para un CPD con servidores críticos, ¿qué SAI hace falta?',['Online o de doble conversión','Inline o interactivo','Offline o standby','Cualquiera, siempre que tenga muchos VA'],0,'Es el obligatorio en los servidores del CPD.'],
+['sai','6.3','¿En qué SAI los equipos toman la corriente directamente de la red mientras hay luz y, si falla, tarda milisegundos en conmutar?',['Offline o standby','Online','Doble conversión','Modular de CPD'],0,'Es el más sencillo y barato.'],
+['sai','6.3','¿Qué SAI corrige pequeñas subidas y bajadas de tensión sin gastar batería?',['Inline o interactivo','Offline o standby','Online','Ninguno: siempre gastan batería'],0,'Tiene un regulador para eso.'],
+['sai','6.5','Conectas una impresora láser a una toma «solo filtro» del SAI. ¿Es correcto?',['Sí: la protege de picos sin cargar la batería','No: debe ir a una toma de batería','No: nunca puede ir al SAI','Solo si el SAI es online'],0,'Lo prohibido es conectarla a las tomas de batería.'],
+['sai','6.8','¿Cómo se fija el tiempo de espera del software del SAI antes de apagar?',['Entre 5 y 10 minutos, por debajo de la autonomía real','Igual a la autonomía real','Algo por encima de la autonomía','A cero: se apaga en cuanto se va la luz'],0,'Así se evitan descargas profundas y apagados bruscos.'],
+['sai','6.8','El SAI manda la orden de apagado, pero uno de los servidores no se apaga. Causa más probable:',['No tiene instalado el agente del SAI o no es visible en la red','No tiene configurado Restore AC Power State','El SAI es offline','Las baterías están en paralelo'],0,'Los clientes necesitan el agente para recibir la orden.'],
+['sai','6.8','Cuando vuelve la luz, los servidores siguen apagados y hay que encenderlos a mano. ¿Qué faltaba?',['Configurar Restore AC Power State en la BIOS/UEFI','Instalar el agente del SAI','Más autonomía de batería','Un SAI online'],0,'En modo de encendido automático arrancan solos.'],
+['sai','6.7','Un único SAI debe avisar y apagar a 5 servidores. ¿Qué puerto necesitas?',['Ethernet, con su propia IP','USB','Serie','RJ11'],0,'USB o serie solo comunican con un equipo.'],
+['calc','fórmula 1','SAI de 1500 VA con Fc 0,6 y una carga de 950 W. ¿Es suficiente?',['No: da 900 W','Sí: 1500 VA es más que 950 W','Sí, sobran 50 W','No: da 600 W'],0,'Pr = 1500 × 0,6 = 900 W, menos que 950 W.'],
+['calc','fórmula 1','La etiqueta del SAI dice 1000 VA / 600 W. ¿Cuál es su factor de conversión?',['0,6','1,67','0,4','600'],0,'Fc = Pr ÷ Pa = 600 ÷ 1000.'],
+['calc','fórmula 1','Necesitas 720 W con un SAI de gama alta (Fc 0,9). ¿Qué potencia aparente mínima necesitas?',['800 VA','648 VA','720 VA','1200 VA'],0,'Pa = 720 ÷ 0,9 = 800 VA. 1200 VA sería con Fc 0,6.'],
+['calc','fórmula 2','Tres baterías de 12 V y 9 Ah. ¿Qué energía total almacenan?',['324 Wh','108 Wh','27 Wh','36 Wh'],0,'Energía = n × V × Ah = 3 × 12 × 9.'],
+['calc','fórmula 3','Energía total 216 Wh, profundidad de descarga 50 % y eficiencia del inversor 90 %. ¿Cuánta energía útil hay?',['97,2 Wh','108 Wh','194,4 Wh','216 Wh'],0,'216 × 0,5 × 0,9. 108 olvida el inversor; 194,4 olvida la profundidad de descarga.'],
+['calc','fórmula 4','Con 97,2 Wh útiles y una carga de 324 W, ¿cuánto aguanta el SAI?',['18 minutos','0,3 minutos','30 minutos','3,3 minutos'],0,'97,2 ÷ 324 = 0,3 h → 0,3 × 60 = 18 min.'],
+['calc','fórmula 5','Una fuente entrega 450 W con una eficiencia del 90 %. ¿Cuánto pide de la red?',['500 W','405 W','450 W','540 W'],0,'Pentrada = 450 ÷ 0,9. 405 sale si multiplicas en vez de dividir.'],
+['calc','fórmula 2','El inversor saca 240 W de una batería de 12 V. ¿Qué corriente da la batería?',['20 A','2880 A','0,05 A','1,04 A'],0,'I = 240 ÷ 12. 1,04 A sería con 230 V.'],
+['calc','fórmula 4','Quieres 12 minutos de autonomía con una carga de 500 W. ¿Cuánta energía útil necesitas?',['100 Wh','6000 Wh','41,7 Wh','60 Wh'],0,'12 min = 0,2 h → 0,2 × 500 = 100 Wh.'],
+['calc','práctica','Una zona consume 8400 W. Con un margen del 20 %, ¿qué potencia hay que contratar?',['10,08 kW','8,6 kW','1,68 kW','10.080 kW'],0,'8400 × 1,20 = 10 080 W = 10,08 kW.'],
+['calc','práctica','Se contratan 6,72 kW y el término de potencia cuesta 45 € por kW y año. ¿Coste anual?',['302,40 €','302.400 €','6,72 €','51,72 €'],0,'6,72 × 45 = 302,40 €. Multiplica los kW, no los W.']
+];
+const HARD_SOR=[
+['her','La GPO del dominio prohíbe el Panel de control (Habilitada). La GPO de la UO 1ESO lo permite (Deshabilitada). Sin opciones especiales, ¿qué le pasa a un usuario de 1ESO?',['Puede usar el Panel: gana la UO, la más cercana','No puede: gana el dominio','No se aplica ninguna por conflicto','Depende del orden alfabético de las GPO'],0,'Si el secundario contradice al primario, se aplica el secundario.'],
+['her','Igual que antes, pero la GPO del dominio tiene No reemplazar. ¿Qué le pasa al usuario de 1ESO?',['No puede: la UO no puede sustituirla','Puede: gana la más cercana','No se aplica ninguna','Solo se aplica tras reiniciar el servidor'],0,'No reemplazar impone la directiva a los niveles de abajo.'],
+['her','La UO 1ESO tiene Bloquear herencia y ninguna GPO propia. El dominio tiene una GPO «fondo corporativo» sin No reemplazar. ¿Recibe el fondo un usuario de 1ESO?',['No','Sí','Solo en los equipos, no en los usuarios','Da error de configuración'],0,'Bloquear herencia corta todo lo de arriba que no tenga No reemplazar.'],
+['her','Igual que antes, pero la GPO del dominio tiene No reemplazar. ¿Recibe el fondo?',['Sí: No reemplazar gana a Bloquear herencia','No: el bloqueo gana','Solo al reiniciar','Solo si la UO tiene usuarios en la carpeta Users'],0,'No reemplazar siempre tiene preferencia.'],
+['her','La GPO de la UO padre pone una directiva en Habilitada; la GPO de la UO hija la tiene en No configurada. ¿Qué recibe un usuario de la hija?',['Habilitada, heredada del padre','No configurada','Deshabilitada','Nada: la hija anula al padre'],0,'No configurada no cambia nada: se mantiene lo heredado.'],
+['her','Marcas la opción «Deshabilitada» de la GPO (no de un ajuste) en el vínculo de una UO. ¿Qué pasa?',['La GPO deja de aplicarse a ese contenedor','Todos sus ajustes pasan a valer Deshabilitado','La UO bloquea la herencia','Se elimina el GPO'],0,'No confundir con poner un ajuste en estado Deshabilitado.'],
+['her','Vinculas una GPO al dominio. ¿Se aplica a los usuarios que están en la carpeta Users?',['Sí: heredan la del dominio; lo que no se puede es vincular una GPO a Users','No: Users no admite GPO de ningún tipo','Solo si se mueven a una UO','Solo la parte de configuración del equipo'],0,'Users es un contenedor dentro del dominio: hereda del dominio, aunque no admite GPO propias.'],
+['her','El bosque tiene los dominios A y B. Una GPO vinculada al dominio A, ¿se aplica a los usuarios de B?',['No: las directivas no se heredan entre dominios','Sí, si tiene No reemplazar','Sí, por estar en el mismo bosque','Solo las directivas de seguridad'],0,'Se aplican por dominio.'],
+['her','La GPO de la UO Profesores no debe aplicarse al grupo Jefatura, que está dentro de esa UO. ¿Qué haces?',['Quitar el permiso Leer a Jefatura en la pestaña Seguridad de la GPO','Marcar Bloquear herencia en Profesores','Marcar No reemplazar en la GPO','Deshabilitar la GPO'],0,'Filtrado del ámbito: sin Leer, no se aplica. Las otras opciones afectan a todos.'],
+['gpo','Cambias una directiva de usuario y el alumno tiene la sesión iniciada. ¿Cómo lo aplicas antes?',['gpupdate /force en el cliente, o cerrar e iniciar sesión','Reiniciar el servidor','Esperar al próximo reinicio del equipo, no hay otra forma','secedit /refreshpolicy en el servidor'],0,'Las de usuario se aplican al iniciar sesión o forzando la actualización.'],
+['gpo','Una GPO con ajustes de Configuración del equipo está vinculada a la UO Alumnos, que solo contiene usuarios; los equipos están en la UO Aulas. ¿Se aplica la parte de equipo?',['No: la configuración del equipo afecta a los equipos de la UO donde está vinculada','Sí, a los equipos donde inicien sesión los alumnos','Sí, en cuanto se reinicien','Solo si tiene No reemplazar'],0,'Los ajustes de equipo se aplican a objetos equipo dentro del ámbito de la GPO.'],
+['der','Un técnico debe copiar ficheros en los que no tiene permiso de lectura. ¿Qué es lo correcto?',['Añadirlo a Operadores de copia de seguridad: el privilegio prevalece sobre el permiso','Darle Control total NTFS en todas las carpetas','Hacerlo administrador del dominio','No se puede: el permiso siempre manda'],0,'Es el ejemplo de somebooks.'],
+['der','¿Cuál de estos es un derecho de conexión (logon right) y no un privilegio?',['Permitir el inicio de sesión local','Apagar el sistema','Cambiar la hora del sistema','Hacer copias de seguridad'],0,'Los de conexión dicen cómo se inicia sesión; los privilegios, qué se puede hacer después.'],
+['der','Umbral de bloqueo 3, duración 30 min, restablecer contador a los 15 min. Un usuario falla 2 veces, espera 20 minutos y falla otras 2. ¿Qué pasa?',['No se bloquea: el contador volvió a cero a los 15 minutos','Se bloquea 30 minutos','Se bloquea hasta que lo desbloquee el administrador','Se bloquea 15 minutos'],0,'Tras la espera lleva 2 fallos, no 4.'],
+['der','Con esa misma configuración, un usuario falla 3 veces seguidas. ¿Cuándo puede volver a intentarlo?',['A los 30 minutos','A los 15 minutos','Nunca sin el administrador','Inmediatamente'],0,'Duración del bloqueo = 30 min.'],
+['der','Con los requisitos de complejidad habilitados, ¿qué contraseña es válida para el usuario ana?',['Mar2026x','ana2026X','marzo2026','MARZO2026'],0,'ana2026X contiene el nombre de usuario; las otras dos no mezclan mayúsculas, minúsculas y números.'],
+['gpo','Bloqueas sol.exe con una regla de hash. Un alumno lo renombra a juego.exe y otro instala una versión actualizada. ¿Qué pasa?',['El renombrado sigue bloqueado; el actualizado se puede ejecutar','Los dos siguen bloqueados','Los dos se pueden ejecutar','El renombrado se ejecuta; el actualizado sigue bloqueado'],0,'El hash depende del contenido: el nombre da igual, la versión no.'],
+['gpo','Configuras la redirección de Mis documentos a C:\\doc_UO_1ESO en lugar de \\\\PC01\\doc_UO_1ESO. ¿Qué problema hay?',['Cada cliente buscaría esa ruta en su propio disco C: local','Ninguno, funciona igual','Da error de sintaxis al guardar la GPO','Solo funciona si hay cuotas'],0,'Por eso se usa la ruta UNC del servidor.'],
+['gpo','Pones por GPO un proxy falso 127.1.1.1 y un alumno sigue navegando. ¿Por qué?',['Puede cambiar la configuración de conexión: falta deshabilitar la página Conexiones','127.1.1.1 es un proxy real','La GPO de proxy solo afecta a equipos','gpupdate borra el proxy'],0,'Marca «Detectar la configuración automáticamente» y se salta el proxy.'],
+['cuo','Cuotas en E: con límite 50 MB y SIN marcar «Denegar espacio». usu1 ocupa 48 MB y copia un archivo de 10 MB. ¿Qué pasa?',['Se copia; queda en 58 MB y se registra el suceso si está marcado','No se copia','Se copian solo 2 MB','Se borran archivos antiguos para dejar sitio'],0,'Sin Denegar espacio, el límite solo avisa.'],
+['cuo','Mismo caso, pero con «Denegar espacio» marcado. ¿Qué pasa?',['No se copia: Windows dice que no hay espacio suficiente','Se copia y se avisa','Se copia y se bloquea la cuenta','Se copia la mitad'],0,'48 + 10 = 58 MB supera el límite de 50 MB.'],
+['cuo','Quieres limitar solo la carpeta \\datos\\Informática a 1 GB con las cuotas de disco de los apuntes. ¿Cómo?',['No se puede: las cuotas se aplican a un volumen entero','En Propiedades de la carpeta › pestaña Cuota','Con una GPO de la UO','Con los permisos NTFS'],0,'Se aplican a una unidad o partición, no a carpetas.'],
+['cuo','El límite general del volumen es 50 MB y usu1 tiene una entrada de cuota de 25 MB. ¿Qué límite tiene usu1?',['25 MB, la de su entrada personalizada','50 MB, el general','75 MB, la suma','El general, porque se configuró antes'],0,'La entrada de cuota manda sobre el valor general.'],
+['cuo','Recurso compartido «datos»: Todos con Cambiar y Leer. En la pestaña Seguridad de Informática solo está GInformática. Un usuario de Matemáticas abre \\\\PC01\\datos\\Informática. ¿Qué pasa?',['No puede entrar: no tiene permisos NTFS en esa subcarpeta','Puede entrar y modificar, porque Todos tiene Cambiar','Puede leer pero no escribir','Puede entrar si tiene cuota libre'],0,'Los permisos de la subcarpeta son los que mandan.'],
+['der','¿Dónde se configura el umbral de bloqueo de cuenta?',['Config. del equipo › Config. de seguridad › Directivas de cuenta › Directiva de bloqueo de cuentas','Config. del usuario › Plantillas administrativas › Sistema','Directivas locales › Opciones de seguridad','Directivas locales › Asignación de derechos de usuario'],0,'Es una directiva de cuenta.'],
+['der','«Forzar el apagado desde un sistema remoto» está en…',['Asignación de derechos de usuario','Opciones de seguridad','Directiva de bloqueo de cuentas','Plantillas administrativas › Sistema'],0,'Es un derecho: quién puede hacerlo.'],
+['der','«Estado de la cuenta de invitado» está en…',['Opciones de seguridad','Asignación de derechos de usuario','Directiva de contraseñas','Redireccionamiento de carpetas'],0,'Junto a «Permitir apagar el sistema sin tener que iniciar sesión».'],
+['gpo','Una GPO que solo tiene Configuración del usuario está vinculada a una UO que solo contiene equipos. ¿A quién afecta?',['A nadie: en esa UO no hay usuarios','A todos los usuarios que inicien sesión en esos equipos','A los equipos','Da error al vincularla'],0,'La configuración de usuario se aplica a los usuarios que están dentro del ámbito de la GPO.']
+];
+function pickBy(Q,lvl,t,n){const pri=shuf(Q.filter(q=>q.t===t&&(lvl==='all'||q.l===lvl))), rest=shuf(Q.filter(q=>q.t===t&&lvl!=='all'&&q.l!==lvl)); return pri.concat(rest).slice(0,n);}
+
 /* ---------- motor de test reutilizable ---------- */
 function makeTest(root, cfg){
   const fk = cfg.key;
@@ -2578,6 +2710,7 @@ function makeTest(root, cfg){
   root.innerHTML =
    '<div class="block" data-r="setup">'+
     '<div class="row"><b>Tema</b><div class="segc" data-r="topic" role="group" aria-label="Tema"><button type="button" data-v="all" aria-pressed="true">Todo</button>'+cfg.topics.map(t=>'<button type="button" data-v="'+t.v+'" aria-pressed="false">'+esc(t.label)+'</button>').join('')+'<button type="button" data-v="fallos" aria-pressed="false">Mis fallos</button></div></div>'+
+    '<div class="row"><b>Nivel</b><div class="segc" data-r="lvl" role="group" aria-label="Nivel"><button type="button" data-v="d" aria-pressed="true">Examen (difícil)</button><button type="button" data-v="b" aria-pressed="false">Básico</button><button type="button" data-v="all" aria-pressed="false">Todo</button></div></div>'+
     '<div class="row"><b>Preguntas</b><div class="segc" data-r="n" role="group" aria-label="Número de preguntas"><button type="button" data-v="10" aria-pressed="false">10</button><button type="button" data-v="20" aria-pressed="true">20</button><button type="button" data-v="40" aria-pressed="false">40</button><button type="button" data-v="999" aria-pressed="false">Todas</button></div><span class="muted" data-r="avail"></span></div>'+
     '<div class="row"><button class="btn primary" type="button" data-r="start">Empezar</button>'+(cfg.sim?'<button class="btn" type="button" data-r="sim">'+esc(cfg.sim.label)+'</button>':'')+'</div>'+
    '</div>'+
@@ -2587,23 +2720,23 @@ function makeTest(root, cfg){
     '<div class="row"><button class="btn primary" type="button" data-r="next" disabled>Siguiente</button><button class="btn" type="button" data-r="stop">Terminar</button></div>'+
    '</div><div class="block" data-r="end" hidden></div>';
   const $ = r => root.querySelector('[data-r="'+r+'"]');
-  let topic='all', n=20, RUN=null;
-  const pool = () => topic==='fallos' ? (f=>Q.filter(q=>f.has(q.id)))(getF()) : Q.filter(q=>topic==='all'||q.t===topic);
+  let topic='all', n=20, RUN=null, lvl='d';
+  const pool = () => topic==='fallos' ? (f=>Q.filter(q=>f.has(q.id)))(getF()) : Q.filter(q=>(topic==='all'||q.t===topic)&&(lvl==='all'||q.l===lvl));
   const upd = () => { $('avail').textContent = pool().length+' disponibles'; };
   const bindSeg = (r,cb) => $(r).querySelectorAll('button').forEach(bt=>bt.addEventListener('click',()=>{ $(r).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===bt)); cb(bt.dataset.v); }));
-  bindSeg('topic', v=>{topic=v;upd();}); bindSeg('n', v=>{n=+v;});
+  bindSeg('topic', v=>{topic=v;upd();}); bindSeg('n', v=>{n=+v;}); bindSeg('lvl', v=>{lvl=v;upd();});
   function start(qs){
     if(!qs.length){ $('avail').textContent = topic==='fallos'?'No tienes fallos guardados todavía.':'No hay preguntas.'; return; }
     RUN={qs,i:0,hits:0,wrong:[]}; $('setup').hidden=true; $('end').hidden=true; $('run').hidden=false; show();
   }
   $('start').addEventListener('click',()=>start(shuf(pool()).slice(0,n)));
-  if(cfg.sim) $('sim').addEventListener('click',()=>start(cfg.sim.fn(Q)));
+  if(cfg.sim) $('sim').addEventListener('click',()=>start(cfg.sim.fn(Q,lvl)));
   function show(){
     const q=RUN.qs[RUN.i], order=shuf(q.o.map((_,k)=>k));
     $('count').textContent=(RUN.i+1)+' / '+RUN.qs.length; $('hits').textContent=RUN.hits+' aciertos';
     $('bar').style.width=(RUN.i/RUN.qs.length*100)+'%';
     const box=$('q'); box.className='q '+cls(q.t);
-    box.innerHTML='<div class="meta"><span class="pts">'+esc(lab(q.t))+'</span><span class="muted" style="font-size:.85rem">'+esc(q.s)+'</span></div><h3>'+fmt(q.q)+'</h3><div class="opts">'+order.map((k,i)=>'<button type="button" data-k="'+k+'"><b>'+'ABCDE'[i]+'</b><span>'+fmt(q.o[k])+'</span></button>').join('')+'</div><div class="expl" hidden></div>';
+    box.innerHTML='<div class="meta"><span class="pts">'+esc(lab(q.t))+'</span>'+(q.l==='d'?'<span class="tag-lvl">Examen</span>':'')+'<span class="muted" style="font-size:.85rem">'+esc(q.s)+'</span></div><h3>'+fmt(q.q)+'</h3><div class="opts">'+order.map((k,i)=>'<button type="button" data-k="'+k+'"><b>'+'ABCDE'[i]+'</b><span>'+fmt(q.o[k])+'</span></button>').join('')+'</div><div class="expl" hidden></div>';
     const nx=$('next'); nx.disabled=true;
     box.querySelectorAll('.opts button').forEach(bt=>bt.addEventListener('click',()=>{
       const ok=+bt.dataset.k===q.a, f=getF();
@@ -2636,11 +2769,12 @@ function makeTest(root, cfg){
 
 /* ---------- test de Servicios en Red ---------- */
 const SRI_Q = BANK.map(b=>({t:['t0','dhcp','dns'][b.t],s:b.s,q:b.q,o:b.o,a:b.a,e:b.e}))
-  .concat(EXTRA.map(x=>({t:['t0','dhcp','dns'][x[0]],s:'Práctica tipo examen',q:x[1],o:x[2],a:x[3],e:x[4]})));
+  .concat(EXTRA.map(x=>({t:['t0','dhcp','dns'][x[0]],s:'Práctica tipo examen',q:x[1],o:x[2],a:x[3],e:x[4]}))).map(q=>Object.assign(q,{l:'b'}))
+  .concat(HARD_SRI.map(x=>({t:['t0','dhcp','dns'][x[0]],s:'Nivel examen',q:x[1],o:x[2],a:x[3],e:x[4],l:'d'})));
 makeTest(document.getElementById('test-sri'), {
   key:'sri-fallos', questions:SRI_Q,
   topics:[{v:'t0',label:'T0',cls:'t0'},{v:'dhcp',label:'DHCP',cls:'dhcp'},{v:'dns',label:'DNS',cls:'dns'}],
-  sim:{label:'Simulacro con el peso del examen', fn:Q=>{const by=t=>shuf(Q.filter(q=>q.t===t)); return shuf([...by('t0').slice(0,4),...by('dhcp').slice(0,6),...by('dns').slice(0,10)]);}}
+  sim:{label:'Simulacro con el peso del examen', fn:(Q,L)=>shuf([...pickBy(Q,L,'t0',4),...pickBy(Q,L,'dhcp',6),...pickBy(Q,L,'dns',10)])}
 });
 
 /* ---------- test de Seguridad ---------- */
@@ -2770,9 +2904,9 @@ const SEGQ = [
 ];
 makeTest(document.getElementById('test-seg'), {
   key:'seg-fallos',
-  questions: SEGQ.map(x=>({t:x[0], s:(x[1].match(/^\d/)?'Apartado '+x[1]:'Práctica de cálculo'), q:x[2], o:x[3], a:x[4], e:x[5]})),
+  questions: SEGQ.map(x=>({t:x[0], s:(x[1].match(/^\d/)?'Apartado '+x[1]:'Práctica de cálculo'), q:x[2], o:x[3], a:x[4], e:x[5], l:'b'})).concat(HARD_SEG.map(x=>({t:x[0], s:(x[1].match(/^\d/)?'Apartado '+x[1]:x[1][0].toUpperCase()+x[1].slice(1)), q:x[2], o:x[3], a:x[4], e:x[5], l:'d'}))),
   topics:[{v:'ud1',label:'UD1',cls:'seg'},{v:'ud2',label:'UD2',cls:'seg'},{v:'sai',label:'SAI',cls:'seg'},{v:'calc',label:'Cálculos',cls:'calc'}],
-  sim:{label:'Repaso mezclado de los cuatro bloques', fn:Q=>{const by=t=>shuf(Q.filter(q=>q.t===t)); return shuf([...by('ud1').slice(0,8),...by('ud2').slice(0,7),...by('sai').slice(0,5),...by('calc').slice(0,4)]);}}
+  sim:{label:'Repaso mezclado de los cuatro bloques', fn:(Q,L)=>shuf([...pickBy(Q,L,'ud1',8),...pickBy(Q,L,'ud2',7),...pickBy(Q,L,'sai',5),...pickBy(Q,L,'calc',5)])}
 });
 
 /* ---------- clasificador UD1 ---------- */
@@ -3141,9 +3275,9 @@ const SORQ=[
 ];
 makeTest(document.getElementById('test-sor'), {
   key:'sor-fallos',
-  questions: SORQ.map(x=>({t:x[0], s:{gpo:'Directivas de grupo',her:'Herencia y filtrado',der:'Derechos y seguridad',cuo:'Cuotas de disco'}[x[0]], q:x[1], o:x[2], a:x[3], e:x[4]})),
+  questions: SORQ.map(x=>Object.assign(x,{l:'b'})).concat(HARD_SOR.map(x=>Object.assign(x,{l:'d'}))).map(x=>({t:x[0], s:{gpo:'Directivas de grupo',her:'Herencia y filtrado',der:'Derechos y seguridad',cuo:'Cuotas de disco'}[x[0]], q:x[1], o:x[2], a:x[3], e:x[4], l:x.l})),
   topics:[{v:'gpo',label:'GPO',cls:'sor'},{v:'her',label:'Herencia',cls:'sor'},{v:'der',label:'Derechos',cls:'sor'},{v:'cuo',label:'Cuotas',cls:'sor'}],
-  sim:{label:'Repaso mezclado de los cuatro bloques', fn:Q=>{const by=t=>shuf(Q.filter(q=>q.t===t)); return shuf([...by('gpo').slice(0,7),...by('her').slice(0,6),...by('der').slice(0,6),...by('cuo').slice(0,5)]);}}
+  sim:{label:'Repaso mezclado de los cuatro bloques', fn:(Q,L)=>shuf([...pickBy(Q,L,'gpo',6),...pickBy(Q,L,'her',7),...pickBy(Q,L,'der',6),...pickBy(Q,L,'cuo',5)])}
 });
 
 route();
